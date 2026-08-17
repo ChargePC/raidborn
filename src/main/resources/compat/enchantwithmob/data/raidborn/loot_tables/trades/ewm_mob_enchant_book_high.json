@@ -1,0 +1,24 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "enchantwithmob:mob_enchant_book",
+          "functions": [
+            {
+              "function": "enchantwithmob:mob_enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 25.0,
+                "max": 40.0
+              },
+              "treasure": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

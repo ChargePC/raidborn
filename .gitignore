@@ -1,0 +1,11 @@
+.gradle/
+build/
+out/
+run/
+
+*.class
+*.log
+hs_err_pid*
+
+.idea/workspace.xml
+.idea/shelf/

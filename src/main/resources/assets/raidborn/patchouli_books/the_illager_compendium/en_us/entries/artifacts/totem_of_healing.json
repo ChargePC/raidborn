@@ -1,0 +1,13 @@
+{
+  "name": "Totem of Healing",
+  "icon": "raidborn:totem_of_healing",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:totem_of_healing",
+      "text": "Press the artifact key to create a healing area for 15 seconds. You and your nearby recruits receive Regeneration II while inside. Cooldown: 45 seconds.$(br2)Activating any Raidborn totem puts all three totems on cooldown.",
+      "title": "Totem of Healing"
+    }
+  ]
+}

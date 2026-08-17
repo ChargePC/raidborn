@@ -1,0 +1,18 @@
+{
+  "name": "Ominous Dagger",
+  "icon": "raidborn:ominous_dagger",
+  "category": "raidborn:utility_and_items",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:ominous_dagger",
+      "text": "A fast Iron-tier weapon. Each Villager killed with it permanently adds 2.5% damage to that dagger, up to 100% after 40 kills.$(br2)Villager Soul drops are twice as likely when the killing blow comes from the dagger. It cannot receive Unbreaking or Mending.",
+      "title": "Ominous Dagger"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Obtaining",
+      "text": "The Ominous Dagger is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l)."
+    }
+  ]
+}

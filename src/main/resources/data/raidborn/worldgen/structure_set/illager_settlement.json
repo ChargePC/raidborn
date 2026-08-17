@@ -1,0 +1,25 @@
+{
+  "structures": [
+    {
+      "structure": "raidborn:illager_settlement_small",
+      "weight": 5
+    },
+    {
+      "structure": "raidborn:illager_settlement_medium",
+      "weight": 3
+    },
+    {
+      "structure": "raidborn:illager_settlement_tower",
+      "weight": 2
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 28,
+    "separation": 8,
+    "salt": 73184261,
+    "frequency_reduction_method": "legacy_type_1",
+    "frequency": 1.0,
+    "spread_type": "linear"
+  }
+}

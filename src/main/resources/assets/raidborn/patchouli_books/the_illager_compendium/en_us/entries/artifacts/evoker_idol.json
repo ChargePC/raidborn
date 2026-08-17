@@ -1,0 +1,13 @@
+{
+  "name": "Evoker Idol",
+  "icon": "raidborn:evoker_idol",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:evoker_idol",
+      "text": "When you are hit, there is a 15% chance to summon 3 Vex that attack your aggressor. The Vex disappear after 15 seconds.",
+      "title": "Evoker Idol"
+    }
+  ]
+}

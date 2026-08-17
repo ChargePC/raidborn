@@ -1,0 +1,22 @@
+{
+  "parent": "raidborn:earned_not_given",
+  "display": {
+    "icon": { "item": "raidborn:overlord_essence" },
+    "title": { "translate": "advancements.raidborn.final_authority.title" },
+    "description": { "translate": "advancements.raidborn.final_authority.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_hero_of_the_raid": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "raidborn:hero_of_the_raid": {}
+        }
+      }
+    }
+  }
+}

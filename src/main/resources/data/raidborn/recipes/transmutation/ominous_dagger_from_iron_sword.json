@@ -1,0 +1,13 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:villager_soul"
+  },
+  "input": {
+    "item": "minecraft:iron_sword"
+  },
+  "output": {
+    "item": "raidborn:ominous_dagger",
+    "count": 1
+  }
+}

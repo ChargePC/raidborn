@@ -1,0 +1,17 @@
+{
+  "parent": "raidborn:unlikely_alliance",
+  "display": {
+    "icon": { "item": "minecraft:name_tag" },
+    "title": { "translate": "advancements.raidborn.you_work_for_me_now.title" },
+    "description": { "translate": "advancements.raidborn.you_work_for_me_now.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "recruit_first_illager": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

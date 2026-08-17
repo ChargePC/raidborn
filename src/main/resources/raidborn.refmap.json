@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "net/randomcara/raidborn/mixin/VillageIronGolletSpawnMixin": {
+      "place": "Lnet/minecraft/world/level/levelgen/structure/pools/SinglePoolElement;m_213695_(Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Rotation;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/util/RandomSource;Z)Z"
+    }
+  },
+  "data": {
+    "searge": {
+      "net/randomcara/raidborn/mixin/VillageIronGolletSpawnMixin": {
+        "place": "Lnet/minecraft/world/level/levelgen/structure/pools/SinglePoolElement;m_213695_(Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Rotation;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/util/RandomSource;Z)Z"
+      }
+    }
+  }
+}

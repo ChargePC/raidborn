@@ -1,0 +1,13 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:soul_of_many_villagers"
+  },
+  "input": {
+    "item": "minecraft:mud"
+  },
+  "output": {
+    "item": "raidborn:beast_heart",
+    "count": 1
+  }
+}

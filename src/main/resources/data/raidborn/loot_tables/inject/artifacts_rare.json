@@ -1,0 +1,111 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "name": "raidborn_artifacts_pool",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:raidborn_necklace",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:giga_emerald",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:bloody_chalice",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:evoker_idol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:ominous_relic",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:poison_arrowhead",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:temporal_relic",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:arcane_dice",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:big_red_button",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:voodoo_villager_doll",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:anywhere_pillow",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:totem_of_healing",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:totem_of_protection",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:totem_of_resistance",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:spider_pendant",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:experience_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:soggy_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:oath_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:lightfed_pill",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "raidborn:sacred_sun",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

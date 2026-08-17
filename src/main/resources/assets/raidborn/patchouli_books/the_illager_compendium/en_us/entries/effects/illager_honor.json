@@ -1,0 +1,24 @@
+{
+  "name": "Illager Honor",
+  "icon": "raidborn:textures/mob_effect/illager_honor.png",
+  "category": "raidborn:effects",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Illager Honor",
+      "item": "raidborn:savage_essence",
+      "text": "Drink a $(l:raidborn:utility_and_items/essences)Savage Essence$() to gain Illager Honor. This permanent alliance effect makes Illagers friendly toward you."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Alliance Rules",
+      "text": "Illager Honor provides 10 recruitment slots by default. You lose it if you kill an Illager-side creature.$(br2)Bad Omen temporarily suppresses the effect. Illager Honor returns when Bad Omen ends."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Village Relations",
+      "text": "While any Raidborn alliance effect is active, Villager interaction is blocked, Iron Golems treat you as hostile, and Hero of the Village cannot be gained."
+    }
+  ]
+}

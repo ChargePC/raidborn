@@ -1,0 +1,14 @@
+{
+  "name": "Arcane Dice",
+  "icon": "raidborn:arcane_dice",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:arcane_dice",
+      "text": "Equip it in a Curio slot and press the artifact key to give yourself and each nearby recruited Illager a random beneficial effect. Every target rolls its own effect. Cooldown: 90 seconds.",
+      "title": "Arcane Dice"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Beast Heart",
+  "category": "raidborn:utility_and_items",
+  "icon": "raidborn:beast_heart",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Beast Heart",
+      "item": "raidborn:beast_heart",
+      "text": "The core used to summon a $(l:raidborn:mobs/beast)Beast$(/l). Place a Carved Pumpkin above it, Mud below it and on two opposite sides, and a Chest directly against either remaining horizontal side.$(br2)The Beast faces away from the Chest."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Obtaining",
+      "text": "The Beast Heart is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Its exact recipe is listed in the table's entry."
+    }
+  ]
+}

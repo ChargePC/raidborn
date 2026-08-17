@@ -1,0 +1,13 @@
+{
+  "name": "Giga Emerald",
+  "icon": "raidborn:giga_emerald",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:giga_emerald",
+      "text": "Reduces emerald prices when trading with Villagers and Illagers while equipped.",
+      "title": "Giga Emerald"
+    }
+  ]
+}

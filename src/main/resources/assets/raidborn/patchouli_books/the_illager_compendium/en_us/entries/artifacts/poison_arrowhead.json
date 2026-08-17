@@ -1,0 +1,13 @@
+{
+  "name": "Poison Arrowhead",
+  "icon": "raidborn:poison_arrowhead",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:poison_arrowhead",
+      "text": "Your projectiles and attacks made with weapons or tools inflict Poison III for 5 seconds. Recruited Illagers owned by you can also apply the poison without harming members of your patrol.",
+      "title": "Poison Arrowhead"
+    }
+  ]
+}

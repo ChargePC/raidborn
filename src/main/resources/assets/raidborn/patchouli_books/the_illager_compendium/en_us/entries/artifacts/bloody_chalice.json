@@ -1,0 +1,13 @@
+{
+  "name": "Bloody Chalice",
+  "icon": "raidborn:bloody_chalice",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:bloody_chalice",
+      "text": "When one of your nearby recruits kills an enemy, you recover 3 hearts. When you kill an enemy, nearby recruits in your patrol recover 3 hearts.",
+      "title": "Bloody Chalice"
+    }
+  ]
+}

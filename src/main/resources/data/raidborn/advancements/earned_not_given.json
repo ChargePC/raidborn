@@ -1,0 +1,22 @@
+{
+  "parent": "raidborn:unlikely_alliance",
+  "display": {
+    "icon": { "item": "raidborn:savage_essence" },
+    "title": { "translate": "advancements.raidborn.earned_not_given.title" },
+    "description": { "translate": "advancements.raidborn.earned_not_given.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_illager_honor": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "raidborn:illager_honor": {}
+        }
+      }
+    }
+  }
+}

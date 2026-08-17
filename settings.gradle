@@ -1,0 +1,30 @@
+pluginManagement {
+    // Cada repositório serve apenas o seu próprio grupo. Os plugins usam versão dinâmica ('1.+',
+    // '0.7.+'), o que obriga o Gradle a consultar a rede, e sem os filtros ele pergunta a todos os
+    // repositórios por todos os plugins: basta um deles estar fora do ar para o build nem começar.
+    repositories {
+        gradlePluginPortal()
+
+        maven {
+            name = "MinecraftForge"
+            url = "https://maven.minecraftforge.net/"
+            content { includeGroupByRegex 'net\\.minecraftforge.*' }
+        }
+
+        maven {
+            name = "ParchmentMC"
+            url = "https://maven.parchmentmc.org"
+            content { includeGroupByRegex 'org\\.parchmentmc.*' }
+        }
+
+        maven {
+            name = "SpongePowered"
+            url = "https://repo.spongepowered.org/repository/maven-public/"
+            content { includeGroupByRegex 'org\\.spongepowered.*' }
+        }
+    }
+}
+
+plugins {
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.8.0"
+}

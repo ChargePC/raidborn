@@ -1,0 +1,18 @@
+{
+  "name": "Illager Settlement Small",
+  "icon": "minecraft:stone_button",
+  "category": "raidborn:structures",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Small Settlement",
+      "text": "Small Illager settlements generate in plains, savannas, snowy plains, and taigas. They are the most common settlement type."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Occupants",
+      "text": "Small settlements mainly contain common units such as Pillagers, Vindicators, Grumblagers, and compatible common Illagers from installed mods.$(br2)Allied players can use these camps to find possible recruits outside raids."
+    }
+  ]
+}

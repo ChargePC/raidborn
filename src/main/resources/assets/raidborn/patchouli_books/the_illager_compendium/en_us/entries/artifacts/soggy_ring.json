@@ -1,0 +1,14 @@
+{
+  "name": "Soggy Ring",
+  "icon": "raidborn:soggy_ring",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:soggy_ring",
+      "text": "Makes you immune to fire and lets you walk over lava. Nearby lava temporarily becomes cobblestone with a fizzing sound, then returns after 8 seconds if the block was not broken.",
+      "title": "Soggy Ring"
+    }
+  ]
+}

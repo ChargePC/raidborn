@@ -1,0 +1,13 @@
+{
+  "name": "Raidborn Necklace",
+  "icon": "raidborn:raidborn_necklace",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:raidborn_necklace",
+      "text": "Grants 5 additional recruitment slots while equipped. It also preserves your Raidborn alliance effect when you die.",
+      "title": "Raidborn Necklace"
+    }
+  ]
+}

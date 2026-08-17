@@ -1,0 +1,202 @@
+{
+  "replace": false,
+  "values": [
+    "raidborn:raidborn_necklace",
+    "raidborn:giga_emerald",
+    "raidborn:bloody_chalice",
+    "raidborn:evoker_idol",
+    "raidborn:ominous_relic",
+    "raidborn:poison_arrowhead",
+    "raidborn:temporal_relic",
+    "raidborn:spider_pendant",
+    "raidborn:experience_ring",
+    "raidborn:soggy_ring",
+    "raidborn:oath_ring",
+    "raidborn:lightfed_pill",
+    "raidborn:sacred_sun",
+    "raidborn:arcane_dice",
+    "raidborn:big_red_button",
+    "raidborn:voodoo_villager_doll",
+    "raidborn:anywhere_pillow",
+    "raidborn:totem_of_healing",
+    "raidborn:totem_of_protection",
+    "raidborn:totem_of_resistance",
+
+    {
+      "id": "artifacts:umbrella",
+      "required": false
+    },
+    {
+      "id": "artifacts:everlasting_beef",
+      "required": false
+    },
+    {
+      "id": "artifacts:eternal_steak",
+      "required": false
+    },
+    {
+      "id": "artifacts:plastic_drinking_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:novelty_drinking_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:snorkel",
+      "required": false
+    },
+    {
+      "id": "artifacts:night_vision_goggles",
+      "required": false
+    },
+    {
+      "id": "artifacts:villager_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:superstitious_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:cowboy_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:anglers_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:lucky_scarf",
+      "required": false
+    },
+    {
+      "id": "artifacts:scarf_of_invisibility",
+      "required": false
+    },
+    {
+      "id": "artifacts:cross_necklace",
+      "required": false
+    },
+    {
+      "id": "artifacts:panic_necklace",
+      "required": false
+    },
+    {
+      "id": "artifacts:shock_pendant",
+      "required": false
+    },
+    {
+      "id": "artifacts:flame_pendant",
+      "required": false
+    },
+    {
+      "id": "artifacts:thorn_pendant",
+      "required": false
+    },
+    {
+      "id": "artifacts:charm_of_sinking",
+      "required": false
+    },
+    {
+      "id": "artifacts:cloud_in_a_bottle",
+      "required": false
+    },
+    {
+      "id": "artifacts:obsidian_skull",
+      "required": false
+    },
+    {
+      "id": "artifacts:antidote_vessel",
+      "required": false
+    },
+    {
+      "id": "artifacts:universal_attractor",
+      "required": false
+    },
+    {
+      "id": "artifacts:crystal_heart",
+      "required": false
+    },
+    {
+      "id": "artifacts:helium_flamingo",
+      "required": false
+    },
+    {
+      "id": "artifacts:chorus_totem",
+      "required": false
+    },
+    {
+      "id": "artifacts:digging_claws",
+      "required": false
+    },
+    {
+      "id": "artifacts:feral_claws",
+      "required": false
+    },
+    {
+      "id": "artifacts:power_glove",
+      "required": false
+    },
+    {
+      "id": "artifacts:fire_gauntlet",
+      "required": false
+    },
+    {
+      "id": "artifacts:pocket_piston",
+      "required": false
+    },
+    {
+      "id": "artifacts:vampiric_glove",
+      "required": false
+    },
+    {
+      "id": "artifacts:golden_hook",
+      "required": false
+    },
+    {
+      "id": "artifacts:onion_ring",
+      "required": false
+    },
+    {
+      "id": "artifacts:pickaxe_heater",
+      "required": false
+    },
+    {
+      "id": "artifacts:aqua_dashers",
+      "required": false
+    },
+    {
+      "id": "artifacts:bunny_hoppers",
+      "required": false
+    },
+    {
+      "id": "artifacts:kitty_slippers",
+      "required": false
+    },
+    {
+      "id": "artifacts:running_shoes",
+      "required": false
+    },
+    {
+      "id": "artifacts:snowshoes",
+      "required": false
+    },
+    {
+      "id": "artifacts:steadfast_spikes",
+      "required": false
+    },
+    {
+      "id": "artifacts:flippers",
+      "required": false
+    },
+    {
+      "id": "artifacts:rooted_boots",
+      "required": false
+    },
+    {
+      "id": "artifacts:whoopee_cushion",
+      "required": false
+    }
+  ]
+}

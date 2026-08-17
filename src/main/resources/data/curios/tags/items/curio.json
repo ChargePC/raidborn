@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "raidborn:big_red_button",
+    "raidborn:arcane_dice",
+    "raidborn:totem_of_healing",
+    "raidborn:totem_of_protection",
+    "raidborn:totem_of_resistance",
+    "raidborn:voodoo_villager_doll",
+    "raidborn:anywhere_pillow"
+  ]
+}

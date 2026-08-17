@@ -1,0 +1,14 @@
+{
+  "name": "Sacred Sun",
+  "icon": "raidborn:sacred_sun",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:sacred_sun",
+      "text": "Emits light similar to a torch while equipped. Undead within 8 blocks burn as if exposed to daylight.",
+      "title": "Sacred Sun"
+    }
+  ]
+}

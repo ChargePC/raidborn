@@ -1,0 +1,31 @@
+{
+  "name": "Artifact Creation",
+  "icon": "raidborn:artifact_template",
+  "category": "raidborn:artifacts",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Breakable artifacts can be dismantled into $(item)Artifact Fragments$(). Four fragments make an $(item)Artifact Template$(), which can be transmuted into a random artifact.",
+      "title": "Artifact Creation"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "raidborn:artifact_fragment_from_artifact",
+      "title": "Artifact Fragments",
+      "text": "A breakable artifact yields 3 fragments. Compatible artifacts from the Artifacts mod can also be dismantled."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "raidborn:artifact_template",
+      "title": "Artifact Template",
+      "text": "Combine 4 Artifact Fragments to make a template."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:artifact_template",
+      "title": "Transmutation",
+      "text": "Use the template in the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l) to create a random artifact. The possible results include Raidborn artifacts and compatible artifacts from the Artifacts mod."
+    }
+  ]
+}

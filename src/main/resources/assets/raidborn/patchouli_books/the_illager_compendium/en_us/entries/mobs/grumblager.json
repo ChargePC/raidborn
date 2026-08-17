@@ -1,0 +1,26 @@
+{
+  "name": "Grumblager",
+  "category": "raidborn:mobs",
+  "icon": "raidborn:grumblager_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Overview",
+      "text": "The Grumblager is a compact Raider with 14 health. It appears in every raid wave and spawns with an Iron Sword, Bow, or Crossbow.$(br2)Its held weapon determines whether it fights in melee, with a bow, or with a crossbow."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "raidborn:grumblager",
+      "name": "Grumblager",
+      "scale": 0.5,
+      "offset": 0.2,
+      "rotate": true,
+      "text": "Grumblagers can wear mixtures of leather and chainmail armor."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Recruited Armor",
+      "text": "Changing a recruited Grumblager's armor is disabled by default. When the server enables this option, its owner can right-click it with an armor piece to equip that slot. Any replaced piece drops on the ground."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Illager Compendium",
+  "landing_text": "This book contains everything you need to know about the Raidborn mod. Inside, you'll find detailed information about new illager trades, items, artifacts and mechanics added by the mod.",
+  "version": "0",
+  "subtitle": "Raidborn guide",
+  "creative_tab": "raidborn:raidborn_tab",
+  "use_resource_pack": true,
+  "model": "raidborn:illager_compendium",
+  "header_color": "000000",
+  "book_texture": "raidborn:textures/gui/book/compendium.png",
+  "filler_texture": "raidborn:textures/gui/book/filler.png",
+  "show_toasts":false,
+  "show_progress": false
+}

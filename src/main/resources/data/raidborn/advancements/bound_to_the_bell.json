@@ -1,0 +1,22 @@
+{
+  "parent": "raidborn:you_work_for_me_now",
+  "display": {
+    "icon": { "item": "raidborn:grand_warbell" },
+    "title": { "translate": "advancements.raidborn.bound_to_the_bell.title" },
+    "description": { "translate": "advancements.raidborn.bound_to_the_bell.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "link_settlement_illager": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "link_settlement_illager"
+    ]
+  ]
+}

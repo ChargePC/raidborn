@@ -1,0 +1,50 @@
+{
+  "name": "Recruiting",
+  "icon": "minecraft:crossbow",
+  "category": "raidborn:mechanics",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Recruiting",
+      "text": "Wear a banner in your chest slot, have a Raidborn alliance effect, then Shift-right-click a recruitable Illager. The banner and alliance effect are both required."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Recruitment Slots",
+      "text": "Illager Loyalty provides 5 slots, Illager Honor 10, and Hero of the Illage 15 by default. Most recruits cost 1 slot. Evokers and Beasts cost 5, while some compatible units cost 2 or 3.$(br2)The Raidborn Necklace adds 5 more slots."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Recruit Tooltip",
+      "text": "Hold Shift and look directly at a recruitable creature to display its current health and recruitment-slot cost.$(br2)The tooltip can be placed on the right, left, or top of the screen, or hidden, in the Raidborn client configuration."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Your Patrol",
+      "text": "Keep wearing a banner to lead your recruits. They follow you, teleport back when left far behind, defend you, and attack targets you engage. Recruits owned by the same player do not fight each other."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Support Healers",
+      "text": "By default, recruited Witches and Illager Invasion Alchemists throw Splash Potions of Healing at their injured owner or same-patrol recruits within 10 blocks. They act only while idle, outside Settlement Mode, and not under an Attack order. Servers can disable this support AI."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Losing the Alliance",
+      "text": "If your alliance effect is removed, your active patrol is disbanded. Recruits stored inside a Raid Bag still use recruitment slots and can only be released while you have the same alliance effect used to store them."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "title": "Illager Warhorn",
+      "item": "raidborn:illager_warhorn",
+      "text": "Shift-right-click to cycle between Attack, Follow, and Hold. Right-click to issue the selected order. Attack targets the creature you are looking at, Follow regroups the patrol, and Hold assigns your current position."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "title": "Raid Bag",
+      "item": "raidborn:raid_bag",
+      "text": "Right-click an empty bag to store your nearby patrol. After a short lock period, right-click again to release them. The bag binds to its owner, and stored recruits continue to count toward the recruitment limit."
+    }
+  ]
+}

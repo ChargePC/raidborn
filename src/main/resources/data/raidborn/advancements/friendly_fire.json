@@ -1,0 +1,17 @@
+{
+  "parent": "raidborn:unlikely_alliance",
+  "display": {
+    "icon": { "item": "minecraft:flint_and_steel" },
+    "title": { "translate": "advancements.raidborn.friendly_fire.title" },
+    "description": { "translate": "advancements.raidborn.friendly_fire.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "lose_oath": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Voodoo Villager Doll",
+  "icon": "raidborn:voodoo_villager_doll",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:voodoo_villager_doll",
+      "text": "Press the artifact key to grant nearby melee recruits Speed I and Strength I for 15 seconds. Cooldown: 45 seconds.",
+      "title": "Voodoo Villager Doll"
+    }
+  ]
+}

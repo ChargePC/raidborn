@@ -1,0 +1,6 @@
+{
+  "name": "Utility and Items",
+  "description": "Souls, essences, command tools, storage items, weapons, and blocks used to build an Illager faction.",
+  "icon": "raidborn:raid_bag",
+  "sortnum": 1
+}

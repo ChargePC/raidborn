@@ -1,0 +1,30 @@
+{
+  "name": "Essences",
+  "icon": "raidborn:raidborn_essence",
+  "category": "raidborn:utility_and_items",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Essences are consumed to gain Raidborn's permanent alliance effects. They are created with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l).",
+      "title": "Essences"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:raidborn_essence",
+      "text": "$(thing)Raidborn Essence$() grants Illager Loyalty and 5 recruitment slots by default.",
+      "title": "Raidborn Essence"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:savage_essence",
+      "text": "$(thing)Savage Essence$() grants Illager Honor and 10 recruitment slots by default.",
+      "title": "Savage Essence"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:overlord_essence",
+      "text": "$(thing)Overlord Essence$() grants Hero of the Illage and 15 recruitment slots by default.",
+      "title": "Overlord Essence"
+    }
+  ]
+}

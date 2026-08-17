@@ -1,0 +1,14 @@
+{
+  "name": "Lightfed Pill",
+  "icon": "raidborn:lightfed_pill",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:lightfed_pill",
+      "text": "While equipped, stand still for 5 seconds in light level 6 or higher. Once charged, it restores 1 hunger point every 2 seconds as long as you remain still and in the light.",
+      "title": "Lightfed Pill"
+    }
+  ]
+}

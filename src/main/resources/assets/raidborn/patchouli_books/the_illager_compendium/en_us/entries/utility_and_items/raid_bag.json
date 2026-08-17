@@ -1,0 +1,23 @@
+{
+  "name": "Raid Bag",
+  "icon": "raidborn:raid_bag",
+  "category": "raidborn:utility_and_items",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:raid_bag",
+      "text": "Right-click an empty Raid Bag to store all nearby recruits owned by you. The bag binds to its owner and cannot release the patrol for 20 seconds after capture.",
+      "title": "Raid Bag"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Releasing the Patrol",
+      "text": "Right-click again to release the stored recruits. You must have the same alliance effect used during capture and enough free recruitment slots.$(br2)Stored recruits still count toward your recruitment limit."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Obtaining",
+      "text": "The Raid Bag is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l)."
+    }
+  ]
+}

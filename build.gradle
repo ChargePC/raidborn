@@ -1,0 +1,127 @@
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '6.0.24'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+group = 'net.randomcara.raidborn'
+version = '0.1-1.20.1'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+minecraft {
+    mappings channel: 'parchment', version: '2023.06.26-1.20.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', tasks.named('createSrgToMcp').get().outputs.files.singleFile
+
+            mods {
+                raidborn {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', tasks.named('createSrgToMcp').get().outputs.files.singleFile
+
+            mods {
+                raidborn {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    // BentosLib é publicada localmente com `./gradlew.bat publishToMavenLocal` no projeto dela.
+    mavenLocal()
+
+    // Forge primeiro: é quem serve net.minecraftforge e cpw.mods, incluindo o modlauncher 10.0.+
+    // que o eventbus pede por versão dinâmica.
+    maven { url = 'https://maven.minecraftforge.net' }
+
+    // Cada repositório abaixo serve um grupo só, e o filtro é o que garante isso. Sem ele o Gradle
+    // pergunta a todos por todo artefato, e uma falha de infraestrutura em qualquer um deles aborta
+    // a resolução inteira em vez de cair para o próximo — foi assim que uma queda do Sponge
+    // (HTTP 522) derrubou o build por causa de um artefato que nem é de lá.
+    maven {
+        name = 'SpongePowered'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+        content { includeGroupByRegex 'org\\.spongepowered.*' }
+    }
+
+    maven {
+        url = 'https://maven.parchmentmc.org'
+        content { includeGroupByRegex 'org\\.parchmentmc.*' }
+    }
+
+    maven {
+        url = 'https://maven.theillusivec4.top/'
+        content { includeGroupByRegex 'top\\.theillusivec4.*' }
+    }
+
+    maven {
+        url = 'https://maven.blamejared.com'
+        content {
+            includeGroupByRegex 'mezz\\.jei.*'
+            includeGroupByRegex 'vazkii.*'
+        }
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.9'
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    implementation fg.deobf('net.randomcara.bentoslib:bentoslib:0.1-1.20.1')
+
+    runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
+    compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1:api')
+
+    runtimeOnly fg.deobf('vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE')
+    compileOnly fg.deobf('vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api')
+
+    compileOnly fg.deobf('mezz.jei:jei-1.20.1-common-api:15.20.0.106')
+    compileOnly fg.deobf('mezz.jei:jei-1.20.1-forge-api:15.20.0.106')
+    runtimeOnly fg.deobf('mezz.jei:jei-1.20.1-forge:15.20.0.106')
+}
+
+mixin {
+    add sourceSets.main, 'raidborn.refmap.json'
+    config 'raidborn.mixins.json'
+}
+
+jar {
+    // O annotation processor do Mixin grava raidborn.refmap.json na saída de classes e o
+    // MixinGradle registra o mesmo arquivo pelo sourceSet, então ele chega duas vezes no jar.
+    // A partir do Gradle 7 isso é erro em vez de aviso. As duas cópias são idênticas.
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes([
+                'MixinConfigs': 'raidborn.mixins.json'
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

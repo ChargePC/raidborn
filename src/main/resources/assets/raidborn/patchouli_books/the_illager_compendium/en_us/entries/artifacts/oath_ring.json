@@ -1,0 +1,14 @@
+{
+  "name": "Oath Ring",
+  "icon": "raidborn:oath_ring",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:oath_ring",
+      "text": "When you gain a new status effect, or a stronger version of one you already have, nearby recruited Illagers owned by you receive the same effect.",
+      "title": "Oath Ring"
+    }
+  ]
+}

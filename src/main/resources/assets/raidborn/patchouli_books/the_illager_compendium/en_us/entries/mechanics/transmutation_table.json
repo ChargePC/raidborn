@@ -1,0 +1,40 @@
+{
+  "name": "Transmutation Table",
+  "category": "raidborn:mechanics",
+  "icon": "raidborn:transmutation_table",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Transmutation Table",
+      "item": "raidborn:transmutation_table",
+      "text": "The Transmutation Table combines a soul with an ordinary item to create special Raidborn items, essences, and artifacts."
+    },
+    {
+      "type": "patchouli:crafting",
+      "title": "Crafting",
+      "recipe": "raidborn:transmutation_table",
+      "text": "Crafted with Red Carpet, Gold Ingots, and Tuff."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How It Works",
+      "text": "Place an Amethyst Shard in the fuel slot, a soul in the soul slot, and the item to transform in the input slot. Each transmutation consumes one shard and one soul, and takes about 10 seconds."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Villager Soul Recipes",
+      "text": "$(li)Writable Book → Illager Compendium$(li)Goat Horn → Illager Warhorn$(li)Iron Sword → Ominous Dagger$(li)Chest → Raid Bag$(li)Glass Bottle → Raidborn Essence"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Soul of Many Villagers",
+      "text": "$(li)Mud → Beast Heart$(li)Bell → Grand Warbell$(li)Glass Bottle → Savage Essence$(li)Artifact Template → Random Artifact"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Village Soul",
+      "text": "A Village Soul and a Glass Bottle create an Overlord Essence.$(br2)The transformed item is replaced by the result when the process finishes."
+    }
+  ]
+}

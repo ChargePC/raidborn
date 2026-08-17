@@ -1,0 +1,13 @@
+{
+  "name": "Big Red Button",
+  "icon": "raidborn:big_red_button",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:big_red_button",
+      "text": "Press the artifact key to sacrifice one random nearby recruited Illager in a small explosion. The explosion does not break blocks. Cooldown: 1 minute and 40 seconds.",
+      "title": "Big Red Button"
+    }
+  ]
+}

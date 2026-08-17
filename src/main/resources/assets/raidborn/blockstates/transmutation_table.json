@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raidborn:block/transmutation_table"
+    },
+    "facing=east": {
+      "model": "raidborn:block/transmutation_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raidborn:block/transmutation_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raidborn:block/transmutation_table",
+      "y": 270
+    }
+  }
+}

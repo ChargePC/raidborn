@@ -1,0 +1,18 @@
+{
+  "name": "Illager Settlement Medium",
+  "icon": "minecraft:stone_slab",
+  "category": "raidborn:structures",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Medium Settlement",
+      "text": "Medium Illager settlements generate in plains, savannas, snowy plains, and taigas. They are less common and larger than small camps."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Occupants",
+      "text": "They contain common Illagers and stronger units. Witches can appear in the strong positions, along with compatible units from installed Illager mods."
+    }
+  ]
+}

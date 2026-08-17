@@ -1,0 +1,37 @@
+{
+  "illager_accept1": {
+    "sounds": [
+      "raidborn:illager_accept1"
+    ]
+  },
+  "illager_accept2": {
+    "sounds": [
+      "raidborn:illager_accept2"
+    ]
+  },
+  "illager_accept3": {
+    "sounds": [
+      "raidborn:illager_accept3"
+    ]
+  },
+  "illager_warhorn_attack": {
+    "sounds": [
+      "raidborn:illager_warhorn_attack"
+    ]
+  },
+  "illager_warhorn_follow": {
+    "sounds": [
+      "raidborn:illager_warhorn_follow"
+    ]
+  },
+  "illager_warhorn_raid": {
+    "sounds": [
+      "raidborn:illager_warhorn_raid"
+    ]
+  },
+  "illager_bell": {
+    "sounds": [
+      "raidborn:illager_bell"
+    ]
+  }
+}

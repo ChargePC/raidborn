@@ -1,0 +1,14 @@
+{
+  "name": "Anywhere Pillow",
+  "icon": "raidborn:anywhere_pillow",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:anywhere_pillow",
+      "text": "Equip it in a Curio slot and press the artifact key at night or during a thunderstorm to sleep where you stand. You need solid ground, enough room, and no nearby monsters. Cooldown: 20 seconds.$(br2)Using it outside the Overworld causes an explosion.",
+      "title": "Anywhere Pillow"
+    }
+  ]
+}

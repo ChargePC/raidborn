@@ -1,0 +1,14 @@
+{
+  "name": "Illager Compendium",
+  "landing_text": "A field guide to Raidborn's alliance effects, recruitment, settlements, Village Attacks, artifacts, creatures, and transmutation recipes.",
+  "version": "0",
+  "subtitle": "Raidborn guide",
+  "creative_tab": "raidborn:raidborn_tab",
+  "use_resource_pack": true,
+  "model": "raidborn:illager_compendium",
+  "header_color": "000000",
+  "book_texture": "raidborn:textures/gui/book/compendium.png",
+  "filler_texture": "raidborn:textures/gui/book/filler.png",
+  "show_toasts": false,
+  "show_progress": false
+}

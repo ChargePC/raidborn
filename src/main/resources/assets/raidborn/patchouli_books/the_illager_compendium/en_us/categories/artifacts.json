@@ -1,0 +1,6 @@
+{
+  "name": "Artifacts",
+  "description": "Curio relics with passive effects or abilities activated with the artifact key. Most are found as rare loot or created from an Artifact Template.",
+  "icon": "raidborn:raidborn_necklace",
+  "sortnum": 1
+}

@@ -1,0 +1,13 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:villager_soul"
+  },
+  "input": {
+    "item": "minecraft:goat_horn"
+  },
+  "output": {
+    "item": "raidborn:illager_warhorn",
+    "count": 1
+  }
+}

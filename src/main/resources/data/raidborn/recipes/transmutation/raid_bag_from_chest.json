@@ -1,0 +1,13 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:villager_soul"
+  },
+  "input": {
+    "item": "minecraft:chest"
+  },
+  "output": {
+    "item": "raidborn:raid_bag",
+    "count": 1
+  }
+}

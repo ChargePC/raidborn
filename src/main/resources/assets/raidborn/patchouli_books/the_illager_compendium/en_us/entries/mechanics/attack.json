@@ -1,0 +1,49 @@
+{
+  "name": "Village Attacks",
+  "icon": "minecraft:goat_horn",
+  "category": "raidborn:mechanics",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Village Attack",
+      "text": "A Village Attack is a reverse raid: you and your recruited Illagers assault a village. It can begin when you enter a valid village while carrying a Raidborn alliance effect."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Valid Village",
+      "text": "By default, the village needs at least 3 living Villagers, 3 points of interest, and 1 naturally spawned Iron Golem. Beds, job sites, and bells count as points of interest. Villagers inside boats or minecarts are ignored by default."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Objective",
+      "text": "Defeat the Villagers belonging to the attacked village before time runs out. The target list is reinforced while the Attack is active, so Villagers discovered in the same village can be added after the event begins."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Defenders",
+      "text": "Natural Iron Golems and village-linked Iron Gollets defend the village. Depending on the Attack tier and server settings, additional Iron Golems, Iron Gollets, or up to three configured defender types may appear. Hero of the Illage can also add one stronger defender."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Difficulty",
+      "text": "The alliance effect used to start the event determines the defense tier and reward quality. Illager Loyalty is the lowest tier, Illager Honor is stronger, and Hero of the Illage is the highest."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Time Limit",
+      "text": "The default time limit is 10 minutes for a small village, 15 minutes for a medium village, and 20 minutes for a large village. The Attack fails if you die. It is abandoned if you remain more than 96 blocks from the center for 30 seconds by default."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Boss Bar",
+      "text": "The red boss bar first shows the event starting phase, then tracks the remaining village targets. Registered Villagers panic and try to escape while the Attack is active."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "title": "Village Loot",
+      "item": "raidborn:village_loot",
+      "text": "Winning rewards Village Loot based on the Attack tier. Right-click the item to open it. Rewards that do not fit in your inventory drop on the ground."
+    }
+  ]
+}

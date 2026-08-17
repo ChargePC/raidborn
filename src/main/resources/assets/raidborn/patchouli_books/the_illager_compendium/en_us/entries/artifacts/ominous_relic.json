@@ -1,0 +1,13 @@
+{
+  "name": "Ominous Relic",
+  "icon": "raidborn:ominous_relic",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:ominous_relic",
+      "text": "Each nearby recruited Illager owned by you grants half a heart of maximum health while this artifact is equipped.",
+      "title": "Ominous Relic"
+    }
+  ]
+}

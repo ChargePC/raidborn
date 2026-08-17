@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": { "item": "raidborn:raidborn_necklace" },
+    "title": { "translate": "advancements.raidborn.root.title" },
+    "description": { "translate": "advancements.raidborn.root.description" },
+    "background": "raidborn:textures/gui/advancements/backgrounds/raidborn.png",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "has_villager_soul": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["raidborn:villager_soul"]
+          }
+        ]
+      }
+    }
+  }
+}

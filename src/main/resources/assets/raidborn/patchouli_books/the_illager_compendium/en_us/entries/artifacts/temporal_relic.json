@@ -1,0 +1,13 @@
+{
+  "name": "Temporal Relic",
+  "icon": "raidborn:temporal_relic",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:temporal_relic",
+      "text": "Makes item and ability cooldowns recover 30% faster while equipped.",
+      "title": "Temporal Relic"
+    }
+  ]
+}

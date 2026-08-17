@@ -1,0 +1,6 @@
+{
+  "name": "Effects",
+  "description": "Permanent alliance effects that make Illagers friendly and determine how many recruitment slots you have.",
+  "icon": "raidborn:textures/mob_effect/illager_loyalty.png",
+  "sortnum": 2
+}

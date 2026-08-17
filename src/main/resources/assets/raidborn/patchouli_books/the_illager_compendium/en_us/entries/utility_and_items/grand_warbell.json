@@ -1,0 +1,24 @@
+{
+  "name": "Grand Warbell",
+  "icon": "raidborn:grand_warbell",
+  "category": "raidborn:utility_and_items",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Grand Warbell",
+      "item": "raidborn:grand_warbell",
+      "text": "Right-click the bell to assign nearby recruited Illagers to $(l:raidborn:mechanics/settlement_mode)Settlement Mode$(/l). The default settlement area extends 48 blocks from the bell."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Settlement Center",
+      "text": "Linked Illagers stop following the player, use beds and workstations, sleep, wander around the settlement, and may become available for trading."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Obtaining",
+      "text": "The Grand Warbell is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Breaking it removes Settlement Mode from nearby linked Illagers."
+    }
+  ]
+}
