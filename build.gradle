@@ -115,9 +115,17 @@ jar {
     // A partir do Gradle 7 isso é erro em vez de aviso. As duas cópias são idênticas.
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
+    // A MIT exige que o texto da licença acompanhe as cópias do software. mods.toml só carrega o
+    // nome dela, então o arquivo em si vai junto no jar — quem baixar o mod tem o texto sem
+    // precisar do repositório.
+    from(rootProject.file('LICENSE.txt'))
+
     manifest {
         attributes([
-                'MixinConfigs': 'raidborn.mixins.json'
+                'MixinConfigs'          : 'raidborn.mixins.json',
+                'Implementation-Title'  : 'Raidborn: Ally with Illagers',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor' : 'Randomcara7'
         ])
     }
 }

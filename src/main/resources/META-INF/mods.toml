@@ -1,12 +1,15 @@
 modLoader="javafml"
 loaderVersion="[47,)"
-license="MIT"
+license="MIT (LICENSE.txt)"
+issueTrackerURL="https://github.com/ChargePC/raidborn/issues"
 
 [[mods]]
 modId="raidborn"
 version="0.1-1.20.1"
 displayName="Raidborn: Ally with Illagers"
-authors="Randomcara7 and I_DRAW_THINGS"
+displayURL="https://github.com/ChargePC/raidborn"
+authors="Randomcara7, I_DRAW_THINGS"
+credits="Randomcara7 (github.com/ChargePC) — criador do mod: design, programação e balanceamento. I_DRAW_THINGS — arte: texturas de itens e blocos, modelos e texturas de entidades. Licenciado sob MIT; o texto completo acompanha o jar em LICENSE.txt."
 description='''Join the wrong side'''
 
 [[dependencies.raidborn]]

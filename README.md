@@ -11,8 +11,9 @@ assentamentos, artefatos e transmutação.
 | **Forge** | 47.4.9 |
 | **Java** | 17 |
 | **Versão do mod** | 0.1-1.20.1 |
-| **Autores** | Randomcara7 e I_DRAW_THINGS |
-| **Licença** | [MIT](LICENSE) |
+| **Autores** | Randomcara7 e I_DRAW_THINGS — veja [Créditos](#créditos) |
+| **Licença** | [MIT](LICENSE.txt) |
+| **Bugs e sugestões** | [Issues](https://github.com/ChargePC/raidborn/issues) |
 
 ## Dependências
 
@@ -71,3 +72,19 @@ net/randomcara/raidborn/
 ├── integration/     compat com JEI
 └── mixin/           mixins (config em raidborn.mixins.json)
 ```
+
+## Créditos
+
+**Randomcara7** ([github.com/ChargePC](https://github.com/ChargePC)) — criador do mod. Design do
+sistema de recrutamento e assentamentos, programação e balanceamento.
+
+**I_DRAW_THINGS** — arte. Texturas de itens e blocos, modelos e texturas das entidades
+(beast, grumblager, iron gollet, juggernaut).
+
+Os mesmos créditos estão no campo `credits` de
+[`mods.toml`](src/main/resources/META-INF/mods.toml), então aparecem na tela de mods do jogo.
+
+## Licença
+
+MIT — texto completo em [LICENSE.txt](LICENSE.txt). O arquivo também é embarcado no jar em
+`build.gradle`, para que o texto acompanhe as cópias distribuídas do mod, como a MIT exige.
