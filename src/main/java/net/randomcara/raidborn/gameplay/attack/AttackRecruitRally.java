@@ -14,11 +14,11 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 import java.util.List;
 
 /**
- * Regroups the owner's patrol when an Attack starts.
+ * Pulls the owner's patrol back together when an Attack kicks off.
  *
- * <p>{@link FollowOwnerGoal} only teleports a recruit after 40 blocks, and
- * {@code AttackIllagerAIHandler} registers as allies only what is already inside the village area,
- * so stragglers arrived mid-Attack or never at all.
+ * <p>{@link FollowOwnerGoal} won't teleport a recruit until it's 40 blocks out, and
+ * {@code AttackIllagerAIHandler} only registers allies that are already inside the village area.
+ * Result was stragglers turning up halfway through the fight, or not at all.
  */
 public final class AttackRecruitRally {
     private static final double ALREADY_CLOSE_DIST_SQR = 10.0D * 10.0D;

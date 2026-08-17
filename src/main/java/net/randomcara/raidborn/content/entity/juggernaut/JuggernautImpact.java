@@ -15,15 +15,16 @@ import net.randomcara.raidborn.content.entity.VillageSide;
 import javax.annotation.Nullable;
 
 /**
- * The shockwaves a Juggernaut sends through the ground: the two-armed slam, and the thud when it
- * lands from a height.
+ * Ground shockwaves: the two-armed slam and the thud on landing from a height. Neither one damages
+ * anything or breaks blocks.
  *
- * <p>Neither deals damage or breaks blocks. Both use {@code push} rather than {@code knockback}
- * because it adds straight to deltaMovement and therefore still moves knockback-resistant targets;
- * {@code hurtMarked} is what makes the server send the new velocity to the client.
+ * <p>Both use {@code push} instead of {@code knockback} because it goes straight onto
+ * deltaMovement, so knockback-resistant targets still get moved. {@code hurtMarked} is what makes
+ * the server bother sending the new velocity to the client.
  */
 final class JuggernautImpact {
 
+    // all eyeballed, tweak if the slam ever feels weak
     private static final double SLAM_RADIUS = 4.5D;
     private static final double SLAM_VERTICAL_POWER = 0.75D;
     private static final double SLAM_HORIZONTAL_POWER = 0.12D;

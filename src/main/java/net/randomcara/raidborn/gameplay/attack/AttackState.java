@@ -1,10 +1,8 @@
 package net.randomcara.raidborn.gameplay.attack;
 
 /**
- * Where an Attack is in its lifecycle.
- *
- * <p>An Attack runs, then finishes exactly one way. Keeping that as a single field is what stops
- * combinations like "won and abandoned" from existing at all.
+ * Where an Attack is in its lifecycle. It runs, then it ends exactly one way. Single field so
+ * nonsense like "won and abandoned" can't be represented.
  */
 public enum AttackState {
     ACTIVE,

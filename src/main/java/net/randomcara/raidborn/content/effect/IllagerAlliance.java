@@ -9,12 +9,11 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 /**
- * The three pacts a player can hold with the illagers.
+ * The three pacts a player can hold with the illagers. Mutually exclusive.
  *
- * <p>They are mutually exclusive and share one rulebook — illagers ignore you, villagers refuse to
- * trade, iron golems attack on sight — enforced in {@link IllagerAllianceEvents}. What actually
- * differs between them is only what appears below: how Bad Omen interacts with the pact, and what
- * breaks it.
+ * <p>Base rules are the same for all of them (illagers ignore you, villagers won't trade, golems
+ * still attack) and live in {@link IllagerAllianceEvents}. Only the bad omen handling and the break
+ * condition differ, which is what's below.
  */
 public enum IllagerAlliance {
     LOYALTY(

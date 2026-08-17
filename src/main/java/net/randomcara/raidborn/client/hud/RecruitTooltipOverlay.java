@@ -153,7 +153,7 @@ public final class RecruitTooltipOverlay {
         String hpText = Integer.toString(currentHp);
         String slotsText = Integer.toString(slots);
 
-        // The trailing "true" turns on the vanilla text drop shadow.
+        // trailing true = vanilla drop shadow
         guiGraphics.drawString(font, hpText, x + HP_X, y + HP_Y, TEXT_COLOR, true);
         guiGraphics.drawString(font, slotsText, x + SLOTS_X, y + SLOTS_Y, TEXT_COLOR, true);
     }

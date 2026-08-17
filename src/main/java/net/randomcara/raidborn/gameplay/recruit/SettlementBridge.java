@@ -67,14 +67,13 @@ public final class SettlementBridge {
     /**
      * Re-checks everything a settlement member claims but does not own.
      *
-     * <p>Its bell, its bed and its workstation are blocks, and the player can mine any of them while
-     * the mob is far away. Breaking a bell fires {@link #clearVillageOnBrokenBell} for the members
-     * loaded around it, but one standing in an unloaded chunk never hears about it, and there is no
-     * event at all for a bed or a workstation disappearing. So this runs whenever the member is
-     * ticked near a player, which is the first moment it could act on the loss anyway.
+     * <p>The bell, bed and workstation are all blocks and the player can mine any of them while the
+     * mob is nowhere near. Breaking a bell fires {@link #clearVillageOnBrokenBell} for members
+     * loaded around it, but one sitting in an unloaded chunk never hears, and there's no event at
+     * all for a bed or workstation vanishing. So this runs whenever the member ticks near a player,
+     * which is the earliest it could react anyway.
      *
-     * <p>That world-driven decay is why this one is periodic and
-     * {@link RecruitmentEvents#sanitizeRecruitState} is not.
+     * <p>That's why this one is periodic and {@link RecruitmentEvents#sanitizeRecruitState} isn't.
      */
     static void sanitizeVillageState(Mob mob) {
         if (!WarbellVillageData.isVillageMember(mob)) return;

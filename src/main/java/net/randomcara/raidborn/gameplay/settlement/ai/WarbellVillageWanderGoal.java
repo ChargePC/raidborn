@@ -13,11 +13,11 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstatio
 import java.util.EnumSet;
 
 /**
- * The daily routine of a settled illager: sleep at night, stand at its workstation during the day,
- * wander inside the settlement the rest of the time.
+ * Daily routine for a settled illager: sleep at night, stand at the workstation during the day,
+ * wander around the settlement otherwise.
  *
- * <p>Fighting is not part of the routine. {@link WarbellVillageDefence} answers that question first
- * every tick, and the routine only runs when there is no intruder.
+ * <p>Fighting isn't part of it. {@link WarbellVillageDefence} gets asked first every tick and the
+ * routine only runs when there's no intruder.
  */
 public class WarbellVillageWanderGoal extends Goal {
     private static final int MIN_WANDER_COOLDOWN = 40;

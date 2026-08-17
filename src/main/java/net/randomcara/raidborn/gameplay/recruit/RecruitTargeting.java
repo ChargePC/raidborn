@@ -12,8 +12,8 @@ import java.util.UUID;
 /**
  * Target protection and combat memory for recruits.
  *
- * <p>Handle with care: the vanilla revenge path is fragile. See {@link #isRevengeTargetChange} and
- * {@link #clearTargetKeepRevenge}.
+ * <p>Careful in here, the vanilla revenge path breaks if you look at it funny. See
+ * {@link #isRevengeTargetChange} and {@link #clearTargetKeepRevenge}.
  */
 public final class RecruitTargeting {
     static final double FOLLOW_TARGET_LEASH_RADIUS = 48.0D;
@@ -27,12 +27,12 @@ public final class RecruitTargeting {
     static final String TAG_FOLLOW_TARGET_EXPIRE = "raidborn_follow_target_expire";
 
     /**
-     * Clears the active target and movement but deliberately preserves {@code getLastHurtByMob()}.
+     * Clears the active target and movement but keeps {@code getLastHurtByMob()}. That's on purpose.
      *
-     * <p>Vanilla {@code HurtByTargetGoal} may still be using that revenge target while it finishes
-     * {@code start()}/{@code alertOthers()}. Clearing both at once leaves the goal with a null target
-     * and makes {@code Pillager#isAlliedTo(null)} crash the server while the pillager alerts nearby
-     * illagers.
+     * <p>Vanilla {@code HurtByTargetGoal} can still be using the revenge target while it works
+     * through {@code start()}/{@code alertOthers()}. Clear both at once and the goal is left with a
+     * null target, then {@code Pillager#isAlliedTo(null)} takes the server down while the pillager
+     * is alerting its friends.
      */
     static void clearTargetKeepRevenge(Mob mob) {
         mob.setTarget(null);
@@ -61,6 +61,8 @@ public final class RecruitTargeting {
      * {@code alertOthers()}, which hands {@code getTarget()} to {@code Pillager#isAlliedTo}. Blocking
      * the target change on that path would leave {@code getTarget()} null inside {@code alertOthers()}
      * and crash the server, so it is left to the deferred player-tick cleanup.
+     *
+     * <p>TODO: a mixin on alertOthers would be cleaner than deferring, look at this again later.
      */
     static boolean isRevengeTargetChange(Mob mob, LivingEntity newTarget) {
         return newTarget != null && newTarget == mob.getLastHurtByMob();

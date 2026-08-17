@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Who a Juggernaut holds a grudge against, and for how long.
+ * Who a Juggernaut holds a grudge against and for how long.
  *
- * <p>A grudge normally expires on its own clock. One taken during a defensive event instead lasts
- * until that event ends, so a raider cannot simply back off for half a minute mid-fight and be
- * treated as a neutral again.
+ * <p>Grudges normally expire on their own timer. Ones picked up during a defensive event last
+ * until the event is over instead, otherwise a raider could back off for 30 seconds mid fight and
+ * come back a neutral.
  *
- * <p>The map is bounded: past {@link #MEMORY_LIMIT} entries the one expiring soonest is dropped.
+ * <p>Bounded map: past {@link #MEMORY_LIMIT} entries the soonest-expiring one gets dropped.
  */
 final class JuggernautAggression {
 

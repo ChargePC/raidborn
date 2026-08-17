@@ -20,12 +20,11 @@ import java.util.EnumSet;
 import javax.annotation.Nullable;
 
 /**
- * Fetch a hurt villager, pick them up, and carry them out of danger while regeneration does the
- * work.
+ * Grab a hurt villager, carry them away from whatever hit them, let regen do the rest.
  *
- * <p>The Gollet does not heal at range: it has to reach the villager, clamp on, and then keep
- * moving away from whatever is nearby. Being interrupted is normal, so the goal is written to
- * resume rather than to run to completion.
+ * <p>No ranged healing, the Gollet has to actually reach the villager and pick them up. Getting
+ * interrupted halfway is normal, so this is written to pick up where it left off instead of
+ * assuming it runs to the end.
  */
 class HealHurtVillagerGoal extends Goal {
 
@@ -203,11 +202,11 @@ class HealHurtVillagerGoal extends Goal {
     }
 
     /**
-     * Straight at the villager, or around the houses when that is not working.
+     * Straight at the villager, or around the houses when that isn't working.
      *
-     * <p>The detour is a random position roughly in the villager's direction. It exists because a
-     * villager cowering indoors is a position the direct path repeatedly fails on while the door is
-     * two blocks to the left; walking to the general area lets the next direct path succeed.
+     * <p>The detour is just a random spot roughly toward the villager. Needed because a villager
+     * cowering indoors is somewhere the direct path keeps failing on while the door sits two blocks
+     * to the left. Walk to the general area and the next direct path usually works.
      */
     private void moveToVillager(Villager villager) {
         if (!this.preferDetour && this.gollet.getNavigation().moveTo(villager, MOVE_SPEED)) {

@@ -48,17 +48,15 @@ minecraft {
 }
 
 repositories {
-    // BentosLib é publicada localmente com `./gradlew.bat publishToMavenLocal` no projeto dela.
+    // bentoslib comes from here, run publishToMavenLocal in that project first
     mavenLocal()
 
-    // Forge primeiro: é quem serve net.minecraftforge e cpw.mods, incluindo o modlauncher 10.0.+
-    // que o eventbus pede por versão dinâmica.
+    // forge first, it serves net.minecraftforge and cpw.mods (eventbus asks for modlauncher 10.0.+)
     maven { url = 'https://maven.minecraftforge.net' }
 
-    // Cada repositório abaixo serve um grupo só, e o filtro é o que garante isso. Sem ele o Gradle
-    // pergunta a todos por todo artefato, e uma falha de infraestrutura em qualquer um deles aborta
-    // a resolução inteira em vez de cair para o próximo — foi assim que uma queda do Sponge
-    // (HTTP 522) derrubou o build por causa de um artefato que nem é de lá.
+    // content filters below. without them gradle asks every repo for every artifact, and one repo
+    // being down aborts resolution instead of falling through to the next. sponge threw 522s once
+    // and killed the build over an artifact that wasn't even hosted there.
     maven {
         name = 'SpongePowered'
         url = 'https://repo.spongepowered.org/repository/maven-public/'
@@ -110,14 +108,12 @@ mixin {
 }
 
 jar {
-    // O annotation processor do Mixin grava raidborn.refmap.json na saída de classes e o
-    // MixinGradle registra o mesmo arquivo pelo sourceSet, então ele chega duas vezes no jar.
-    // A partir do Gradle 7 isso é erro em vez de aviso. As duas cópias são idênticas.
+    // mixin's AP writes raidborn.refmap.json into the classes dir and MixinGradle registers the
+    // same file through the sourceSet, so it shows up twice. identical copies, but gradle 7+
+    // treats that as an error instead of a warning.
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    // A MIT exige que o texto da licença acompanhe as cópias do software. mods.toml só carrega o
-    // nome dela, então o arquivo em si vai junto no jar — quem baixar o mod tem o texto sem
-    // precisar do repositório.
+    // MIT wants the license text shipped alongside the software and mods.toml only carries the name
     from(rootProject.file('LICENSE.txt'))
 
     manifest {

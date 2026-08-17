@@ -16,12 +16,12 @@ import net.randomcara.raidborn.gameplay.attack.AttackManager;
 import net.randomcara.raidborn.world.settlement.SettlementSpawnMarkerEvents;
 
 /**
- * Clears runtime state held in static fields.
+ * Wipes runtime state kept in static fields.
  *
- * <p>A client process is not restarted between worlds: without this, leaving one world and opening
- * another carries positions, UUIDs and events over. The worst case was {@link SoggyRingItem},
- * whose pending-block map is keyed by dimension, and {@code minecraft:overworld} is the same key
- * in every world.
+ * <p>The client process doesn't restart between worlds, so without this you leave one world and
+ * open another with the old positions, UUIDs and events still in memory. Worst offender was
+ * {@link SoggyRingItem}: its pending-block map is keyed by dimension and
+ * {@code minecraft:overworld} is the same key in every single world.
  */
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public final class RaidbornServerLifecycle {

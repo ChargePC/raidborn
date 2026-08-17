@@ -1,6 +1,6 @@
 {
   "name": "Mechanics",
-  "description": "Recruit Illagers, command patrols, establish settlements, trade, launch Village Attacks, and use the Transmutation Table.",
+  "description": "How any of this actually works. Taking recruits, giving them orders, settling them somewhere, and pointing them at a village.",
   "icon": "minecraft:comparator",
   "sortnum": 2
 }

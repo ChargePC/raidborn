@@ -50,10 +50,8 @@ import net.randomcara.raidborn.core.registry.ModTags;
 import javax.annotation.Nullable;
 
 /**
- * Heavy defensive Iron Golem variant.
- *
- * <p>Extends {@link IronGolem} on purpose: villagers and the Hero Attack scan, which looks for
- * {@code IronGolem.class}, then recognise it as a village defender with no extra code.
+ * Heavy defensive Iron Golem variant. Extends {@link IronGolem} so villagers and the Hero Attack
+ * scan (which looks for {@code IronGolem.class}) already treat it as a defender.
  */
 public class Juggernaut extends IronGolem {
     public static final double DETECTION_RANGE = 16.0D;
@@ -452,12 +450,11 @@ public class Juggernaut extends IronGolem {
             return false;
         }
 
-        // IronGollet extends IronGolem, so it is covered here.
         if (VillageSide.isDefender(candidate)) {
             return false;
         }
 
-        // Creepers are excluded so they do not blow up the village along with the attacker.
+        // no creepers, they take the village down with the attacker
         if (candidate instanceof Creeper) {
             return false;
         }

@@ -18,8 +18,8 @@ import javax.annotation.Nullable;
 /**
  * Per-village Juggernaut state, keyed by the meeting POI (bell) position.
  *
- * <p>Living in a {@link SavedData} is what lets the natural-spawn roll happen exactly once and the
- * post-raid timer keep running with the chunk unloaded.
+ * <p>It's {@link SavedData} so the natural spawn roll only ever happens once and the post-raid
+ * timer keeps ticking while the chunk is unloaded.
  */
 public class JuggernautVillageData extends SavedData {
     private static final String DATA_NAME = Raidborn.MOD_ID + "_juggernaut_villages";

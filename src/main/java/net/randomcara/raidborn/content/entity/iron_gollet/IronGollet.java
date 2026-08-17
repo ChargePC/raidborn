@@ -230,7 +230,7 @@ public class IronGollet extends IronGolem {
 
         @Override
         public boolean canUse() {
-            // Cheap check first: super scans entities in a radius of 10.
+            // cheap check first, super scans a 10 block radius
             return !this.gollet.hasHealingPriority() && super.canUse();
         }
     }
@@ -461,10 +461,9 @@ public class IronGollet extends IronGolem {
     }
 
     /**
-     * Only drops the passenger when the Gollet is really gone.
-     *
-     * <p>{@code remove} also runs for {@code UNLOADED_TO_CHUNK} and {@code CHANGED_DIMENSION};
-     * dismounting there dropped the carried villager on every chunk unload.
+     * Only drops the passenger when the Gollet is actually gone. {@code remove} also fires for
+     * {@code UNLOADED_TO_CHUNK} and {@code CHANGED_DIMENSION}, and dismounting on those was
+     * dropping the carried villager every chunk unload.
      */
     @Override
     public void remove(RemovalReason reason) {
@@ -605,7 +604,7 @@ public class IronGollet extends IronGolem {
             return false;
         }
 
-        // Creepers are excluded so they do not blow up the village along with the attacker.
+        // creepers would level the village along with whoever they were sent after
         if (threat instanceof Creeper || VillageSide.isDefender(threat)) {
             return false;
         }
@@ -646,11 +645,11 @@ public class IronGollet extends IronGolem {
     }
 
     /**
-     * Nearest hurt villager that no other Gollet is already heading for.
+     * Nearest hurt villager no other Gollet is already going for.
      *
-     * <p>Coordination is read from the neighbouring Gollets themselves rather than a global registry:
-     * each publishes its target in {@link #healingTargetUuid}. If two pick the same villager on the
-     * same tick, the farther one switches on the next.
+     * <p>No global registry, each Gollet just publishes its target in {@link #healingTargetUuid} and
+     * the others read it off them. Two can still pick the same villager on the same tick; the
+     * farther one gives up next tick.
      */
     @Nullable
     public Villager findHurtVillager() {

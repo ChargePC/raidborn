@@ -37,10 +37,10 @@ public class FollowOwnerGoal extends Goal {
     /**
      * How fast a recruit should actually travel, in blocks per tick, and how often it may repath.
      *
-     * <p>The goal speed is a multiplier over {@link Attributes#MOVEMENT_SPEED}, and recruits are
-     * every illager in the game plus whatever other mods add, so a single multiplier makes the fast
-     * ones sprint and leaves the slow ones behind. Stating the wanted speed and dividing it out in
-     * {@link #getFollowSpeed} keeps the whole squad moving together.
+     * <p>Goal speed is a multiplier on {@link Attributes#MOVEMENT_SPEED}, and recruits can be any
+     * illager in the game plus whatever other mods throw in, so one flat multiplier has the fast
+     * ones sprinting off and the slow ones trailing. Naming the target speed and dividing it back
+     * out in {@link #getFollowSpeed} keeps the squad together.
      */
     private record FollowTuning(double nearSpeed, double farSpeed, int repathTicks) {
     }
@@ -140,8 +140,8 @@ public class FollowOwnerGoal extends Goal {
     /**
      * True when the mob has a fight worth staying for, so the follow stands aside.
      *
-     * <p>Targets that died, or that turned out to be the owner or a squadmate, are dropped here:
-     * they would otherwise block the follow for as long as the reference lived.
+     * <p>Dead targets, and ones that turn out to be the owner or a squadmate, get dropped here.
+     * Otherwise they block the follow for as long as the reference sticks around.
      */
     private boolean hasBlockingCombatTarget() {
         LivingEntity target = this.mob.getTarget();
@@ -307,7 +307,7 @@ public class FollowOwnerGoal extends Goal {
         if (distSqr > STOP_FOLLOW_SQR && (walkingIntoWall || stalled)) {
             this.stuckTicks += STUCK_CHECK_INTERVAL_TICKS;
 
-            // A single step or a fence gate is the common case, and a hop clears both.
+            // usually just a step or a fence gate, a hop clears both
             if (walkingIntoWall && this.mob.onGround()) {
                 this.mob.getJumpControl().jump();
             }

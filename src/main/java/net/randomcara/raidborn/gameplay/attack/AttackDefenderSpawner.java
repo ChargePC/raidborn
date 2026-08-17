@@ -37,11 +37,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Puts the village's defence on the field when an Attack starts, and takes it off when it ends.
+ * Puts the village defence on the field when an Attack starts and clears it when the Attack ends.
  *
- * <p>Three questions, answered in order and all only ever asked from here: how many defenders the
- * tier owes after discounting the ones already standing around, where each one fits, and the
- * spawning and bookkeeping itself. Who they fight afterwards is {@link DefenderTargeting}.
+ * <p>Works out how many defenders the tier still owes after counting the ones already standing
+ * around, finds somewhere for each of them to fit, then spawns and tracks them. Nothing else calls
+ * into this. Who they end up fighting is {@link DefenderTargeting}'s problem.
  */
 public final class AttackDefenderSpawner {
 
@@ -91,9 +91,7 @@ public final class AttackDefenderSpawner {
         }
     }
 
-    // ------------------------------------------------------------------------------------------
-    // How many
-    // ------------------------------------------------------------------------------------------
+    // --- how many ---
 
     /** The tier picks the ratio per villager, the config caps each type. */
     private static Map<EntityType<?>, Integer> plannedForTier(AttackRaidbornHooks.AttackTier tier, int villagers) {
@@ -158,9 +156,9 @@ public final class AttackDefenderSpawner {
     /**
      * The ceiling on a whole wave, on top of the per-type limits each tier already applies.
      *
-     * <p>Stock values leave room to spare — the most any tier asks for is seven — so this only comes
-     * into play once someone raises the per-tier maximums or turns on the extra defender slots. A
-     * value of zero switches off the per-villager wave entirely.
+     * <p>Default config has plenty of headroom (no tier asks for more than seven), so this only
+     * matters once someone bumps the per-tier maximums or enables the extra defender slots. Zero
+     * turns the per-villager wave off completely.
      */
     private static int capForVillageSize(int villagers) {
         if (villagers <= 5) {
@@ -228,9 +226,7 @@ public final class AttackDefenderSpawner {
         AttackRaidbornHooks.markExistingAttackDefender(defender, attack.getAttackId());
     }
 
-    // ------------------------------------------------------------------------------------------
-    // Spawning
-    // ------------------------------------------------------------------------------------------
+    // --- spawning ---
 
     /**
      * Types are filled in the order they were planned, so the golems and gollets a tier promises are
@@ -295,7 +291,7 @@ public final class AttackDefenderSpawner {
 
         if (hasJuggernautInVillage(attack, level)) {
             Raidborn.LOGGER.debug(
-                    "Juggernaut: Hero Attack em {} já tem um Juggernaut na área, mantendo o existente",
+                    "Juggernaut: Hero Attack at {} already has one in the area, keeping it",
                     attack.getCenter().toShortString()
             );
             return;
@@ -323,7 +319,7 @@ public final class AttackDefenderSpawner {
 
         if (juggernaut == null) {
             Raidborn.LOGGER.debug(
-                    "Juggernaut: Hero Attack em {} sem espaço livre para o defensor",
+                    "Juggernaut: Hero Attack at {} has no free space for the defender",
                     attack.getCenter().toShortString()
             );
             return;
@@ -404,20 +400,18 @@ public final class AttackDefenderSpawner {
         return true;
     }
 
-    // ------------------------------------------------------------------------------------------
-    // Duplicate guards
-    // ------------------------------------------------------------------------------------------
+    // --- dupe guards ---
 
     /**
      * A village fields one Juggernaut at a time.
      *
-     * <p>The natural and raid spawns each keep their own slot in the village record, but an Attack
-     * has no such slot and cannot use theirs: it can start next to a Juggernaut either of them
-     * already placed, or next to one a previous Attack left behind because its chunk was unloaded
-     * when the cleanup ran. So the check is against the ground rather than against bookkeeping.
+     * <p>Natural and raid spawns each get their own slot in the village record. An Attack doesn't
+     * have one and can't borrow theirs, since it might start right next to a Juggernaut either of
+     * them placed, or one a previous Attack abandoned because the chunk was unloaded when cleanup
+     * ran. So check the ground, not the bookkeeping.
      *
-     * <p>Whoever is already standing there has been registered as a defender of this Attack by the
-     * detector scan, which collects {@link IronGolem} and therefore covers the Juggernaut too.
+     * <p>Anything already standing there got registered as a defender of this Attack by the detector
+     * scan, which collects {@link IronGolem} and so picks up the Juggernaut too.
      */
     private static boolean hasJuggernautInVillage(AttackInstance attack, ServerLevel level) {
         return !level.getEntitiesOfClass(Juggernaut.class, villageScanBox(attack), Juggernaut::isAlive).isEmpty();
@@ -437,9 +431,7 @@ public final class AttackDefenderSpawner {
         return new AABB(attack.getCenter()).inflate(Math.max(16.0D, attack.getRadius()));
     }
 
-    // ------------------------------------------------------------------------------------------
-    // Where they fit
-    // ------------------------------------------------------------------------------------------
+    // --- placement ---
 
     /**
      * Ring around the villager first, then around the nearest POI, then a wider ring around the
@@ -496,9 +488,9 @@ public final class AttackDefenderSpawner {
     /**
      * Searches for ground starting from the origin height, not from the top of the terrain.
      *
-     * <p>{@code getHeightmapPos} returns the house roof when x/z falls on a building, and a flat roof
-     * passes any "solid floor, open sky" test, which is how defenders ended up spawning on rooftops.
-     * The villager used as anchor stands on the ground, so its height is the right reference.
+     * <p>{@code getHeightmapPos} gives you the house roof whenever x/z lands on a building, and a
+     * flat roof passes any "solid floor, open sky" test. That's how defenders kept spawning on
+     * rooftops. The anchor villager is standing on actual ground, so use its height instead.
      */
     @Nullable
     private static BlockPos groundNear(ServerLevel level, EntityType<?> entityType, int x, int z, int originY) {

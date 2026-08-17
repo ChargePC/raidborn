@@ -59,8 +59,8 @@ public final class RecruitmentEvents {
     /**
      * Whether the hover tooltip should offer this mob as recruitable.
      *
-     * <p>Reads the same rules the recruitment itself uses, so the tooltip cannot promise a recruit
-     * the config or a missing integration would refuse.
+     * <p>Same rules the actual recruitment uses, so the tooltip can't promise something the config
+     * or a missing integration would then refuse.
      */
     public static boolean isRecruitableTooltipTarget(Entity entity) {
         return recruitmentEnabledFor(entity) && isRecruitable(entity);
@@ -176,14 +176,14 @@ public final class RecruitmentEvents {
      * Enforces the one invariant of recruitment: {@code TAG_RECRUITED} and {@code TAG_OWNER} are
      * either both present or both absent, and a recruit is never also a settlement member.
      *
-     * <p>Every path in the mod writes the pair together, so it cannot drift on its own. What can
-     * break it is persistent data outliving the code that wrote it: an entity conversion carries the
-     * tag compound over to a different mob, {@code /data} can set one half of it, and other mods
-     * copying entity NBT do the same. Half a pair leaves either an ownerless recruit that nothing
-     * commands or an owned mob that no goal follows, and neither is recoverable in play.
+     * <p>Every path in the mod writes the pair together so it can't drift by itself. What breaks it
+     * is persistent data outliving the code that wrote it: entity conversion drags the tag compound
+     * onto a different mob, {@code /data} can set one half, other mods copying entity NBT do the
+     * same. Half a pair gives you either an ownerless recruit nothing can command or an owned mob no
+     * goal follows, and there's no way to fix either in game.
      *
-     * <p>Called at the points where such a mob first surfaces — entity join, the recruitment
-     * interaction, and the target-change event — and deliberately not on a timer.
+     * <p>Called where such a mob first turns up: entity join, the recruitment interaction and the
+     * target-change event. Not on a timer, on purpose.
      */
     static void sanitizeRecruitState(Mob mob) {
         boolean recruited = mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED);

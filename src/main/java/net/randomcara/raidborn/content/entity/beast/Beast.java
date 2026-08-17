@@ -686,7 +686,7 @@ public class Beast extends AbstractIllager {
 
     private final class BeastMeleeAttackGoal extends MeleeAttackGoal {
         private BeastMeleeAttackGoal() {
-            // longMemory = false keeps the Beast from insisting forever on a target it cannot reach.
+            // longMemory false, otherwise it fixates on targets it can't reach
             super(Beast.this, 1.05D, false);
         }
 

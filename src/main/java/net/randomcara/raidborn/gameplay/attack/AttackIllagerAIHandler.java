@@ -126,10 +126,9 @@ public final class AttackIllagerAIHandler {
      * Who an ally goes for, in order: whoever is hitting it, whoever is hitting the squad, whoever
      * is hitting the owner, then the objective itself.
      *
-     * <p>Same policy shape as {@link DefenderTargeting} on the other side, written out as a ladder
-     * rather than shared with it: the two pick from different pools (threats vs. villagers and
-     * defenders) and only the retarget window is genuinely common, which is why that is the part
-     * that lives in {@link RetargetWindow}.
+     * <p>Same shape as {@link DefenderTargeting} on the other side but written out separately, since
+     * the two pull from different pools (threats vs villagers and defenders). The retarget window is
+     * the only bit actually shared, and that's in {@link RetargetWindow}.
      */
     private static LivingEntity chooseTarget(AttackInstance attack,
                                              Mob ally,

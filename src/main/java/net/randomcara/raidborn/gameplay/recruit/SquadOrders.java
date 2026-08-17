@@ -146,8 +146,8 @@ public final class SquadOrders {
 
     /**
      * Drops everything that would make the mob keep fighting: the active target, both revenge
-     * slots, and any path it was running. The single place this is done — capture, release,
-     * teleport and order changes all route here so a recruit cannot come back still swinging.
+     * slots, and whatever path it was running. Only place this happens: capture, release, teleport
+     * and order changes all go through here so a recruit can't come back still swinging.
      */
     public static void clearCombatState(Mob mob) {
         mob.setTarget(null);

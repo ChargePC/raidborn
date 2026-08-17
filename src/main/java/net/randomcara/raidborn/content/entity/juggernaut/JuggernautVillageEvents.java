@@ -144,10 +144,11 @@ public final class JuggernautVillageEvents {
     /**
      * The link is only dropped when the Juggernaut actually dies, in {@link #onJuggernautDeath}.
      *
-     * <p>"Not found" is used as confirmation only, never as a death: {@code level.getEntity} returns
-     * null for an unloaded chunk and the Juggernaut never despawns ({@code removeWhenFarAway} is
-     * false). Treating that as a death marked the day of death and, five days later, the village
-     * gained a second natural Juggernaut with the first one still alive.
+     * <p>"Not found" never counts as a death, only as confirmation. {@code level.getEntity} returns
+     * null for an unloaded chunk and the Juggernaut never despawns anyway
+     * ({@code removeWhenFarAway} is false). Treating it as a death stamped the death day and five
+     * days later the village got a second natural Juggernaut while the first was still walking
+     * around.
      */
     private static boolean isJuggernautAlive(ServerLevel level, UUID id) {
         return level.getEntity(id) instanceof Juggernaut juggernaut && juggernaut.isAlive();
@@ -172,9 +173,9 @@ public final class JuggernautVillageEvents {
             record.setNaturalRoll(allowed);
 
             Raidborn.LOGGER.debug(
-                    "Juggernaut: vila em {} sorteada -> {} (chance {}%)",
+                    "Juggernaut: rolled village at {} -> {} (chance {}%)",
                     bellPos.toShortString(),
-                    allowed ? "recebe defensor natural" : "sem defensor natural",
+                    allowed ? "gets a natural defender" : "no natural defender",
                     (int) (RaidbornServerConfig.getJuggernautNaturalSpawnChance() * 100.0F)
             );
 
@@ -226,14 +227,14 @@ public final class JuggernautVillageEvents {
 
         if (juggernaut == null) {
             Raidborn.LOGGER.debug(
-                    "Juggernaut: sem espaço livre perto do sino em {}, tentando de novo no próximo scan",
+                    "Juggernaut: no free space near the bell at {}, retrying on the next scan",
                     bellPos.toShortString()
             );
             return false;
         }
 
         Raidborn.LOGGER.debug(
-                "Juggernaut natural criado em {} para a vila de {}",
+                "Natural Juggernaut spawned at {} for the village at {}",
                 juggernaut.blockPosition().toShortString(),
                 bellPos.toShortString()
         );
@@ -375,8 +376,8 @@ public final class JuggernautVillageEvents {
      * Looks for a 3x3x3 clearing without water, lava or collisions; the Juggernaut is almost three
      * blocks wide.
      *
-     * <p>Rings outward from the bell rather than random points: a village centre is full of houses
-     * and paths, and loose sampling failed almost every time.
+     * <p>Rings outward from the bell instead of sampling random points. A village centre is all
+     * houses and paths, so random sampling missed nearly every time.
      */
     @Nullable
     public static BlockPos findSpawnPosition(ServerLevel level, BlockPos origin) {
@@ -403,10 +404,10 @@ public final class JuggernautVillageEvents {
     /**
      * Tests the heights at that x/z starting from the origin level, nearest first, never far above it.
      *
-     * <p>Not {@code getHeightmapPos} directly: it returns the top of the terrain at that x/z, which
-     * inside a village is the house roof. A flat roof passes {@link #isValidSpawnArea} easily, so the
-     * Juggernaut spawned on top of the building; at 2.9 blocks wide its box then overhangs the slab
-     * and clips the walls, and since {@code isPushable()} is false it is never pushed out afterwards.
+     * <p>Can't just use {@code getHeightmapPos}, it gives the top of the terrain at that x/z, which
+     * inside a village means a house roof. Flat roofs sail through {@link #isValidSpawnArea}, so the
+     * Juggernaut ended up on top of buildings. At 2.9 blocks wide its box overhangs the slab and
+     * clips the walls, and {@code isPushable()} is false so nothing ever shoves it back out.
      */
     @Nullable
     private static BlockPos findGroundNearOrigin(ServerLevel level, int x, int z, int originY) {

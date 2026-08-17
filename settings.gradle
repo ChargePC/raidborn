@@ -1,7 +1,7 @@
 pluginManagement {
-    // Cada repositório serve apenas o seu próprio grupo. Os plugins usam versão dinâmica ('1.+',
-    // '0.7.+'), o que obriga o Gradle a consultar a rede, e sem os filtros ele pergunta a todos os
-    // repositórios por todos os plugins: basta um deles estar fora do ar para o build nem começar.
+    // same story as build.gradle: the plugins use dynamic versions ('1.+', '0.7.+') so gradle has
+    // to hit the network, and without these filters it asks every repo for every plugin. one repo
+    // down and the build doesn't even start.
     repositories {
         gradlePluginPortal()
 

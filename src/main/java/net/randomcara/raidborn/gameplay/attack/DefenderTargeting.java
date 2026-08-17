@@ -21,13 +21,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Hands every Attack defender someone to fight.
+ * Hands each Attack defender someone to fight.
  *
- * <p>Vanilla target goals only see what is in front of them, so a squad left to itself piles onto
- * the first raider it finds and ignores the player. This picks targets for the squad as a whole.
+ * <p>Vanilla target goals only look at what's in front of them, so a squad left alone dogpiles the
+ * first raider it trips over and ignores the player entirely. This assigns targets for the group.
  *
- * <p>The mirror of this runs in {@link AttackIllagerAIHandler} for the player's side: same shape,
- * opposite point of view.
+ * <p>{@link AttackIllagerAIHandler} does the same thing for the player's side.
  */
 final class DefenderTargeting {
 
@@ -210,9 +209,9 @@ final class DefenderTargeting {
     /**
      * The target has to pass the defender's own rules.
      *
-     * <p>Without this a Juggernaut was handed a target 90 blocks away, its {@code aiStep} cleared it
-     * on the next tick for exceeding the chase range, and the two systems swapped the field 20 times
-     * a second, invalidating the path on every swap.
+     * <p>Without it a Juggernaut got handed a target 90 blocks out, {@code aiStep} cleared it the
+     * next tick for being past the chase range, and the two of them fought over the field 20 times
+     * a second, killing the path every time.
      */
     private static boolean canTarget(Mob defender, LivingEntity threat) {
         if (threat == defender || !threat.isAlive()) {

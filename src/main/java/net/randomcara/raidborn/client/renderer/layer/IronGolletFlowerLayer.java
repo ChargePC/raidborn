@@ -15,10 +15,8 @@ import net.randomcara.raidborn.client.model.IronGolletModel;
 import net.randomcara.raidborn.content.entity.iron_gollet.IronGollet;
 
 /**
- * Poppy offered to villagers, equivalent to {@code IronGolemFlowerLayer}.
- *
- * <p>The vanilla layer is typed on {@code IronGolem} and reads the golem model, so it cannot be
- * reused here.
+ * Poppy the Gollet holds out to villagers. Same idea as {@code IronGolemFlowerLayer}, which is
+ * typed on {@code IronGolem} and reads the golem model, so it can't be reused directly.
  */
 @OnlyIn(Dist.CLIENT)
 public class IronGolletFlowerLayer extends RenderLayer<IronGollet, IronGolletModel<IronGollet>> {

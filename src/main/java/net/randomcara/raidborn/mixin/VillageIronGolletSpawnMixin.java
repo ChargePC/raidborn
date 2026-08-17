@@ -122,10 +122,10 @@ public abstract class VillageIronGolletSpawnMixin {
     }
 
     /**
-     * Keeps the two Gollets from overlapping and requires solid ground.
+     * Keeps the two Gollets from overlapping, and wants solid ground under them.
      *
-     * <p>Returns {@code null} when no candidate fits: the previous fallback was the origin itself,
-     * which placed the Gollet inside a block or floating.
+     * <p>Returns {@code null} if nothing fits. Used to fall back to the origin itself, which put
+     * the Gollet inside a block or hovering.
      */
     @Unique
     @org.jetbrains.annotations.Nullable

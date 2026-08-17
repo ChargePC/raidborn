@@ -16,14 +16,14 @@ import java.util.Comparator;
 import javax.annotation.Nullable;
 
 /**
- * Village defence for a settled illager: who counts as an intruder, and how to get to them.
+ * Village defence for a settled illager: who counts as an intruder and how to reach them.
  *
- * <p>Kept apart from {@link WarbellVillageWanderGoal} because the two answer different questions.
- * The goal owns the daily routine — sleep, work, wander — and asks this once per tick whether there
- * is anything to fight instead.
+ * <p>Separate from {@link WarbellVillageWanderGoal} since they answer different questions. The goal
+ * owns the daily routine (sleep, work, wander) and just asks this once a tick whether there's
+ * something to fight instead.
  *
- * <p>Combat is leashed to the settlement on purpose: a settled illager that chases a golem over the
- * hill stops being a villager and never finds its way back.
+ * <p>Combat stays leashed to the settlement. A settled illager that chases a golem over the hill
+ * stops being a villager and never comes back.
  */
 class WarbellVillageDefence {
 
@@ -47,8 +47,8 @@ class WarbellVillageDefence {
     /**
      * The intruder this mob should be fighting, or null to carry on with the routine.
      *
-     * <p>A target already set is kept as long as it is alive and both sides are still inside the
-     * settlement; otherwise the area is rescanned, at most once every {@link #SCAN_INTERVAL_TICKS}.
+     * <p>Keeps an existing target while it's alive and both sides are still inside the settlement,
+     * otherwise rescans, at most once per {@link #SCAN_INTERVAL_TICKS}.
      */
     @Nullable
     LivingEntity selectTarget(Mob mob, BlockPos bellPos) {

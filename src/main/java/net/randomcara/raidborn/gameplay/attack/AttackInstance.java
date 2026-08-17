@@ -42,7 +42,7 @@ public class AttackInstance {
     private final Set<UUID> participatingRecruitUuids = new LinkedHashSet<>();
     private final Set<BlockPos> villagePoiPositions = new LinkedHashSet<>();
 
-    /** Resolved once on start: the event centre does not move. */
+    /** Resolved once on start, the event center doesn't move. */
     @Nullable
     private BlockPos bellPos;
 

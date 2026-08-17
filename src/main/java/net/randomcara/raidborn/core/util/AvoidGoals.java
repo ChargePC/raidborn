@@ -17,16 +17,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 /**
- * Reads which entity type an {@link AvoidEntityGoal} runs away from.
+ * Reads which entity type an {@link AvoidEntityGoal} is running away from.
  *
- * <p>{@code AvoidEntityGoal} keeps that type in a private field with no accessor, so reflection is
- * the only way to tell "flees from players" apart from "flees from wolves" before deciding to strip
- * the goal. Resolved fields are cached per goal class: the lookup happens on every entity join, and
- * scanning the field table each time would be wasted work.
+ * <p>The type sits in a private field with no accessor, so reflection is the only way to tell
+ * "flees from players" from "flees from wolves" before stripping the goal. Fields get cached per
+ * goal class, since this runs on every entity join and rescanning the field table each time is
+ * pointless.
  *
- * <p>Only fields declared directly on the goal's own class are considered, which is why a mod's
- * subclass of {@code AvoidEntityGoal} reports {@code null} — the inherited field is not visible
- * here. That is deliberate: it also keeps this from stripping Raidborn's own avoid goal.
+ * <p>Only fields declared on the goal's own class count, so a mod subclassing
+ * {@code AvoidEntityGoal} comes back {@code null}. Fine by me: it also stops this from eating
+ * Raidborn's own avoid goal.
  */
 public final class AvoidGoals {
     private static final Map<Class<?>, List<Field>> TYPE_FIELDS = new ConcurrentHashMap<>();

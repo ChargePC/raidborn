@@ -38,7 +38,7 @@ public class ClientModEvents {
         });
     }
 
-    // The per-item area colour lives here because BentosLib knows no items: it only holds the
+    // per-item area color lives here because BentosLib knows nothing about items, it only holds the
     // registry we fill on init.
     private static void registerTotemAreaVisuals() {
         AreaVisualClient.register(

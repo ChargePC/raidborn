@@ -1,90 +1,77 @@
 # Raidborn: Ally with Illagers
 
-> Join the wrong side
+Join the wrong side.
 
-Mod para Minecraft 1.20.1 (Forge) que coloca o jogador do lado dos illagers: recrutamento,
-assentamentos, artefatos e transmutação.
+Forge mod for Minecraft 1.20.1. You get to play on the illager side for once: recruit them
+into a squad, settle them around a warbell, raid villages, and turn junk into artifacts at the
+transmutation table.
 
-| | |
-|---|---|
-| **Minecraft** | 1.20.1 |
-| **Forge** | 47.4.9 |
-| **Java** | 17 |
-| **Versão do mod** | 0.1-1.20.1 |
-| **Autores** | Randomcara7 e I_DRAW_THINGS — veja [Créditos](#créditos) |
-| **Licença** | [MIT](LICENSE.txt) |
-| **Bugs e sugestões** | [Issues](https://github.com/ChargePC/raidborn/issues) |
+Still 0.1, so expect rough edges. Bugs and ideas go in the
+[issues](https://github.com/ChargePC/raidborn/issues).
 
-## Dependências
+## What you need
 
-Obrigatórias em runtime:
+Required at runtime:
 
-- **BentosLib** `0.1-1.20.1` — biblioteca interna do projeto, veja o passo de build abaixo
+- BentosLib `0.1-1.20.1` (my own lib, see the build section)
 - [Curios API](https://www.curseforge.com/minecraft/mc-mods/curios) `5.14.1+1.20.1`
 
-Opcionais (integração):
+Optional, the mod just hooks into them if present:
 
-- [Patchouli](https://www.curseforge.com/minecraft/mc-mods/patchouli) `1.20.1-84.1`
+- [Patchouli](https://www.curseforge.com/minecraft/mc-mods/patchouli) `1.20.1-84.1` (the in-game book)
 - [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) `15.20.0.106`
 
-## Build
+Java 17, Forge 47.4.9.
 
-O Raidborn depende de `net.randomcara.bentoslib:bentoslib`, que é resolvida via `mavenLocal()`.
-**Publique a BentosLib antes de buildar o Raidborn**, senão o Gradle não resolve a dependência:
+## Building
+
+BentosLib comes from `mavenLocal()`, so publish it first or Gradle won't resolve it:
 
 ```bash
 cd ../bentoslib && ./gradlew publishToMavenLocal
 ```
 
-Com a biblioteca publicada:
+then
 
 ```bash
 ./gradlew build
 ```
 
-O jar sai em `build/libs/`.
+and the jar lands in `build/libs/`.
 
-> O `gradlew` deste projeto é um script bootstrap próprio: ele baixa o Gradle 8.8 para
-> `.gradle/wrapper/` na primeira execução, então não existe `gradle-wrapper.jar` versionado.
+Heads up: `gradlew` here is a bootstrap script, not the usual wrapper. It downloads Gradle 8.8
+into `.gradle/wrapper/` the first time you run it, which is why there's no `gradle-wrapper.jar`
+committed.
 
-## Rodar em desenvolvimento
+## Dev
 
 ```bash
 ./gradlew runClient
 ```
 
-```bash
-./gradlew runServer
-```
+`runServer` for the other side. Both run out of `run/`, which is gitignored.
 
-O diretório de trabalho das duas tasks é `run/`, que não é versionado.
+## Code layout
 
-## Estrutura do código
+Everything sits under `net/randomcara/raidborn`:
 
-```
-net/randomcara/raidborn/
-├── core/            registries, config, utilitários e camada de compat
-├── content/         itens, entidades, efeitos e artefatos
-├── gameplay/        recrutamento, assentamentos, ataques, banners, trocas e loot
-├── transmutation/   bloco, block entity, menu e receitas de transmutação
-├── world/           geração e dados de assentamento
-├── client/          renderers, modelos e HUD
-├── integration/     compat com JEI
-└── mixin/           mixins (config em raidborn.mixins.json)
-```
+- `core` - registries, config, compat checks, misc helpers
+- `content` - items, entities, effects, artifacts
+- `gameplay` - recruiting, settlements, attacks, banners, trading, loot
+- `transmutation` - the table, its block entity, menu and recipes
+- `world` - worldgen and settlement data
+- `client` - renderers, models, HUD
+- `integration` - JEI
+- `mixin` - listed in raidborn.mixins.json
 
-## Créditos
+## Credits
 
-**Randomcara7** ([github.com/ChargePC](https://github.com/ChargePC)) — criador do mod. Design do
-sistema de recrutamento e assentamentos, programação e balanceamento.
+Randomcara7 ([ChargePC](https://github.com/ChargePC)) - code, the recruitment and settlement
+systems, balancing.
 
-**I_DRAW_THINGS** — arte. Texturas de itens e blocos, modelos e texturas das entidades
-(beast, grumblager, iron gollet, juggernaut).
+I_DRAW_THINGS - all the art. Item and block textures, plus the models and textures for the beast,
+grumblager, iron gollet and juggernaut.
 
-Os mesmos créditos estão no campo `credits` de
-[`mods.toml`](src/main/resources/META-INF/mods.toml), então aparecem na tela de mods do jogo.
+## License
 
-## Licença
-
-MIT — texto completo em [LICENSE.txt](LICENSE.txt). O arquivo também é embarcado no jar em
-`build.gradle`, para que o texto acompanhe as cópias distribuídas do mod, como a MIT exige.
+MIT, full text in [LICENSE.txt](LICENSE.txt). It's also packed into the jar.

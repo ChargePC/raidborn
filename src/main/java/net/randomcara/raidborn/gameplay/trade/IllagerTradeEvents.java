@@ -66,7 +66,7 @@ public class IllagerTradeEvents {
     private static final String RNC_MODID = RaidbornCompat.RAVAGE_AND_CABBAGE;
     private static final String EWM_MODID = RaidbornCompat.ENCHANT_WITH_MOB;
 
-    // Trade-only integrations: no compat switch of their own, so they stay local to this file.
+    // trade-only integrations, no compat switch of their own so they just live here
     private static final String FNF_MODID = "friendsandfoes";
     private static final String WANDERING_BAGS_MODID = "wandering_bags";
 

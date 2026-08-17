@@ -8,12 +8,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Set;
 
 /**
- * Entity ids contributed by the optional illager mods.
+ * Entity ids from the optional illager mods.
  *
- * <p>Split from {@link RaidbornCompat} on purpose: that class answers <em>is this integration
- * active</em>, this one only names entities. A {@link ResourceLocation} is inert when the mod is
- * absent, so the constants are always safe to touch — only the lookups need an {@code *Loaded}
- * guard around them.
+ * <p>Separate from {@link RaidbornCompat}, which answers "is this integration active". This one
+ * just names entities. A {@link ResourceLocation} is inert if the mod isn't there, so the constants
+ * are always safe to touch and only the lookups need an {@code *Loaded} guard.
  */
 public final class RaidbornCompatEntities {
     public static final String SANDR_MODID = RaidbornCompat.SAVAGE_AND_RAVAGE;

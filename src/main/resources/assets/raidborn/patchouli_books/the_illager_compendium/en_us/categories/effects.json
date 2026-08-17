@@ -1,6 +1,6 @@
 {
   "name": "Effects",
-  "description": "Permanent alliance effects that make Illagers friendly and determine how many recruitment slots you have.",
+  "description": "The three oaths. They keep the Illagers off you and decide how many of them you can take with you.",
   "icon": "raidborn:textures/mob_effect/illager_loyalty.png",
   "sortnum": 2
 }

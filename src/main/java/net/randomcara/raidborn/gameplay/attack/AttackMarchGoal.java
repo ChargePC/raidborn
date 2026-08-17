@@ -10,15 +10,15 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 /**
- * Marches an ally towards a distant objective during an Attack.
+ * Marches an ally toward a far-off objective during an Attack.
  *
- * <p>{@code PathNavigation.createPath} caps the search at the mob's {@link Attributes#FOLLOW_RANGE}.
- * Vindicators and evokers have 12 blocks of follow range, so they cannot plot a route to a villager
- * on the other side of the village: vanilla {@code MeleeAttackGoal} gets null from
- * {@code createPath}, gives up, and the mob falls back to {@code RandomStrollGoal}.
+ * <p>{@code PathNavigation.createPath} caps its search at the mob's
+ * {@link Attributes#FOLLOW_RANGE}. Vindicators and evokers only get 12 blocks of that, so they
+ * can't path to a villager on the far side of the village at all: {@code createPath} returns null,
+ * vanilla {@code MeleeAttackGoal} gives up, and the mob wanders off on {@code RandomStrollGoal}.
  *
- * <p>Same approach as vanilla {@code Raider.PathfindToRaidGoal}: aim at an intermediate waypoint
- * inside pathfinding range and re-plot while advancing.
+ * <p>Does what {@code Raider.PathfindToRaidGoal} does, aim at a waypoint that IS in range and
+ * re-plot as you go.
  */
 public class AttackMarchGoal extends Goal {
     private static final int REPATH_INTERVAL_TICKS = 10;
@@ -83,7 +83,7 @@ public class AttackMarchGoal extends Goal {
             return;
         }
 
-        // Let the current route finish: repathing every tick is exactly what freezes the movement.
+        // let the current route finish. repathing every tick is what freezes them in place
         if (!this.mob.getNavigation().isDone()) {
             return;
         }

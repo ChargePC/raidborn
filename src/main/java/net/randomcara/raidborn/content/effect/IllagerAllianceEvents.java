@@ -35,11 +35,10 @@ import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import javax.annotation.Nullable;
 
 /**
- * The rules every {@link IllagerAlliance} shares.
+ * Rules shared by every {@link IllagerAlliance}.
  *
- * <p>All three pacts protect the player the same way, so the handlers run once over whichever pact
- * the player holds instead of once per pact. Anything specific to a single one is read off the
- * enum rather than branched on here.
+ * <p>All three protect the player the same way, so the handlers run once on whichever pact is
+ * active rather than once per pact. Per-pact differences get read off the enum, no branching here.
  */
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public final class IllagerAllianceEvents {

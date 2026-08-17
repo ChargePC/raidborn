@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
 /**
  * Grants a criterion on a datapack advancement.
  *
- * <p>Every caller needs the same three guards — no server, advancement not loaded, criterion
- * rejected — so they live here instead of being restated at each award site. A datapack is free to
- * drop any of Raidborn's advancements, so a missing one is a no-op rather than an error.
+ * <p>Same three guards every time (no server, advancement not loaded, criterion rejected), so
+ * they're here instead of copy-pasted at every award site. Datapacks can drop any of Raidborn's
+ * advancements, so a missing one is a no-op and not an error.
  */
 public final class RaidbornAdvancements {
     private RaidbornAdvancements() {

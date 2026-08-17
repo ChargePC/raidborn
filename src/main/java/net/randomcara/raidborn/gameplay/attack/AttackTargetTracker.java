@@ -145,8 +145,8 @@ public final class AttackTargetTracker {
     /**
      * Safety net for villagers removed without dying (command, another mod).
      *
-     * <p>Entity not found means <em>unloaded</em>, not dead: only loaded and provably invalid ones
-     * are dropped. The normal loss comes from {@code LivingDeathEvent} in {@link AttackEventHandler}.
+     * <p>Entity not found means unloaded, not dead, so only loaded and provably invalid ones get
+     * dropped. Normal losses come through {@code LivingDeathEvent} in {@link AttackEventHandler}.
      */
     public static void updateAliveVillagers(AttackInstance attack, ServerLevel level) {
         Iterator<UUID> iterator = attack.getAliveVillagerUuids().iterator();
@@ -380,7 +380,7 @@ public final class AttackTargetTracker {
     /**
      * Shelter is any village POI near the villager and away from the threat.
      *
-     * <p>{@code PoiManager} already maintains this index: beds, workstations and the bell enter it
+     * <p>{@code PoiManager} already keeps this index, beds and workstations and the bell all go in
      * when the village generates.
      */
     @Nullable
@@ -455,7 +455,7 @@ public final class AttackTargetTracker {
                 && head.getFluidState().isEmpty();
     }
 
-    /** Resolved once per Attack: the centre does not move and the bell is the meeting POI. */
+    /** Resolved once per Attack. The center doesn't move and the bell is the meeting POI. */
     @Nullable
     public static BlockPos findVillageBell(ServerLevel level, BlockPos attackCenter) {
         return level.getPoiManager()

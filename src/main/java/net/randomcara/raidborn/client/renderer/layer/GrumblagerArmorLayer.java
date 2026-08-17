@@ -378,7 +378,6 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
     }
 
     private boolean usesInnerModel(EquipmentSlot slot) {
-        // LEGS is never rendered, so this can stay false.
         return false;
     }
 

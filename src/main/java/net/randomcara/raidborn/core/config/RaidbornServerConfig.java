@@ -18,9 +18,9 @@ public class RaidbornServerConfig {
     /**
      * One [attack.extra_defenders.extraDefenderN] block.
      *
-     * <p>Every slot carries the same five options, so they are declared once and repeated per slot
-     * rather than spelled out three times. The option paths are unchanged, and an existing
-     * raidborn-server.toml keeps working.
+     * <p>All the slots take the same five options, so they're declared once and looped instead of
+     * written out three times. Option paths are identical, existing raidborn-server.toml files
+     * still load.
      */
     public record ExtraDefenderSlot(
             ForgeConfigSpec.BooleanValue enabled,

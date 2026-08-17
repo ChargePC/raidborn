@@ -19,14 +19,14 @@ import net.randomcara.raidborn.gameplay.settlement.ai.WarbellVillageWanderGoal;
 /**
  * Installs the goals a recruit needs.
  *
- * <p>Which goals those are depends only on the entity type, so this runs at the three points where
- * a mob can first turn up needing them and nowhere else: entity join, which also covers every
- * reload and chunk load, since a mob rebuilt from NBT comes back with only its vanilla goal set;
- * the recruitment interaction; and settlement assignment.
+ * <p>Which goals it gets depends only on the entity type, so this fires at the three spots where a
+ * mob can first show up needing them: entity join (which covers reloads and chunk loads too, since
+ * a mob rebuilt from NBT comes back with just its vanilla goals), the recruitment interaction, and
+ * settlement assignment.
  *
- * <p>Still idempotent, because those three overlap. Goals that depend on config, such as the
- * support healer, check it in {@code canUse} instead of here, so the server config can be reloaded
- * without anything having to be reinstalled.
+ * <p>Those three overlap, so it has to be idempotent. Config-dependent goals like the support
+ * healer check the config in {@code canUse} rather than here, which means you can reload the server
+ * config without reinstalling anything.
  */
 public final class RecruitGoalInstaller {
     private static final int VILLAGE_DOOR_GOAL_PRIORITY = 1;

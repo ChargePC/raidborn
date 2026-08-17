@@ -224,10 +224,10 @@ public final class RecruitTickEvents {
     /**
      * Catches settlement members that {@link WarbellVillageWanderGoal} can no longer help.
      *
-     * <p>That goal keeps its own bed, workstation and navigation up to date, but it only runs while
-     * the bell is valid. A member whose bell was mined while it stood in an unloaded chunk is left
-     * with no goal willing to run and no event that reached it, so releasing it has to come from
-     * outside — which is all this does.
+     * <p>That goal maintains its own bed, workstation and navigation, but only runs while the bell
+     * is still valid. A member whose bell got mined while it sat in an unloaded chunk ends up with
+     * no goal willing to run and no event that ever reached it, so the release has to come from
+     * outside, which is all this does.
      */
     static void tickVillageMobs(ServerPlayer player) {
         List<Mob> villageMobs = player.level().getEntitiesOfClass(

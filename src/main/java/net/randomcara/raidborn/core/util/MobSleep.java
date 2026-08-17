@@ -4,13 +4,12 @@ import net.minecraft.world.entity.Mob;
 import net.randomcara.raidborn.Raidborn;
 
 /**
- * Wakes a mob without trusting the bed it is lying on.
+ * Wakes a mob without trusting the bed it's lying on.
  *
- * <p>{@code stopSleeping} reads {@code BedBlock.FACING} off whatever block reports itself as a bed.
- * A modded bed that answers {@code isBed} without carrying that property makes the vanilla call
- * throw, and recruits sleep in whatever the settlement was built with. Losing the wake-up is
- * survivable — the mob stands up on its next path — so it is caught here instead of taking down the
- * squad update around it.
+ * <p>{@code stopSleeping} reads {@code BedBlock.FACING} off whatever block claims to be a bed, so a
+ * modded bed that answers {@code isBed} without that property throws. Recruits sleep in whatever
+ * the settlement was built out of, so this happens. Missing one wake-up is harmless (the mob stands
+ * up on its next path) and better than dropping the whole squad update.
  */
 public final class MobSleep {
     private MobSleep() {

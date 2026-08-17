@@ -1,6 +1,6 @@
 {
   "name": "Mobs",
-  "description": "Creatures added by Raidborn and the behavior that matters when you encounter or recruit them.",
+  "description": "What Raidborn puts in the world, and what it does when you meet it. Some of it will follow you home.",
   "icon": "minecraft:egg",
   "sortnum": 1
 }

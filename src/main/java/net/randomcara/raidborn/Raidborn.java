@@ -99,7 +99,7 @@ public class Raidborn {
                     .consumerMainThread(ItemActivationPacket::handle)
                     .add();
 
-            // Keep the position: the packet id inside the channel must not change.
+            // don't move this, the packet id inside the channel has to stay put
             ActivateCurioItemPacket.register(CHANNEL, nextPacketId());
 
             CHANNEL.messageBuilder(TotemAreaVisualPacket.class, nextPacketId(), NetworkDirection.PLAY_TO_CLIENT)

@@ -10,14 +10,14 @@ import net.minecraft.world.phys.AABB;
 import net.randomcara.raidborn.core.util.MobSleep;
 
 /**
- * Brings a recruit back to its owner.
+ * Brings a recruit back to its owner. Two stages, best landing spot first.
  *
- * <p>Two stages, ordered by how good the landing spot is. The ring search walks outwards from the
- * owner and only accepts a block it has checked — solid floor, room for the body, inside the world
- * border — which leaves a returning squad standing around the player rather than inside the
- * terrain. When nothing in that ring fits, because the owner is in a boat, on a one-block ledge or
- * down a tight cave, the scatter stage hands the problem to vanilla's {@code randomTeleport}, which
- * will settle for any safe spot in the rough area.
+ * <p>The ring search walks outwards from the owner and only takes a block it has actually checked
+ * (solid floor, headroom, inside the world border), so a returning squad ends up standing around
+ * the player instead of buried in the terrain.
+ *
+ * <p>If nothing in the ring works, owner in a boat or on a one-block ledge or stuck down some cave,
+ * the scatter stage punts to vanilla {@code randomTeleport}, which takes any safe spot nearby.
  */
 public final class RecruitTeleport {
     private static final int RING_MIN_RADIUS = 2;

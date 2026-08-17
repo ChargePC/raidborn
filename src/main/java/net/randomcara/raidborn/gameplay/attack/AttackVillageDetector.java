@@ -92,10 +92,11 @@ public final class AttackVillageDetector {
     }
 
     /**
-     * Reduces the POI list to one per 32 block cell.
+     * Cuts the POI list down to one per 32 block cell.
      *
-     * <p>The {@code home} tag covers every bed in the village, so a normal village returned dozens of
-     * positions, and each one became a 96 block entity scan both here and in the periodic reinforcement.
+     * <p>The {@code home} tag hits every bed in the village, so an average one came back with dozens
+     * of positions and each turned into a 96 block entity scan, here and again in the periodic
+     * reinforcement pass. 32 is a guess that worked, could probably go wider.
      */
     private static List<BlockPos> clusterPoiPositions(List<AttackPoiData> pois) {
         List<BlockPos> clustered = new ArrayList<>();

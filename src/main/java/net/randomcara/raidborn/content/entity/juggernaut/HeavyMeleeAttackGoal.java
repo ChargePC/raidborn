@@ -6,10 +6,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import java.util.EnumSet;
 
 /**
- * Heavy swing with wind-up, frontal arc and its own interval.
- *
- * <p>Not {@code MeleeAttackGoal}: its 20 tick interval is fixed, and the Juggernaut needs a slower
- * one that the wind-up can fit inside.
+ * Heavy swing with a wind-up, a frontal arc and its own interval. Not {@code MeleeAttackGoal},
+ * whose 20 tick interval is hardcoded and too fast to fit the wind-up in.
  */
 class HeavyMeleeAttackGoal extends Goal {
 
