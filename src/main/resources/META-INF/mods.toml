@@ -1,15 +1,15 @@
 modLoader="javafml"
 loaderVersion="[47,)"
-license="MIT (LICENSE.txt)"
+license="All Rights Reserved (LICENSE.txt)"
 issueTrackerURL="https://github.com/ChargePC/raidborn/issues"
 
 [[mods]]
 modId="raidborn"
 version="0.1-1.20.1"
-displayName="Raidborn: Ally with Illagers"
+displayName="Raidborn: Join the Illagers"
 displayURL="https://github.com/ChargePC/raidborn"
 authors="Randomcara7, I_DRAW_THINGS"
-credits="Randomcara7 (github.com/ChargePC): design, code and balancing. I_DRAW_THINGS: art, item and block textures, entity models and textures. MIT licensed, full text ships in the jar as LICENSE.txt."
+credits="Randomcara7 (github.com/ChargePC): design, code and balancing. I_DRAW_THINGS: art, item and block textures, entity models and textures. All rights reserved, see LICENSE.txt in the jar for what you may and may not do with it."
 description='''Join the wrong side'''
 
 [[dependencies.raidborn]]

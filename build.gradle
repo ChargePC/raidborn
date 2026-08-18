@@ -113,13 +113,13 @@ jar {
     // treats that as an error instead of a warning.
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    // MIT wants the license text shipped alongside the software and mods.toml only carries the name
+    // license text goes in the jar, mods.toml only carries the name of it
     from(rootProject.file('LICENSE.txt'))
 
     manifest {
         attributes([
                 'MixinConfigs'          : 'raidborn.mixins.json',
-                'Implementation-Title'  : 'Raidborn: Ally with Illagers',
+                'Implementation-Title'  : 'Raidborn: Join the Illagers',
                 'Implementation-Version': project.version,
                 'Implementation-Vendor' : 'Randomcara7'
         ])

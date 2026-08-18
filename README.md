@@ -1,4 +1,4 @@
-# Raidborn: Ally with Illagers
+# Raidborn: Join the Illagers
 
 Join the wrong side.
 
@@ -74,4 +74,7 @@ grumblager, iron gollet and juggernaut.
 
 ## License
 
-MIT, full text in [LICENSE.txt](LICENSE.txt). It's also packed into the jar.
+All rights reserved. Full terms in [LICENSE.txt](LICENSE.txt), which also ships inside the jar.
+
+Short version: play it, stream it, depend on it, stick it in a modpack as long as the copy came
+from here and you list it. Don't reupload it, don't sell it, don't put it behind a paywall.

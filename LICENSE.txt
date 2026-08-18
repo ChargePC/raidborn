@@ -1,16 +1,45 @@
-MIT License
+                          RAIDBORN LICENSE
+                      Version 1.0, August 2026
 
-Copyright (c) 2026 Randomcara7 and I_DRAW_THINGS
+Copyright (c) 2026 Randomcara7 and I_DRAW_THINGS. All Rights Reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This license covers the Raidborn mod, its source code, and the art and other
+files shipped with it, together called "Raidborn" below. Anyone holding a copy
+is granted the permissions listed here and no others.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Use - Allowed, in private and in public, including on public servers and in
+recordings or videos. Another project may depend on Raidborn as a soft or hard
+dependency, provided the copy actually being loaded came from an Official
+Source.
+Copying - Allowed for your own private use, or to prepare a contribution back
+to this project.
+Modification - Allowed for your own private use, or to prepare a contribution
+back to this project. Modified copies stay private.
+Publishing - Not allowed. Do not upload Raidborn, modified or not, anywhere.
+Distributing - Not allowed, except for the modpack case described below.
+Sublicensing - Not allowed.
+Selling - Not allowed. Raidborn may not be sold, and may not be put behind a
+paywall, early access, subscription or donation requirement of any kind.
+
+Modpacks:
+A modpack may include Raidborn without asking first, so long as the copy it
+ships is an unmodified one taken from an Official Source, and Raidborn is
+listed among the pack's contents where players can see it. This permission
+covers the pack only; it does not let the pack author publish Raidborn on its
+own.
+
+Official Sources:
+An Official Source is anywhere the copyright holders publish Raidborn
+themselves. The GitHub repository at github.com/ChargePC/raidborn is one. Any
+future CurseForge or Modrinth page run by the copyright holders is one. A copy
+obtained anywhere else is not, and this license grants nothing for it.
+
+Contributions:
+Sending a contribution to this project means you are fine with it being
+released under this same license.
+
+The copyright notice above and these terms must be kept with every copy of
+Raidborn, whole or in substantial part.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
