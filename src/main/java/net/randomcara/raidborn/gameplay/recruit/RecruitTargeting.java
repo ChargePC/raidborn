@@ -64,7 +64,7 @@ public final class RecruitTargeting {
      *
      * <p>TODO: a mixin on alertOthers would be cleaner than deferring, look at this again later.
      */
-    static boolean isRevengeTargetChange(Mob mob, LivingEntity newTarget) {
+    public static boolean isRevengeTargetChange(Mob mob, LivingEntity newTarget) {
         return newTarget != null && newTarget == mob.getLastHurtByMob();
     }
 

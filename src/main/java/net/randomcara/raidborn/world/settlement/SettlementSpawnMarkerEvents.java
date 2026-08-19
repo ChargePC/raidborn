@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
@@ -267,7 +268,32 @@ public final class SettlementSpawnMarkerEvents {
     }
 
     private static boolean isSettlementIllager(Mob mob) {
-        return mob.isAlive() && mob.getPersistentData().getBoolean(SETTLEMENT_HOME_MARKER_TAG);
+        return mob.isAlive()
+                && mob.getPersistentData().getBoolean(SETTLEMENT_HOME_MARKER_TAG)
+                && !RecruitOwnership.isRecruited(mob);
+    }
+
+    /**
+     * Cuts an illager loose from the settlement it spawned in, permanently.
+     *
+     * <p>Called on recruitment. The home tags are dropped rather than just ignored, so a recruit
+     * that is later dismissed stays free instead of remembering the structure and walking back to
+     * it. Leaving the tags on meant a recruited illager kept getting dragged home and had its
+     * target nulled by the return scan whenever it strayed too far.
+     */
+    public static void clearSettlementHome(Mob mob) {
+        CompoundTag data = mob.getPersistentData();
+
+        if (!data.getBoolean(SETTLEMENT_HOME_MARKER_TAG)) {
+            return;
+        }
+
+        data.remove(SETTLEMENT_HOME_MARKER_TAG);
+        data.remove(SETTLEMENT_HOME_X_TAG);
+        data.remove(SETTLEMENT_HOME_Y_TAG);
+        data.remove(SETTLEMENT_HOME_Z_TAG);
+
+        mob.clearRestriction();
     }
 
     private static void tickSettlementIllagerHome(ServerLevel level, Mob mob) {

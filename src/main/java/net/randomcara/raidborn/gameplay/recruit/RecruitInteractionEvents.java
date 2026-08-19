@@ -24,6 +24,7 @@ import net.randomcara.raidborn.core.util.RaidbornAdvancements;
 import net.randomcara.raidborn.gameplay.settlement.ai.WarbellVillagePathing;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageBedData;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
+import net.randomcara.raidborn.world.settlement.SettlementSpawnMarkerEvents;
 
 import java.util.List;
 import java.util.UUID;
@@ -188,6 +189,10 @@ public final class RecruitInteractionEvents {
                 if (mob instanceof Beast beast) {
                     beast.setCreatorUUID(playerId);
                 }
+
+                // A worldgen settlement illager stops belonging to that structure the moment it is
+                // recruited, otherwise the return scan keeps hauling it back home mid-patrol.
+                SettlementSpawnMarkerEvents.clearSettlementHome(mob);
 
                 SquadOrders.setOrder(mob, SquadOrder.FOLLOW);
 

@@ -31,6 +31,7 @@ import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.core.util.AvoidGoals;
 import net.randomcara.raidborn.core.util.RaidbornAdvancements;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
+import net.randomcara.raidborn.gameplay.recruit.RecruitTargeting;
 
 import javax.annotation.Nullable;
 
@@ -176,9 +177,17 @@ public final class IllagerAllianceEvents {
         if (!isUnrecruitedIllager(mob)) return;
         if (!isProtected(event.getNewTarget())) return;
 
-        // Deliberately not clearing the target here: vanilla HurtByTargetGoal may still be using it,
-        // and nulling it mid-event strands the goal. See RecruitTargeting#clearTargetKeepRevenge.
-        // The player tick above does the safe cleanup a moment later.
+        // Refuse the change outright wherever that is safe. Letting it through and undoing it on the
+        // next player tick meant the goal re-acquired every single tick, and each pass got one step
+        // of pathing and one attack wind-up in before the cleanup ran. That reads in game as an
+        // illager slowly walking you down with its arms up, which is what it was doing.
+        if (!RecruitTargeting.isRevengeTargetChange(mob, event.getNewTarget())) {
+            event.setCanceled(true);
+        }
+
+        // Revenge path only: HurtByTargetGoal may still be inside start()/alertOthers() and nulling
+        // the target under it strands the goal. See RecruitTargeting#clearTargetKeepRevenge. The
+        // player tick above does the cleanup a moment later.
         stopChasing(mob);
     }
 

@@ -27,6 +27,7 @@ import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
 import net.randomcara.raidborn.gameplay.recruit.RecruitSlots;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
+import net.randomcara.raidborn.world.settlement.SettlementSpawnMarkerEvents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -319,6 +320,8 @@ public class RaidBagItem extends Item {
 
         mob.getPersistentData().putBoolean(FollowOwnerGoal.TAG_RECRUITED, true);
         mob.getPersistentData().putUUID(FollowOwnerGoal.TAG_OWNER, player.getUUID());
+
+        SettlementSpawnMarkerEvents.clearSettlementHome(mob);
 
         mob.setPersistenceRequired();
         SquadOrders.clearCombatState(mob);
