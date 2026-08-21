@@ -39,10 +39,6 @@ then
 
 and the jar lands in `build/libs/`.
 
-Heads up: `gradlew` here is a bootstrap script, not the usual wrapper. It downloads Gradle 8.8
-into `.gradle/wrapper/` the first time you run it, which is why there's no `gradle-wrapper.jar`
-committed.
-
 ## Dev
 
 ```bash
