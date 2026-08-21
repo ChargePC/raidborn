@@ -14,10 +14,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.HashMap;
@@ -25,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class LightfedPillItem extends Item implements ICurioItem {
+public class LightfedPillItem extends Item implements SlotBoundCurioItem {
 
     private static final int REQUIRED_STILL_TICKS = 100;
     private static final int FEED_INTERVAL_TICKS = 40;
@@ -36,8 +35,8 @@ public class LightfedPillItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "charm".equals(slotContext.identifier());
+    public String curioSlot() {
+        return CHARM;
     }
 
     @Override

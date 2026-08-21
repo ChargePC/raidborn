@@ -11,16 +11,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public class TemporalRelicItem extends Item implements ICurioItem {
+public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
 
     private static final String TAG_EXTRA_CD_COUNTER = "raidborn_temporal_relic_cd_counter";
 
@@ -29,8 +28,8 @@ public class TemporalRelicItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "charm".equals(slotContext.identifier());
+    public String curioSlot() {
+        return CHARM;
     }
 
     @Override

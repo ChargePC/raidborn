@@ -22,18 +22,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public class PoisonArrowheadItem extends Item implements ICurioItem {
+public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
 
     private static final int POISON_DURATION = 100;
     private static final int POISON_AMPLIFIER = 2;
@@ -43,8 +42,8 @@ public class PoisonArrowheadItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "necklace".equals(slotContext.identifier());
+    public String curioSlot() {
+        return NECKLACE;
     }
 
     @Override

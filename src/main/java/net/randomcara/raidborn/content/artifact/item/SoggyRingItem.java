@@ -20,10 +20,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class SoggyRingItem extends Item implements ICurioItem {
+public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     private static final int LAVA_WALK_RADIUS = 1;
     private static final int LAVA_FIZZ_EVENT = 1501;
@@ -50,8 +50,8 @@ public class SoggyRingItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "ring".equals(slotContext.identifier());
+    public String curioSlot() {
+        return RING;
     }
 
     @Override

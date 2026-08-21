@@ -27,16 +27,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class SacredSunItem extends Item implements ICurioItem {
+public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     private static final int LIGHT_LEVEL = 14;
     private static final double BURN_RADIUS = 8.0D;
@@ -59,8 +59,8 @@ public class SacredSunItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "charm".equals(slotContext.identifier());
+    public String curioSlot() {
+        return CHARM;
     }
 
     @Override

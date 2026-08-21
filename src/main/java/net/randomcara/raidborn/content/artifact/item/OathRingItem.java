@@ -14,9 +14,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class OathRingItem extends Item implements ICurioItem {
+public class OathRingItem extends Item implements SlotBoundCurioItem {
 
     private static final double SHARE_RADIUS = 64.0D;
 
@@ -42,8 +42,8 @@ public class OathRingItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "ring".equals(slotContext.identifier());
+    public String curioSlot() {
+        return RING;
     }
 
     @Override

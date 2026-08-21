@@ -18,17 +18,16 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class SpiderPendantItem extends Item implements ICurioItem {
+public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
 
     private static final double WALL_CLIMB_SPEED = 0.18D;
     private static final double WALL_HORIZONTAL_DAMPING = 0.72D;
@@ -48,8 +47,8 @@ public class SpiderPendantItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "necklace".equals(slotContext.identifier());
+    public String curioSlot() {
+        return NECKLACE;
     }
 
     public static boolean isEquipped(Player player) {

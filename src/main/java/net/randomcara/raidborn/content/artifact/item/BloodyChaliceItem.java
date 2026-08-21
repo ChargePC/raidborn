@@ -16,16 +16,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public class BloodyChaliceItem extends Item implements ICurioItem {
+public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
 
     private static final String TAG_RECRUITED = "raidborn_recruited";
     private static final String TAG_OWNER = "raidborn_owner";
@@ -38,8 +37,8 @@ public class BloodyChaliceItem extends Item implements ICurioItem {
     }
 
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return "charm".equals(slotContext.identifier());
+    public String curioSlot() {
+        return CHARM;
     }
 
     @Override
