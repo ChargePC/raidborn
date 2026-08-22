@@ -3,6 +3,7 @@ package net.randomcara.raidborn.world.settlement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.randomcara.bentoslib.world.spawn.CategorizedMobSpawnTable;
+import net.randomcara.raidborn.Raidborn;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public final class CompatibleIllagerTypes {
     }
 
     private static final CategorizedMobSpawnTable<IllagerStrengthCategory> SPAWN_TABLE =
-            new CategorizedMobSpawnTable<>(ILLAGERS_BY_CATEGORY, SETTLEMENT_ILLAGER_TAG);
+            new CategorizedMobSpawnTable<>(ILLAGERS_BY_CATEGORY, SETTLEMENT_ILLAGER_TAG, Raidborn.LOGGER);
 
     private CompatibleIllagerTypes() {
     }
