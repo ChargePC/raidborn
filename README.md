@@ -13,7 +13,7 @@ Still 0.1, so expect rough edges. Bugs and ideas go in the
 
 Required at runtime:
 
-- BentosLib `0.1-1.20.1` (my own lib, see the build section)
+- [BentosLib](https://github.com/ChargePC/bentoslib) `0.1-1.20.1` (my own lib)
 - [Curios API](https://www.curseforge.com/minecraft/mc-mods/curios) `5.14.1+1.20.1`
 
 Optional, the mod just hooks into them if present:
@@ -25,10 +25,14 @@ Java 17, Forge 47.4.9.
 
 ## Building
 
-BentosLib comes from `mavenLocal()`, so publish it first or Gradle won't resolve it:
+BentosLib comes from `mavenLocal()`, so clone and publish it first or Gradle won't resolve it:
 
 ```bash
-cd ../bentoslib && ./gradlew publishToMavenLocal
+git clone https://github.com/ChargePC/bentoslib.git
+```
+
+```bash
+cd bentoslib && ./gradlew publishToMavenLocal
 ```
 
 then
