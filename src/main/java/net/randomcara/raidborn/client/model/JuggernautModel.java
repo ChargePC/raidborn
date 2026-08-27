@@ -71,14 +71,14 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
                 "body",
                 CubeListBuilder.create()
                         .texOffs(16, 77)
-                        .addBox(-32.0F, -21.0F, 9.0F, 54.0F, 39.0F, 30.0F, new CubeDeformation(0.0F))
+                        .addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 39.0F, 30.0F, new CubeDeformation(0.0F))
                         .texOffs(0, 152)
-                        .addBox(-21.0F, 18.0F, 13.0F, 32.0F, 8.0F, 22.0F, new CubeDeformation(0.0F))
+                        .addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 8.0F, 22.0F, new CubeDeformation(0.0F))
                         .texOffs(186, 97)
-                        .addBox(-21.0F, 18.0F, 13.0F, 32.0F, 12.0F, 22.0F, new CubeDeformation(0.025F))
+                        .addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 12.0F, 22.0F, new CubeDeformation(0.025F))
                         .texOffs(132, 0)
-                        .addBox(-32.0F, -21.0F, 9.0F, 54.0F, 44.0F, 30.0F, new CubeDeformation(0.025F)),
-                PartPose.offset(4.0F, -17.0F, -20.0F)
+                        .addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 44.0F, 30.0F, new CubeDeformation(0.025F)),
+                PartPose.offset(0.0F, 24.0278F, 0.5833F)
         );
 
         partdefinition.addOrReplaceChild(
@@ -90,38 +90,35 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
                         .addBox(-17.8333F, -6.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.025F))
                         .texOffs(0, 193)
                         .addBox(-16.8333F, -0.6667F, -8.5F, 17.0F, 54.0F, 17.0F, new CubeDeformation(0.0F)),
-                PartPose.offset(-29.1667F, -32.3333F, 3.5F)
+                PartPose.offset(-28.1667F, -32.3333F, 0.5F)
         );
 
         partdefinition.addOrReplaceChild(
                 "head",
                 CubeListBuilder.create()
                         .texOffs(0, 38)
-                        .addBox(-8.0F, -9.5F, -9.95F, 16.0F, 13.0F, 10.0F, new CubeDeformation(0.0F))
+                        .addBox(-8.0F, -7.5F, -9.95F, 16.0F, 13.0F, 10.0F, new CubeDeformation(0.0F))
                         .texOffs(0, 22)
-                        .addBox(-2.0F, -3.5F, -12.95F, 4.0F, 9.0F, 3.0F, new CubeDeformation(0.0F))
+                        .addBox(-2.0F, -1.5F, -12.95F, 4.0F, 9.0F, 3.0F, new CubeDeformation(0.0F))
                         .texOffs(56, 49)
-                        .addBox(-8.0F, -9.5F, -9.95F, 16.0F, 17.0F, 10.0F, new CubeDeformation(0.025F)),
-                PartPose.offset(-1.0F, -20.5F, -11.05F)
+                        .addBox(-8.0F, -7.5F, -9.95F, 16.0F, 17.0F, 10.0F, new CubeDeformation(0.025F)),
+                PartPose.offset(0.0F, -22.5F, -14.05F)
         );
 
-        PartDefinition leftArm = partdefinition.addOrReplaceChild(
+        // No 0.025 overlay here: the overgrowth only spreads over his right arm.
+        partdefinition.addOrReplaceChild(
                 "left_arm",
                 CubeListBuilder.create()
                         .texOffs(224, 172)
                         .mirror()
                         .addBox(-1.1667F, -7.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.0F))
                         .mirror(false)
-                        .texOffs(0, 320)
-                        .addBox(-1.1667F, -7.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.025F))
                         .texOffs(0, 193)
                         .mirror()
                         .addBox(-0.1667F, -1.6667F, -8.5F, 17.0F, 54.0F, 17.0F, new CubeDeformation(0.0F))
                         .mirror(false),
-                PartPose.offset(27.1667F, -31.3333F, 3.5F)
+                PartPose.offset(28.1667F, -31.3333F, 0.5F)
         );
-
-        leftArm.addOrReplaceChild("crusher2", CubeListBuilder.create(), PartPose.offset(8.3333F, 25.3333F, 0.0F));
 
         partdefinition.addOrReplaceChild(
                 "left_leg",
@@ -130,7 +127,7 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
                         .mirror()
                         .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F))
                         .mirror(false),
-                PartPose.offset(13.5F, 6.5F, 3.5F)
+                PartPose.offset(14.5F, 6.5F, 0.5F)
         );
 
         partdefinition.addOrReplaceChild(
@@ -140,7 +137,7 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
                         .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F))
                         .texOffs(116, 164)
                         .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.025F)),
-                PartPose.offset(-15.5F, 6.5F, 3.5F)
+                PartPose.offset(-14.5F, 6.5F, 0.5F)
         );
 
         return LayerDefinition.create(meshdefinition, 400, 400);

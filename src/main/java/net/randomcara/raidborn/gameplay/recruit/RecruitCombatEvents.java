@@ -19,12 +19,23 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public final class RecruitCombatEvents {
+    /**
+     * {@link Mob#setTarget} posts this event <em>before</em> it writes the target field, so anything
+     * that calls setTarget from inside a listener lands straight back in here with
+     * {@link Mob#getTarget()} still returning the old value.
+     *
+     * <p>{@link SettlementBridge#sanitizeVillageState} does exactly that through
+     * {@code clearProtectedPlayerTarget}, and since nothing about the mob changes between passes it
+     * never bottomed out: ringing the Grand Warbell while a recruit still held an allied player as
+     * its target recursed until the stack blew and took the server down with it.
+     */
+    private static final ThreadLocal<Boolean> SANITIZING = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
     @SubscribeEvent
     public static void onRecruitChangesTarget(LivingChangeTargetEvent event) {
         if (!(event.getEntity() instanceof Mob mob)) return;
 
-        RecruitmentEvents.sanitizeRecruitState(mob);
-        SettlementBridge.sanitizeVillageState(mob);
+        sanitizeOnce(mob);
 
         if (WarbellVillageData.isVillageMode(mob)) {
             LivingEntity newTarget = event.getNewTarget();
@@ -98,8 +109,8 @@ public final class RecruitCombatEvents {
             LivingEntity rememberedTarget = RecruitTargeting.getFollowTarget(owner, mob);
 
             if (rememberedTarget != null) {
+                // setNewTarget only, same as the protected-target branch above: setTarget re-enters.
                 event.setNewTarget(rememberedTarget);
-                mob.setTarget(rememberedTarget);
                 RecruitCombatMovement.applyCombatMovement(mob, rememberedTarget, 1.25D, 0.95D, 10.0D * 10.0D);
             }
         }
@@ -183,6 +194,23 @@ public final class RecruitCombatEvents {
         }
 
         commandRecruitsAttack(player, victim);
+    }
+
+    /**
+     * The housekeeping is idempotent and the frame above has just run it for this same mob, so a
+     * re-entered pass skips it and goes straight on to judging the target change itself.
+     */
+    private static void sanitizeOnce(Mob mob) {
+        if (SANITIZING.get()) return;
+
+        SANITIZING.set(Boolean.TRUE);
+
+        try {
+            RecruitmentEvents.sanitizeRecruitState(mob);
+            SettlementBridge.sanitizeVillageState(mob);
+        } finally {
+            SANITIZING.remove();
+        }
     }
 
     static void commandRecruitsAttack(ServerPlayer player, LivingEntity target) {
