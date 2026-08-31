@@ -1,5 +1,6 @@
 package net.randomcara.raidborn.gameplay.recruit;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -115,7 +116,10 @@ public final class RecruitSlots {
             int finalUsed = countRecruitSlots(player, slotScanRadius());
 
             player.displayClientMessage(
-                    Component.literal("§cRecruit limit exceeded. " + releasedCount + " companion(s) dismissed. (" + finalUsed + "/" + maxSlots + " slots)"),
+                    Component.literal("Recruit limit exceeded. " + releasedCount
+                            + " Illager" + (releasedCount == 1 ? "" : "s")
+                            + " dismissed. (" + finalUsed + "/" + maxSlots + " slots)")
+                            .withStyle(ChatFormatting.RED),
                     true
             );
         }

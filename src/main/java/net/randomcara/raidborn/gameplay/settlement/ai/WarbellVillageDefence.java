@@ -11,9 +11,9 @@ import net.minecraft.world.phys.AABB;
 import net.randomcara.raidborn.gameplay.recruit.SettlementBridge;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import javax.annotation.Nullable;
 
 /**
  * Village defence for a settled illager: who counts as an intruder and how to reach them.

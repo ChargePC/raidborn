@@ -1,5 +1,6 @@
 package net.randomcara.raidborn.gameplay.recruit;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -112,7 +113,8 @@ public final class SettlementBridge {
         if (player == null || player.level().isClientSide) return;
 
         if (!RecruitmentEvents.canCommandRecruits(player)) {
-            player.displayClientMessage(Component.literal("§7You cannot command recruits right now."), true);
+            player.displayClientMessage(Component.literal("You cannot command recruits right now.")
+                    .withStyle(ChatFormatting.GRAY), true);
             return;
         }
 
@@ -145,9 +147,12 @@ public final class SettlementBridge {
 
         if (affected > 0) {
             RaidbornAdvancements.award(player, ADV_BOUND_TO_THE_BELL, CRIT_BOUND_TO_THE_BELL);
-            player.displayClientMessage(Component.literal("§aSettlement mode enabled for " + affected + " illager(s)."), true);
+            player.displayClientMessage(Component.literal("Settlement mode enabled for " + affected
+                    + " Illager" + (affected == 1 ? "." : "s."))
+                    .withStyle(ChatFormatting.GREEN), true);
         } else {
-            player.displayClientMessage(Component.literal("§7No valid recruited illagers found."), true);
+            player.displayClientMessage(Component.literal("No valid recruited Illagers found.")
+                    .withStyle(ChatFormatting.GRAY), true);
         }
     }
 

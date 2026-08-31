@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -209,7 +210,7 @@ public final class RaidbornNecklaceEffectEvents {
         return persistentData.getCompound(PLAYER_PERSISTED_TAG);
     }
 
-    private static CompoundTag getExistingPersistedRoot(net.minecraft.world.entity.player.Player player) {
+    private static CompoundTag getExistingPersistedRoot(Player player) {
         CompoundTag persistentData = player.getPersistentData();
 
         if (!persistentData.contains(PLAYER_PERSISTED_TAG, Tag.TAG_COMPOUND)) {

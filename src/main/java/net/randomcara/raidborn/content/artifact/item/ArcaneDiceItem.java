@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -27,9 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCurioItem {
-
-    private static final String TAG_RECRUITED = "raidborn_recruited";
-    private static final String TAG_OWNER = "raidborn_owner";
 
     private static final int COOLDOWN_TICKS = 20 * 90;
     private static final double RADIUS = 96.0D;
@@ -74,10 +72,7 @@ public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCuri
         return player.serverLevel().getEntitiesOfClass(
                 Mob.class,
                 player.getBoundingBox().inflate(RADIUS),
-                mob -> mob.isAlive()
-                        && mob.getPersistentData().getBoolean(TAG_RECRUITED)
-                        && mob.getPersistentData().hasUUID(TAG_OWNER)
-                        && ownerId.equals(mob.getPersistentData().getUUID(TAG_OWNER))
+                mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId)
         );
     }
 

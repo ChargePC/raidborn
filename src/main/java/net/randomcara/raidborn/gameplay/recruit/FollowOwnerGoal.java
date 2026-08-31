@@ -3,19 +3,17 @@ package net.randomcara.raidborn.gameplay.recruit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.randomcara.raidborn.core.compat.RaidbornCompatEntities;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
+import net.randomcara.raidborn.gameplay.banner.BannerSlot;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 
 import java.util.EnumSet;
@@ -112,8 +110,7 @@ public class FollowOwnerGoal extends Goal {
 
     /** A squad only forms behind a player wearing a banner and carrying the alliance effect. */
     private boolean ownerCanLeadSquad(ServerPlayer player) {
-        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
-        return !chest.isEmpty() && chest.getItem() instanceof BannerItem && ModEffects.hasAllianceEffect(player);
+        return BannerSlot.isWearingBanner(player) && ModEffects.hasAllianceEffect(player);
     }
 
     /** Village members answer to the bell, and the other squad orders park the mob somewhere. */

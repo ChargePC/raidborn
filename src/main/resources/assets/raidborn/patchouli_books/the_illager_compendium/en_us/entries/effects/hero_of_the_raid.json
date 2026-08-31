@@ -8,17 +8,17 @@
       "type": "patchouli:spotlight",
       "title": "Hero of the Illage",
       "item": "raidborn:overlord_essence",
-      "text": "Drink an $(l:raidborn:utility_and_items/essences)Overlord Essence$() to gain Hero of the Illage. This permanent alliance effect makes Illagers friendly toward you."
+      "text": "An $(l:raidborn:utility_and_items/essences)Overlord Essence$() grants Hero of the Illage, the last of the three alliance effects. Illagers stop treating you as prey, and it does not wear off on its own."
     },
     {
       "type": "patchouli:text",
       "title": "Alliance Rules",
-      "text": "Hero of the Illage provides 15 recruitment slots by default. It removes Bad Omen and is not lost when you attack or kill an Illager-side creature."
+      "text": "It carries 15 recruitment slots by default and strips Bad Omen outright. Unlike the two below it, it survives you attacking or killing an Illager-side creature, so nothing you do in a fight can cost you the pact."
     },
     {
       "type": "patchouli:text",
       "title": "Village Relations",
-      "text": "While any Raidborn alliance effect is active, Villager interaction is blocked, Iron Golems treat you as hostile, and Hero of the Village cannot be gained."
+      "text": "Any Raidborn alliance effect costs you the village side of the game: Villagers will not deal with you, Iron Golems treat you as hostile, and Hero of the Village stays out of reach while it lasts."
     }
   ]
 }

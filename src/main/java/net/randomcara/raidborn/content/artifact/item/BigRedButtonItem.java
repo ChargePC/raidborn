@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,12 +18,11 @@ import net.minecraft.world.phys.AABB;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
-import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
-import java.util.UUID;
 
 public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCurioItem {
 
@@ -42,7 +42,7 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
 
         if (recruits.isEmpty()) {
             player.displayClientMessage(
-                    Component.literal("You have no recruited illagers nearby.")
+                    Component.literal("You have no recruited Illagers nearby.")
                             .withStyle(Style.EMPTY.withColor(0xD9534F)),
                     true
             );
@@ -89,7 +89,7 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, net.minecraft.world.entity.player.Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
@@ -117,23 +117,6 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
     }
 
     private static boolean isValidOwnedRecruit(ServerPlayer player, Mob mob) {
-        if (!(mob instanceof AbstractIllager)) return false;
-        if (!isRecruited(mob)) return false;
-
-        UUID owner = getOwnerUUID(mob);
-        return owner != null && owner.equals(player.getUUID()) && mob.isAlive();
-    }
-
-    private static boolean isRecruited(Mob mob) {
-        return mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)
-                && mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
-    }
-
-    private static UUID getOwnerUUID(Mob mob) {
-        if (!mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) {
-            return null;
-        }
-
-        return mob.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER);
+        return mob instanceof AbstractIllager && mob.isAlive() && RecruitOwnership.isYours(player, mob);
     }
 }

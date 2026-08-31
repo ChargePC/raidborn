@@ -3,19 +3,19 @@ package net.randomcara.raidborn.gameplay.recruit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BannerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.compat.RaidbornCompatEntities;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.core.util.MobSleep;
+import net.randomcara.raidborn.gameplay.banner.BannerSlot;
 import net.randomcara.raidborn.gameplay.settlement.ai.WarbellVillagePathing;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageBedData;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
@@ -89,7 +89,7 @@ public final class RecruitmentEvents {
 
     static boolean isRecruitable(Entity entity) {
         if (isBeast(entity)) return true;
-        if (entity instanceof net.minecraft.world.entity.monster.Ravager) return false;
+        if (entity instanceof Ravager) return false;
         if (entity instanceof Witch) return RaidbornServerConfig.isWitchRecruitable();
         if (!isSpecialRecruitmentEnabled(entity)) return false;
 
@@ -164,8 +164,7 @@ public final class RecruitmentEvents {
     }
 
     static boolean canAttemptRecruit(ServerPlayer player) {
-        return ownerHasAllianceEffect(player)
-                && player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof BannerItem;
+        return ownerHasAllianceEffect(player) && BannerSlot.isWearingBanner(player);
     }
 
     public static boolean canCommandRecruits(ServerPlayer player) {

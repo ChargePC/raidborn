@@ -8,6 +8,7 @@ modId="raidborn"
 version="0.1-1.20.1"
 displayName="Raidborn: Join the Illagers"
 displayURL="https://github.com/ChargePC/raidborn"
+logoFile="raidborn.png"
 authors="Randomcara7, I_DRAW_THINGS"
 credits="Randomcara7 (github.com/ChargePC): design, code and balancing. I_DRAW_THINGS: art, item and block textures, entity models and textures. All rights reserved, see LICENSE.txt in the jar for what you may and may not do with it."
 description='''Join the wrong side'''

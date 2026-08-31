@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:voodoo_villager_doll",
-      "text": "Press the artifact key to grant nearby melee recruits Speed I and Strength I for 15 seconds. Cooldown: 45 seconds.",
+      "text": "Gives nearby melee recruits Speed I and Strength I for 15 seconds. Ranged recruits are left out, so it pays off most with a patrol built to close distance.$(br2)Cooldown is 45 seconds.",
       "title": "Voodoo Villager Doll"
     }
   ]

@@ -11,8 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.randomcara.raidborn.content.entity.VillageSide;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Ground shockwaves: the two-armed slam and the thud on landing from a height. Neither one damages

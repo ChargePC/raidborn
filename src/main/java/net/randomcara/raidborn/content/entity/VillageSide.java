@@ -11,8 +11,7 @@ import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.randomcara.raidborn.core.registry.ModTags;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /** Iron Gollet and Iron Juggernaut both extend {@link IronGolem}, so the golem test covers them. */
 public final class VillageSide {

@@ -11,9 +11,9 @@ import net.randomcara.raidborn.content.entity.VillageSide;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public final class AttackRaidbornHooks {
     private AttackRaidbornHooks() {

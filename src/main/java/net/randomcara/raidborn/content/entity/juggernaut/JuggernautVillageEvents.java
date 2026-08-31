@@ -29,11 +29,11 @@ import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.core.registry.ModEntities;
 import net.randomcara.raidborn.gameplay.attack.AttackRaidbornHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
 
 /** World-side Juggernaut logic: village spawning, post-raid reward and aggression bookkeeping. */
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)

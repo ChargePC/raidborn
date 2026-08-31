@@ -1,5 +1,6 @@
 package net.randomcara.raidborn.gameplay.recruit;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -157,15 +158,18 @@ public final class RecruitInteractionEvents {
             RecruitmentEvents.releaseRecruit(mob);
 
             int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
-            player.displayClientMessage(Component.literal("§cCompanion dismissed. (" + used + "/" + maxSlots + " slots)"), true);
+            player.displayClientMessage(Component.literal("Illager dismissed. (" + used + "/" + maxSlots + " slots)")
+                    .withStyle(ChatFormatting.RED), true);
         } else if (recruited && hasOwner) {
-            player.displayClientMessage(Component.literal("§7This mob already serves another leader."), true);
+            player.displayClientMessage(Component.literal("This mob already serves another leader.")
+                    .withStyle(ChatFormatting.GRAY), true);
         } else {
             if (RaidBagItem.playerHasStoredSquad(player)) {
                 int storedCount = RaidBagItem.getStoredRecruitCount(player);
                 int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
                 player.displayClientMessage(
-                        Component.literal("§7Your squad is stored in a Raid Bag (" + storedCount + " recruits, " + used + "/" + maxSlots + " slots used)."),
+                        Component.literal("Your squad is stored in a Raid Bag (" + storedCount + " recruits, " + used + "/" + maxSlots + " slots used).")
+                                .withStyle(ChatFormatting.GRAY),
                         true
                 );
                 event.setCanceled(true);
@@ -177,7 +181,8 @@ public final class RecruitInteractionEvents {
             int cost = RecruitSlots.getRecruitCost(mob);
 
             if (currentSlots + cost > maxSlots) {
-                player.displayClientMessage(Component.literal("§cRecruit limit reached (" + currentSlots + "/" + maxSlots + " slots used)."), true);
+                player.displayClientMessage(Component.literal("Recruit limit reached (" + currentSlots + "/" + maxSlots + " slots used).")
+                        .withStyle(ChatFormatting.RED), true);
             } else {
                 if (villageMember) {
                     WarbellVillageData.resetMobFromVillage(mob);
@@ -205,7 +210,8 @@ public final class RecruitInteractionEvents {
                 RaidbornAdvancements.award(player, RecruitmentEvents.ADV_RECRUIT_ILLAGER, RecruitmentEvents.CRIT_RECRUIT_ILLAGER);
 
                 int after = currentSlots + cost;
-                player.displayClientMessage(Component.literal("§aCompanion recruited! (" + after + "/" + maxSlots + " slots)"), true);
+                player.displayClientMessage(Component.literal("Illager recruited! (" + after + "/" + maxSlots + " slots)")
+                        .withStyle(ChatFormatting.GREEN), true);
             }
         }
 

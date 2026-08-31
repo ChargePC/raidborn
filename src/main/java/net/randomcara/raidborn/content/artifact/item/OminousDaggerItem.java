@@ -3,6 +3,7 @@ package net.randomcara.raidborn.content.artifact.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -36,8 +37,9 @@ public class OminousDaggerItem extends SwordItem {
 
     public static final String VILLAGER_KILLS_TAG = "VillagerKills";
 
-    private static final float DAMAGE_BONUS_PER_KILL = 0.025F;
-    private static final float MAX_DAMAGE_BONUS = 1.0F;
+    // Halved from 2.5% to +100%, which sat on top of netherite-sword damage and tripled its DPS.
+    private static final float DAMAGE_BONUS_PER_KILL = 0.0125F;
+    private static final float MAX_DAMAGE_BONUS = 0.5F;
     private static final int MAX_BONUS_KILLS = 40;
 
     private static final UUID OMINOUS_DAGGER_REACH_UUID = UUID.fromString("7b1b8c5d-59c3-4f5f-b4c4-3de7dc0f4c11");
@@ -45,21 +47,23 @@ public class OminousDaggerItem extends SwordItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public OminousDaggerItem(Tier tier, Properties properties) {
-        super(tier, 4, -1.6F, properties);
+        super(tier, 2, -1.8F, properties);
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
+        // Iron tier, the way the book already described it: 5 damage a hit, under an iron sword, at
+        // 2.2 swings a second, over any of them. Shorter reach is what it pays for the speed.
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                 BASE_ATTACK_DAMAGE_UUID,
                 "Weapon modifier",
-                7.0D,
+                4.0D,
                 AttributeModifier.Operation.ADDITION
         ));
 
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(
                 BASE_ATTACK_SPEED_UUID,
                 "Weapon modifier",
-                -1.6D,
+                -1.8D,
                 AttributeModifier.Operation.ADDITION
         ));
 
@@ -124,8 +128,8 @@ public class OminousDaggerItem extends SwordItem {
         TooltipHelper.addShiftDescription(
                 tooltip,
                 TooltipHelper.line("Fast dagger, but with shorter reach", 0xAAAAAA),
-                TooltipHelper.line("+2.5% damage for each villager slain", 0xAA3333),
-                TooltipHelper.line(String.format("Damage bonus: +%.1f%% / 100%%", bonusPercent), 0xFF5555),
+                TooltipHelper.line(String.format("+%.2f%% damage for each Villager slain", DAMAGE_BONUS_PER_KILL * 100.0F), 0xAA3333),
+                TooltipHelper.line(String.format("Damage bonus: +%.1f%% / %.0f%%", bonusPercent, MAX_DAMAGE_BONUS * 100.0F), 0xFF5555),
                 TooltipHelper.line("Progress: " + progressKills + " / " + MAX_BONUS_KILLS, 0x8B0000),
                 TooltipHelper.line("Cannot get Unbreaking or Mending", 0x777777)
         );
@@ -138,27 +142,32 @@ public class OminousDaggerItem extends SwordItem {
 
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
-            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                ItemStack weapon = attacker.getMainHandItem();
+            ItemStack weapon = daggerThatLandedTheHit(event.getSource());
+            if (weapon.isEmpty()) return;
 
-                if (weapon.getItem() instanceof OminousDaggerItem) {
-                    float multiplier = OminousDaggerItem.getDamageMultiplier(weapon);
-                    event.setAmount(event.getAmount() * multiplier);
-                }
-            }
+            event.setAmount(event.getAmount() * OminousDaggerItem.getDamageMultiplier(weapon));
         }
 
         @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             if (!(event.getEntity() instanceof Villager)) return;
 
-            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                ItemStack weapon = attacker.getMainHandItem();
+            ItemStack weapon = daggerThatLandedTheHit(event.getSource());
+            if (weapon.isEmpty()) return;
 
-                if (weapon.getItem() instanceof OminousDaggerItem) {
-                    OminousDaggerItem.addVillagerKill(weapon);
-                }
-            }
+            OminousDaggerItem.addVillagerKill(weapon);
+        }
+
+        /**
+         * Looking at the main hand alone also matched arrows and thrown potions, so anything shot
+         * while the dagger was held got the bonus damage and fed the kill count for free.
+         */
+        private static ItemStack daggerThatLandedTheHit(DamageSource source) {
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return ItemStack.EMPTY;
+            if (source.getDirectEntity() != attacker) return ItemStack.EMPTY;
+
+            ItemStack weapon = attacker.getMainHandItem();
+            return weapon.getItem() instanceof OminousDaggerItem ? weapon : ItemStack.EMPTY;
         }
 
         public static boolean isBannerCaptain(AbstractIllager illager) {

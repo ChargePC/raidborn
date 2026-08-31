@@ -24,7 +24,7 @@ import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
-import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -51,7 +51,7 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
         TooltipHelper.addShiftDescription(
                 tooltip,
                 TooltipHelper.line("Your weapon hits and projectiles poison enemies", 0xFF76DB4C),
-                TooltipHelper.line("Your recruited illagers can poison too", 0xFF4F8C29)
+                TooltipHelper.line("Your recruited Illagers can poison too", 0xFF4F8C29)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);
@@ -151,21 +151,13 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
         if (target == ownerPlayer) return false;
         if (target == poisonSourceEntity) return false;
 
-        if (target instanceof Mob targetMob && isRecruited(targetMob)) {
-            UUID targetOwner = getOwnerUUID(targetMob);
-            if (targetOwner != null && targetOwner.equals(ownerPlayer.getUUID())) {
-                return false;
-            }
+        if (target instanceof Mob targetMob && RecruitOwnership.isOwnedBy(targetMob, ownerPlayer.getUUID())) {
+            return false;
         }
 
-        if (poisonSourceEntity instanceof Mob sourceMob && target instanceof Mob targetMob) {
-            if (isRecruited(sourceMob) && isRecruited(targetMob)) {
-                UUID sourceOwner = getOwnerUUID(sourceMob);
-                UUID targetOwner = getOwnerUUID(targetMob);
-                if (sourceOwner != null && sourceOwner.equals(targetOwner)) {
-                    return false;
-                }
-            }
+        if (poisonSourceEntity instanceof Mob sourceMob && target instanceof Mob targetMob
+                && RecruitOwnership.isSameSquad(sourceMob, targetMob)) {
+            return false;
         }
 
         return true;
@@ -176,8 +168,8 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
             return player;
         }
 
-        if (poisonSourceEntity instanceof Mob mob && isRecruited(mob)) {
-            UUID ownerUuid = getOwnerUUID(mob);
+        if (poisonSourceEntity instanceof Mob mob && RecruitOwnership.isRecruited(mob)) {
+            UUID ownerUuid = RecruitOwnership.getOwnerUUID(mob);
             if (ownerUuid == null) return null;
 
             Entity ownerEntity = mob.level().getPlayerByUUID(ownerUuid);
@@ -187,16 +179,6 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
         }
 
         return null;
-    }
-
-    private static boolean isRecruited(Mob mob) {
-        return mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)
-                && mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
-    }
-
-    private static UUID getOwnerUUID(Mob mob) {
-        if (!mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) return null;
-        return mob.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER);
     }
 
     private static boolean hasPoisonArrowheadEquipped(ServerPlayer player) {

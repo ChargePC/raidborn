@@ -8,17 +8,17 @@
       "type": "patchouli:spotlight",
       "title": "Illager Loyalty",
       "item": "raidborn:raidborn_essence",
-      "text": "Drink a $(l:raidborn:utility_and_items/essences)Raidborn Essence$() to gain Illager Loyalty. This permanent alliance effect makes Illagers friendly toward you."
+      "text": "A $(l:raidborn:utility_and_items/essences)Raidborn Essence$() grants Illager Loyalty, the first of the three alliance effects. Illagers stop treating you as prey, and it does not wear off on its own."
     },
     {
       "type": "patchouli:text",
       "title": "Alliance Rules",
-      "text": "Illager Loyalty provides 5 recruitment slots by default. You lose it if you directly hurt an Illager-side creature.$(br2)Bad Omen temporarily suppresses the effect. Illager Loyalty returns when Bad Omen ends."
+      "text": "It carries 5 recruitment slots by default and it is the least forgiving of the three: directly hurting an Illager-side creature is enough to end it, no kill required.$(br2)Bad Omen suppresses it while it lasts, and Illager Loyalty comes back when Bad Omen goes."
     },
     {
       "type": "patchouli:text",
       "title": "Village Relations",
-      "text": "While any Raidborn alliance effect is active, Villager interaction is blocked, Iron Golems treat you as hostile, and Hero of the Village cannot be gained."
+      "text": "Any Raidborn alliance effect costs you the village side of the game: Villagers will not deal with you, Iron Golems treat you as hostile, and Hero of the Village stays out of reach while it lasts."
     }
   ]
 }

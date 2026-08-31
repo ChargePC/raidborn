@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:experience_ring",
-      "text": "Doubles experience gained while equipped. If you die, the dropped ring stores up to 30 levels of experience. Pick it up to recover the stored XP.",
+      "text": "Doubles the experience you pick up. It also catches up to 30 levels when you die and holds them in the dropped ring, so getting the ring back matters more than getting back in time.",
       "title": "Experience Ring"
     }
   ]

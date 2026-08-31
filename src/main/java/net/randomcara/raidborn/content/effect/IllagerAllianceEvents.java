@@ -32,8 +32,7 @@ import net.randomcara.raidborn.core.util.AvoidGoals;
 import net.randomcara.raidborn.core.util.RaidbornAdvancements;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import net.randomcara.raidborn.gameplay.recruit.RecruitTargeting;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Rules shared by every {@link IllagerAlliance}.

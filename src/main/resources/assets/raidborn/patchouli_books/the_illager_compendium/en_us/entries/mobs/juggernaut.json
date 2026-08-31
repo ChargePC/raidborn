@@ -1,0 +1,56 @@
+{
+  "name": "Iron Juggernaut",
+  "category": "raidborn:mobs",
+  "icon": "raidborn:juggernaut_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Overview",
+      "text": "The Iron Juggernaut is a heavy village defender with 200 health, 12 armor and 20 base attack damage, hitting for 12 to 28 per swing.$(br2)It notices threats within 16 blocks and gives up a chase past 32. Juggernauts never despawn, and a village-linked one stays within 48 blocks of its bell."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "raidborn:juggernaut",
+      "name": "Iron Juggernaut",
+      "scale": 1,
+      "offset": 0.0,
+      "rotate": true,
+      "text": "Villagers, Iron Golems and $(l:raidborn:mobs/iron_gollet)Iron Gollets$(/l) count as allies. Creepers are ignored, since they would take the village down with the attacker."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Heavy Swing",
+      "text": "Every attack opens with a short wind-up and lands about 1.5 seconds apart. It only connects in a wide arc in front of the Juggernaut and never reaches targets more than 2.5 blocks above or below it.$(br2)Hits launch their target upward. Blocking with a Shield costs extra durability and disables the Shield for 5 seconds."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Ground Slam",
+      "text": "When both arms rise, the swing ends in a slam that throws every enemy within 4.5 blocks into the air. A single raised arm is a normal swing.$(br2)Landing from 4 blocks or higher sends out the same shockwave, pushing nearby enemies away. Neither impact damages blocks."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Built of Iron",
+      "text": "It cannot be knocked back, not even by explosions, and takes no fall, drowning, freezing or starvation damage. Poison and Hunger do not stick, and potions and Regeneration do not heal it.$(br2)It cannot be leashed or pushed, refuses Boats and Minecarts, walks along the bottom of water at full speed and never opens doors."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Repair",
+      "text": "Right-click a Juggernaut with an Iron Ingot to restore 25 health, or with an Iron Block to restore 100. Iron is the only thing that repairs it.$(br2)A Juggernaut that considers you an enemy refuses the repair."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Grudges",
+      "text": "Players are left alone until they earn a grudge. Hitting the Juggernaut, or harming a Villager or another defender within 32 blocks of it, is enough. A grudge lasts 30 seconds, or a minute when a Villager was killed, and does not expire while a raid or a Village Attack is running.$(br2)Hero of the Village shields a player who only harmed the village, but not one who struck the Juggernaut itself."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Village Defender",
+      "text": "By default, a village with a bell and at least 2 Villagers can be granted a Juggernaut of its own. A village fields only one at a time.$(br2)If it dies, the village waits 5 days and then has a small daily chance to receive a replacement, and only while its Villagers are still in danger."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Raids and Attacks",
+      "text": "A village that survives a raid at Bad Omen level 5 or higher is granted a Juggernaut, arriving up to 20 minutes after the victory. A $(l:raidborn:mechanics/attack)Village Attack$(/l) started with Hero of the Illage also puts one in the defense, and it treats the attacker as an enemy from the start.$(br2)Only village and raid-reward Juggernauts drop loot: 8 to 16 Iron Ingots and up to 2 Poppies."
+    }
+  ]
+}

@@ -3,6 +3,7 @@ package net.randomcara.raidborn.content.artifact.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +56,7 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, net.minecraft.world.entity.Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
             restoreStoredExperience(player, stack);
         }

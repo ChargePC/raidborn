@@ -25,6 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class SettlementSpawnMarkerEvents {
@@ -86,12 +86,12 @@ public final class SettlementSpawnMarkerEvents {
         event.setCanceled(true);
 
         if (!QUEUED_MARKERS.add(pending.uniqueKey())) {
-            LOGGER.info("Duplicate settlement marker ignored at {} as {}.", pending.blockPos(), category);
+            LOGGER.debug("Duplicate settlement marker ignored at {} as {}.", pending.blockPos(), category);
             return;
         }
 
         PENDING_SPAWNS.add(pending);
-        LOGGER.info("Queued settlement marker at {} as {}.", pending.blockPos(), category);
+        LOGGER.debug("Queued settlement marker at {} as {}.", pending.blockPos(), category);
     }
 
     @SubscribeEvent
@@ -159,7 +159,7 @@ public final class SettlementSpawnMarkerEvents {
                 markSettlementIllager(spawnedMob, pending.blockPos());
             }
 
-            LOGGER.info("Replaced settlement marker at {} with {}.", pending.blockPos(), pending.category());
+            LOGGER.debug("Replaced settlement marker at {} with {}.", pending.blockPos(), pending.category());
             return;
         }
 

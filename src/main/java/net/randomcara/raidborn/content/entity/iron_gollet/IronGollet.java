@@ -49,12 +49,12 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.randomcara.raidborn.content.entity.VillageSide;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public class IronGollet extends IronGolem {
     private static final EntityDataAccessor<Boolean> CARRYING_VILLAGER =

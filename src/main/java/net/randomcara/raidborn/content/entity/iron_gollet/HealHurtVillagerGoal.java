@@ -14,10 +14,10 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.EnumSet;
-import javax.annotation.Nullable;
 
 /**
  * Grab a hurt villager, carry them away from whatever hit them, let regen do the rest.

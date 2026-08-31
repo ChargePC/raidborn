@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -59,14 +60,15 @@ public class IllagerWarhornItem extends Item {
                 tooltip,
                 Component.literal("Shift + Right Click: Change mode").withStyle(ChatFormatting.DARK_GRAY),
                 Component.literal("Right Click: Give order").withStyle(ChatFormatting.DARK_GRAY),
-                Component.literal("Hold: squad stays and defends the commanded position").withStyle(ChatFormatting.DARK_GRAY)
+                Component.literal("Hold: squad stays and defends the commanded position")
+                        .withStyle(ChatFormatting.DARK_GRAY)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, net.minecraft.world.entity.player.Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!(player instanceof ServerPlayer serverPlayer)) {
@@ -78,7 +80,8 @@ public class IllagerWarhornItem extends Item {
         }
 
         if (!RecruitmentEvents.canCommandRecruits(serverPlayer)) {
-            serverPlayer.displayClientMessage(Component.literal("§cYou cannot command your squad right now."), true);
+            serverPlayer.displayClientMessage(Component.literal("You cannot command your squad right now.")
+                    .withStyle(ChatFormatting.RED), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -89,13 +92,15 @@ public class IllagerWarhornItem extends Item {
             setSelectedMode(stack, next);
 
             player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-            serverPlayer.displayClientMessage(Component.literal("§eWarhorn mode: §f" + formatMode(next)), true);
+            serverPlayer.displayClientMessage(Component.literal("Warhorn mode: ").withStyle(ChatFormatting.YELLOW)
+                    .append(Component.literal(formatMode(next)).withStyle(ChatFormatting.WHITE)), true);
             return InteractionResultHolder.success(stack);
         }
 
         List<Mob> squad = SquadOrders.getNearbySquad(serverPlayer);
         if (squad.isEmpty()) {
-            serverPlayer.displayClientMessage(Component.literal("§7You have no recruited illagers nearby."), true);
+            serverPlayer.displayClientMessage(Component.literal("You have no recruited Illagers nearby.")
+                    .withStyle(ChatFormatting.GRAY), true);
             return InteractionResultHolder.success(stack);
         }
 
@@ -111,13 +116,15 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.FOLLOW);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("§aSquad order: Follow"), true);
+                serverPlayer.displayClientMessage(Component.literal("Squad order: Follow")
+                        .withStyle(ChatFormatting.GREEN), true);
             }
             case ATTACK -> {
                 LivingEntity lookedTarget = getLookTarget(serverPlayer);
 
                 if (lookedTarget == null) {
-                    serverPlayer.displayClientMessage(Component.literal("§7No valid target in sight."), true);
+                    serverPlayer.displayClientMessage(Component.literal("No valid target in sight.")
+                            .withStyle(ChatFormatting.GRAY), true);
                     return InteractionResultHolder.success(stack);
                 }
 
@@ -135,11 +142,13 @@ public class IllagerWarhornItem extends Item {
                 }
 
                 if (affected <= 0) {
-                    serverPlayer.displayClientMessage(Component.literal("§7That target is not valid for your squad."), true);
+                    serverPlayer.displayClientMessage(Component.literal("That target is not valid for your squad.")
+                            .withStyle(ChatFormatting.GRAY), true);
                 } else {
                     playOrderSound(level, serverPlayer, SquadOrder.ATTACK);
                     player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                    serverPlayer.displayClientMessage(Component.literal("§4Squad order: Attack target"), true);
+                    serverPlayer.displayClientMessage(Component.literal("Squad order: Attack target")
+                            .withStyle(ChatFormatting.DARK_RED), true);
                 }
             }
             case HOLD -> {
@@ -151,7 +160,8 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.HOLD);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("§6Squad order: Hold position"), true);
+                serverPlayer.displayClientMessage(Component.literal("Squad order: Hold position")
+                        .withStyle(ChatFormatting.GOLD), true);
             }
         }
 

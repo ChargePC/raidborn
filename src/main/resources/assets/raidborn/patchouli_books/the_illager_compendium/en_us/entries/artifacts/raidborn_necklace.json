@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:raidborn_necklace",
-      "text": "Grants 5 additional recruitment slots while equipped. It also preserves your Raidborn alliance effect when you die.",
+      "text": "Adds 5 recruitment slots while worn, and carries your alliance effect through death. Losing the effect is otherwise the quickest way to lose an entire patrol at once.",
       "title": "Raidborn Necklace"
     }
   ]

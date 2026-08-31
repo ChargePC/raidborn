@@ -426,7 +426,7 @@ public class RaidbornServerConfig {
                     .defineInRange("detectionRadius", 64, 16, 256);
 
             attackRequiredVillagers = b
-                    .comment("Minimum living villagers required to start an Attack.")
+                    .comment("Minimum living Villagers required to start an Attack.")
                     .defineInRange("requiredVillagers", 3, 1, 128);
 
             attackRequiredPois = b
@@ -434,11 +434,11 @@ public class RaidbornServerConfig {
                     .defineInRange("requiredPois", 3, 1, 256);
 
             attackRequireNaturalGolem = b
-                    .comment("If true, at least one naturally spawned iron golem is required to start an Attack.")
+                    .comment("If true, at least one naturally spawned Iron Golem is required to start an Attack.")
                     .define("requireNaturalGolem", true);
 
             attackIgnoreVillagersInVehicles = b
-                    .comment("If true, villagers inside boats or minecarts are ignored for Attack activation and objectives.")
+                    .comment("If true, Villagers inside boats or minecarts are ignored for Attack activation and objectives.")
                     .define("ignoreVillagersInVehicles", true);
 
             attackRallyRecruitsOnStart = b
@@ -476,19 +476,19 @@ public class RaidbornServerConfig {
                     .defineInRange("largeTimeLimitTicks", 24000, 20 * 60, 20 * 60 * 60);
 
             attackMaxExtraDefendersSmall = b
-                    .comment("Global maximum extra defenders spawned for villages with 3 to 5 registered villagers.")
+                    .comment("Global maximum extra defenders spawned for villages with 3 to 5 registered Villagers.")
                     .defineInRange("maxExtraDefendersSmall", 8, 0, 128);
 
             attackMaxExtraDefendersMedium = b
-                    .comment("Global maximum extra defenders spawned for villages with 6 to 12 registered villagers.")
+                    .comment("Global maximum extra defenders spawned for villages with 6 to 12 registered Villagers.")
                     .defineInRange("maxExtraDefendersMedium", 18, 0, 256);
 
             attackMaxExtraDefendersLarge = b
-                    .comment("Global maximum extra defenders spawned for villages with 13 or more registered villagers.")
+                    .comment("Global maximum extra defenders spawned for villages with 13 or more registered Villagers.")
                     .defineInRange("maxExtraDefendersLarge", 28, 0, 512);
 
             attackSpawnDefendersPerVillager = b
-                    .comment("If true, the Attack tries to spawn extra village defenders near registered villagers.")
+                    .comment("If true, the Attack tries to spawn extra village defenders near registered Villagers.")
                     .define("spawnDefendersPerVillager", true);
 
             b.push("loyalty");
@@ -565,7 +565,7 @@ public class RaidbornServerConfig {
                     .define("despawnSpawnedDefendersAfterEnd", true);
 
             attackVictoryCelebrationTicks = b
-                    .comment("How long allied illagers celebrate after winning an Attack. 300 ticks = 15 seconds.")
+                    .comment("How long allied Illagers celebrate after winning an Attack. 300 ticks = 15 seconds.")
                     .defineInRange("victoryCelebrationTicks", 300, 20, 20 * 60 * 5);
 
             attackEndBossbarDelayTicks = b
@@ -581,7 +581,7 @@ public class RaidbornServerConfig {
                     .defineInRange("cooldownMatchExtraRadius", 32, 0, 256);
 
             attackVillagerPanicSpeed = b
-                    .comment("Navigation speed used by registered villagers when fleeing during an Attack.")
+                    .comment("Navigation speed used by registered Villagers when fleeing during an Attack.")
                     .defineInRange("villagerPanicSpeed", 0.85D, 0.1D, 2.0D);
 
             b.pop();
@@ -600,7 +600,7 @@ public class RaidbornServerConfig {
                     .defineInRange("naturalSpawnChance", 0.25D, 0.0D, 1.0D);
 
             juggernautMinVillagers = b
-                    .comment("Minimum living villagers for a village to be eligible for a natural Juggernaut.")
+                    .comment("Minimum living Villagers for a village to be eligible for a natural Juggernaut.")
                     .defineInRange("minVillagers", 2, 1, 64);
 
             juggernautVillageScanRadius = b

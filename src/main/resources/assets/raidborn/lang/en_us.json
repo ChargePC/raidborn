@@ -45,15 +45,15 @@
   "advancements.raidborn.final_authority.title": "Final Authority",
   "advancements.raidborn.final_authority.description": "Gain Hero of the Illage.",
   "advancements.raidborn.you_work_for_me_now.title": "You Work for Me Now",
-  "advancements.raidborn.you_work_for_me_now.description": "Recruit your first illager.",
+  "advancements.raidborn.you_work_for_me_now.description": "Recruit your first Illager.",
   "advancements.raidborn.totally_legal_business.title": "Totally Legal Business",
-  "advancements.raidborn.totally_legal_business.description": "Complete your first trade with an illager.",
+  "advancements.raidborn.totally_legal_business.description": "Complete your first trade with an Illager.",
   "advancements.raidborn.friendly_fire.title": "Friendly Fire",
-  "advancements.raidborn.friendly_fire.description": "Lose your oath by attacking an illager.",
+  "advancements.raidborn.friendly_fire.description": "Lose your oath by attacking an Illager.",
   "advancements.raidborn.there_goes_the_plan.title": "There Goes the Plan",
-  "advancements.raidborn.there_goes_the_plan.description": "Lose your oath by killing an illager.",
+  "advancements.raidborn.there_goes_the_plan.description": "Lose your oath by killing an Illager.",
   "advancements.raidborn.bound_to_the_bell.title": "Bound to the Bell",
-  "advancements.raidborn.bound_to_the_bell.description": "Assign a recruited illager to a settlement using a Grand Warbell",
+  "advancements.raidborn.bound_to_the_bell.description": "Assign a recruited Illager to a settlement using a Grand Warbell.",
   "entity.raidborn.grumblager": "Grumblager",
   "item.raidborn.grumblager_spawn_egg": "Grumblager Spawn Egg",
   "entity.raidborn.beast": "Beast",
@@ -71,5 +71,6 @@
   "event.raidborn.attack.victory": "Attack - Victory",
   "event.raidborn.attack.abandoned": "Attack - Abandoned",
   "event.raidborn.attack.failed": "Attack - Failed",
-  "event.raidborn.attack.remaining": "Attack - %s villager(s) remaining"
+  "event.raidborn.attack.remaining_one": "Attack - 1 Villager remaining",
+  "event.raidborn.attack.remaining": "Attack - %s Villagers remaining"
 }

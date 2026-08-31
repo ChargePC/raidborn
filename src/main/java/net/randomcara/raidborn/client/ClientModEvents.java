@@ -1,11 +1,14 @@
 package net.randomcara.raidborn.client;
 
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.randomcara.bentoslib.client.render.area.AreaVisualClient;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.client.model.BeastModel;
@@ -16,11 +19,13 @@ import net.randomcara.raidborn.client.renderer.BeastRenderer;
 import net.randomcara.raidborn.client.renderer.GrumblagerRenderer;
 import net.randomcara.raidborn.client.renderer.IronGolletRenderer;
 import net.randomcara.raidborn.client.renderer.JuggernautRenderer;
+import net.randomcara.raidborn.client.renderer.curio.BannerCurioRenderer;
 import net.randomcara.raidborn.content.entity.beast.client.BeastInventoryScreen;
 import net.randomcara.raidborn.core.registry.ModEntities;
 import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.core.registry.ModMenuTypes;
 import net.randomcara.raidborn.transmutation.client.TransmutationTableScreen;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
@@ -35,7 +40,17 @@ public class ClientModEvents {
             MenuScreens.register(ModMenuTypes.BEAST_INVENTORY_MENU.get(), BeastInventoryScreen::new);
 
             registerTotemAreaVisuals();
+            registerBannerCurioRenderer();
         });
+    }
+
+    /** Every banner colour is a separate item, so the back slot needs the renderer on all of them. */
+    private static void registerBannerCurioRenderer() {
+        for (Item item : ForgeRegistries.ITEMS) {
+            if (item instanceof BannerItem) {
+                CuriosRendererRegistry.register(item, BannerCurioRenderer::new);
+            }
+        }
     }
 
     // per-item area color lives here because BentosLib knows nothing about items, it only holds the

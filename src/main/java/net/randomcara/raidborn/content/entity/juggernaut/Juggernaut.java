@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -40,14 +41,14 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.Vec3;
 import net.randomcara.raidborn.content.entity.VillageSide;
 import net.randomcara.raidborn.core.registry.ModTags;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Heavy defensive Iron Golem variant. Extends {@link IronGolem} so villagers and the Hero Attack
@@ -183,8 +184,8 @@ public class Juggernaut extends IronGolem {
 
     @Override
     public SpawnGroupData finalizeSpawn(
-            net.minecraft.world.level.ServerLevelAccessor level,
-            net.minecraft.world.DifficultyInstance difficulty,
+            ServerLevelAccessor level,
+            DifficultyInstance difficulty,
             MobSpawnType spawnType,
             @Nullable SpawnGroupData spawnData,
             @Nullable CompoundTag dataTag

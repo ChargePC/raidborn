@@ -13,7 +13,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MerchantMenu;
@@ -36,8 +38,7 @@ import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.gameplay.settlement.ai.WarbellVillageRoutine;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstationData;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class IllagerTradeEvents {
@@ -162,7 +163,7 @@ public class IllagerTradeEvents {
     private static boolean isRecruitableForTradeRules(Entity entity) {
         ResourceLocation id = getEntityId(entity);
         if (id == null || !RaidbornServerConfig.isRecruitmentEnabledFor(id)) return false;
-        if (entity instanceof net.minecraft.world.entity.monster.Ravager) return false;
+        if (entity instanceof Ravager) return false;
         if (entity instanceof Witch) return RaidbornServerConfig.isWitchRecruitable();
         if (!specialRecruitsEnabled(entity)) return false;
         if (isModLoaded(CONJ_MODID) && id.equals(CONJ_CONJURER)) return false;
@@ -573,7 +574,7 @@ public class IllagerTradeEvents {
             }
 
             @Override
-            public AbstractContainerMenu createMenu(int id, net.minecraft.world.entity.player.Inventory inventory, Player menuPlayer) {
+            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player menuPlayer) {
                 merchant.setTradingPlayer(menuPlayer);
                 return new IllagerMerchantMenu(id, inventory, merchant);
             }

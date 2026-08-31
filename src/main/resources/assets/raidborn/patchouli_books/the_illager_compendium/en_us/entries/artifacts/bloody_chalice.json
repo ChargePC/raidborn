@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:bloody_chalice",
-      "text": "When one of your nearby recruits kills an enemy, you recover 3 hearts. When you kill an enemy, nearby recruits in your patrol recover 3 hearts.",
+      "text": "Kills feed the patrol both ways. A nearby recruit finishing an enemy heals you 3 hearts, and a kill of your own heals every nearby recruit in the patrol by the same amount.",
       "title": "Bloody Chalice"
     }
   ]

@@ -3,6 +3,7 @@ package net.randomcara.raidborn.client.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -107,7 +108,7 @@ public final class ArtifactHudOverlay {
         return new HudPosition(x, y);
     }
 
-    private static ItemStack getEquippedArtifact(net.minecraft.world.entity.player.Player player) {
+    private static ItemStack getEquippedArtifact(Player player) {
         ItemStack stack;
 
         stack = findEquipped(player, ModItems.ANYWHERE_PILLOW.get());
@@ -134,7 +135,7 @@ public final class ArtifactHudOverlay {
         return ItemStack.EMPTY;
     }
 
-    private static ItemStack findEquipped(net.minecraft.world.entity.player.Player player, Item item) {
+    private static ItemStack findEquipped(Player player, Item item) {
         ItemStack stack = CurioActivationHelper.getEquippedStack(player, item);
 
         if (!(stack.getItem() instanceof IActivatableCurioItem)) {

@@ -16,11 +16,11 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.gameplay.bossbar.EventBossBarController;
 import net.randomcara.raidborn.content.item.utility.VillageLootItem;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public class AttackInstance {
     private static final int START_BOSSBAR_FILL_TICKS = 300;
@@ -340,7 +340,9 @@ public class AttackInstance {
                 int alive = aliveVillagerUuids.size();
 
                 yield !isStartBossBarFilling() && alive > 0 && alive <= 2
-                        ? Component.translatable("event.raidborn.attack.remaining", alive)
+                        ? Component.translatable(alive == 1
+                                ? "event.raidborn.attack.remaining_one"
+                                : "event.raidborn.attack.remaining", alive)
                         : Component.translatable("event.raidborn.attack");
             }
         };
@@ -472,7 +474,6 @@ public class AttackInstance {
     private int getInitialVillagerCount() {
         return initialVillagerUuids.size();
     }
-
 
     public AttackState getState() {
         return state;

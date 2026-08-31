@@ -86,7 +86,7 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         TooltipHelper.addShiftDescription(
                 tooltip,
-                TooltipHelper.line("When you gain an effect, your recruited illagers gain it too", 0xC8A2FF),
+                TooltipHelper.line("When you gain an effect, your recruited Illagers gain it too", 0xC8A2FF),
                 TooltipHelper.line("Only works while equipped", 0xAAAAAA)
         );
     }

@@ -18,6 +18,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,9 +26,6 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
-
-    private static final String TAG_RECRUITED = "raidborn_recruited";
-    private static final String TAG_OWNER = "raidborn_owner";
 
     private static final float HEAL_AMOUNT = 6.0F;
     private static final double PATROL_RADIUS = 96.0D;
@@ -73,8 +71,8 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
             return;
         }
 
-        if (livingKiller instanceof Mob mobKiller && isRecruitedIllager(mobKiller)) {
-            UUID ownerId = getOwnerUUID(mobKiller);
+        if (livingKiller instanceof Mob mobKiller && RecruitOwnership.isRecruited(mobKiller)) {
+            UUID ownerId = RecruitOwnership.getOwnerUUID(mobKiller);
             if (ownerId == null) return;
 
             ServerPlayer owner = mobKiller.getServer() != null
@@ -93,28 +91,13 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
         return CurioActivationHelper.isEquipped(player, ModItems.BLOODY_CHALICE.get());
     }
 
-    private static boolean isRecruitedIllager(Mob mob) {
-        return mob.getPersistentData().getBoolean(TAG_RECRUITED)
-                && mob.getPersistentData().hasUUID(TAG_OWNER);
-    }
-
-    private static UUID getOwnerUUID(Mob mob) {
-        if (!mob.getPersistentData().hasUUID(TAG_OWNER)) {
-            return null;
-        }
-        return mob.getPersistentData().getUUID(TAG_OWNER);
-    }
-
     private static List<Mob> getOwnedPatrolIllagers(ServerPlayer player) {
         UUID ownerId = player.getUUID();
 
         return player.serverLevel().getEntitiesOfClass(
                 Mob.class,
                 player.getBoundingBox().inflate(PATROL_RADIUS),
-                mob -> mob.isAlive()
-                        && mob.getPersistentData().getBoolean(TAG_RECRUITED)
-                        && mob.getPersistentData().hasUUID(TAG_OWNER)
-                        && ownerId.equals(mob.getPersistentData().getUUID(TAG_OWNER))
+                mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId)
         );
     }
 }

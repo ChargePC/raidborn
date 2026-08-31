@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:lightfed_pill",
-      "text": "While equipped, stand still for 5 seconds in light level 6 or higher. Once charged, it restores 1 hunger point every 2 seconds as long as you remain still and in the light.",
+      "text": "Stand still for 5 seconds in light level 6 or higher and it charges. From then on it returns 1 hunger point every 2 seconds, but only while you stay still and stay lit, so it feeds you between fights rather than during them.",
       "title": "Lightfed Pill"
     }
   ]

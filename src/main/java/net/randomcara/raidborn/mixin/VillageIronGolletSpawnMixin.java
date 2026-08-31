@@ -15,6 +15,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.randomcara.raidborn.content.entity.iron_gollet.IronGollet;
 import net.randomcara.raidborn.core.registry.ModEntities;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -128,7 +129,7 @@ public abstract class VillageIronGolletSpawnMixin {
      * the Gollet inside a block or hovering.
      */
     @Unique
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     private static BlockPos raidborn$findSpawnPosition(
             WorldGenLevel level,
             BlockPos origin,

@@ -11,21 +11,21 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.randomcara.bentoslib.client.render.area.AreaVisualClient;
 import net.randomcara.bentoslib.client.render.area.AreaVisualRenderEvents;
 import net.randomcara.bentoslib.network.ActivateCurioItemPacket;
+import net.randomcara.raidborn.client.hud.RecruitTooltipOverlay;
 import net.randomcara.raidborn.core.compat.RaidbornCompatPacks;
 import net.randomcara.raidborn.core.config.RaidbornClientConfig;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
@@ -82,7 +82,6 @@ public class Raidborn {
         modBus.addListener(this::commonSetup);
         modBus.addListener(RaidbornCompatPacks::onAddPackFinders);
 
-        MinecraftForge.EVENT_BUS.register(this);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 MinecraftForge.EVENT_BUS.register(AreaVisualRenderEvents.class)
         );
@@ -153,7 +152,7 @@ public class Raidborn {
         }
 
         public static void handle(ItemActivationPacket msg,
-                                  Supplier<net.minecraftforge.network.NetworkEvent.Context> ctxSupplier) {
+                                  Supplier<NetworkEvent.Context> ctxSupplier) {
             var ctx = ctxSupplier.get();
 
             ctx.enqueueWork(() -> {
@@ -205,7 +204,7 @@ public class Raidborn {
         }
 
         public static void handle(TotemAreaVisualPacket msg,
-                                  Supplier<net.minecraftforge.network.NetworkEvent.Context> ctxSupplier) {
+                                  Supplier<NetworkEvent.Context> ctxSupplier) {
             var ctx = ctxSupplier.get();
 
             ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(
@@ -242,7 +241,7 @@ public class Raidborn {
         }
 
         public static void handle(RecruitTooltipRequestPacket msg,
-                                  Supplier<net.minecraftforge.network.NetworkEvent.Context> ctxSupplier) {
+                                  Supplier<NetworkEvent.Context> ctxSupplier) {
             var ctx = ctxSupplier.get();
 
             ctx.enqueueWork(() -> {
@@ -327,12 +326,12 @@ public class Raidborn {
         }
 
         public static void handle(RecruitTooltipDataPacket msg,
-                                  Supplier<net.minecraftforge.network.NetworkEvent.Context> ctxSupplier) {
+                                  Supplier<NetworkEvent.Context> ctxSupplier) {
             var ctx = ctxSupplier.get();
 
             ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(
                     Dist.CLIENT,
-                    () -> () -> net.randomcara.raidborn.client.hud.RecruitTooltipOverlay.handleTooltipData(
+                    () -> () -> RecruitTooltipOverlay.handleTooltipData(
                             msg.entityId,
                             msg.valid,
                             msg.hp,
@@ -343,10 +342,5 @@ public class Raidborn {
 
             ctx.setPacketHandled(true);
         }
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("raidborn server starting");
     }
 }

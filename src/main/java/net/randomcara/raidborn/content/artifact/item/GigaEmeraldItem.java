@@ -27,7 +27,7 @@ public class GigaEmeraldItem extends Item implements SlotBoundCurioItem {
         TooltipHelper.addShiftDescription(
                 tooltip,
                 TooltipHelper.line("Better reputation means better trade prices", 0x55FF55),
-                TooltipHelper.line("Works with villagers and illagers", 0x00AA00)
+                TooltipHelper.line("Works with Villagers and Illagers", 0x00AA00)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);

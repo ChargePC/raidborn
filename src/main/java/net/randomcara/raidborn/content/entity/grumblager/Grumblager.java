@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,8 +50,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class Grumblager extends AbstractIllager implements CrossbowAttackMob, RangedAttackMob {
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Grumblager.class, EntityDataSerializers.BOOLEAN);
@@ -400,7 +400,7 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
     }
 
     @Override
-    protected SoundEvent getHurtSound(net.minecraft.world.damagesource.DamageSource source) {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.PILLAGER_HURT;
     }
 

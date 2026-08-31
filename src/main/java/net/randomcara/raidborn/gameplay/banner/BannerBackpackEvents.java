@@ -1,5 +1,6 @@
 package net.randomcara.raidborn.gameplay.banner;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -15,7 +16,7 @@ import net.randomcara.raidborn.gameplay.recruit.RecruitmentEvents;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class BannerBackpackEvents {
-    private static final String TAG_HAD_BANNER = "raidborn_had_banner_chest";
+    private static final String TAG_HAD_BANNER = "raidborn_had_banner";
 
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
@@ -26,16 +27,18 @@ public class BannerBackpackEvents {
         ItemStack held = player.getItemInHand(event.getHand());
         if (!(held.getItem() instanceof BannerItem)) return;
 
-        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        ItemStack previous = BannerSlot.get(player).copy();
         ItemStack banner = held.copy();
         banner.setCount(1);
+
+        if (!BannerSlot.set(player, banner)) return;
+
         held.shrink(1);
 
-        if (!chest.isEmpty()) {
-            giveBackOrDrop(player, chest);
+        if (!previous.isEmpty()) {
+            giveBackOrDrop(player, previous);
         }
 
-        player.setItemSlot(EquipmentSlot.CHEST, banner);
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
     }
@@ -45,15 +48,31 @@ public class BannerBackpackEvents {
         if (event.phase != TickEvent.Phase.END) return;
         if (!(event.player instanceof ServerPlayer player)) return;
 
-        boolean hasBanner = player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof BannerItem;
+        moveBannerOffTheChestSlot(player);
+
+        boolean hasBanner = BannerSlot.isWearingBanner(player);
         boolean hadBanner = player.getPersistentData().getBoolean(TAG_HAD_BANNER);
 
         if (hadBanner && !hasBanner) {
             RecruitmentEvents.disbandSquad(player);
-            player.displayClientMessage(Component.literal("§eBanner removed. Your squad has disbanded."), true);
+            player.displayClientMessage(Component.literal("Banner removed. Your squad has disbanded.")
+                    .withStyle(ChatFormatting.YELLOW), true);
         }
 
         player.getPersistentData().putBoolean(TAG_HAD_BANNER, hasBanner);
+    }
+
+    /**
+     * Worlds from before the move still have the banner in the chest armour slot, where it no longer
+     * counts for anything. Nothing else can put a banner there, so finding one means it is an old one.
+     */
+    private static void moveBannerOffTheChestSlot(ServerPlayer player) {
+        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (!(chest.getItem() instanceof BannerItem)) return;
+
+        if (BannerSlot.get(player).isEmpty() && BannerSlot.set(player, chest.copy())) {
+            player.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
+        }
     }
 
     private static void giveBackOrDrop(ServerPlayer player, ItemStack stack) {

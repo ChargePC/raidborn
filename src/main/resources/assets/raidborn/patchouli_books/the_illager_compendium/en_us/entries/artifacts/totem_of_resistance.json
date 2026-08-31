@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:totem_of_resistance",
-      "text": "Press the artifact key to create a field for 15 seconds that blocks incoming projectiles. You and your nearby recruits also receive Absorption IV. Cooldown: 45 seconds.$(br2)Activating any Raidborn totem puts all three totems on cooldown.",
+      "text": "Drops a field for 15 seconds that stops projectiles at its edge and hands everyone inside Absorption IV on top of it. Archers on a wall stop being the problem.$(br2)Cooldown is 45 seconds, and firing any Raidborn totem puts all three on it.",
       "title": "Totem of Resistance"
     }
   ]

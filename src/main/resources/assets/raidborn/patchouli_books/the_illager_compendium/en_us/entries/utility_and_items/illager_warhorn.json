@@ -12,7 +12,7 @@
     {
       "type": "patchouli:text",
       "title": "Obtaining",
-      "text": "The Illager Warhorn is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). It has a 2-second command cooldown."
+      "text": "The horn comes out of the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l) and will not take a second order for 2 seconds after one."
     }
   ]
 }

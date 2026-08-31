@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:totem_of_healing",
-      "text": "Press the artifact key to create a healing area for 15 seconds. You and your nearby recruits receive Regeneration II while inside. Cooldown: 45 seconds.$(br2)Activating any Raidborn totem puts all three totems on cooldown.",
+      "text": "Drops a healing field for 15 seconds. You and any nearby recruit standing in it hold Regeneration II, so it is worth placing before the patrol scatters.$(br2)Cooldown is 45 seconds, and firing any Raidborn totem puts all three on it.",
       "title": "Totem of Healing"
     }
   ]

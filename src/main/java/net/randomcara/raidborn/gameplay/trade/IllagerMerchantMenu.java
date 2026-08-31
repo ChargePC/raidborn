@@ -5,8 +5,7 @@ import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class IllagerMerchantMenu extends MerchantMenu {
     private static final int NO_SELECTION = -1;

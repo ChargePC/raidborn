@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
-import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -59,7 +59,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
         );
 
         if (targets.isEmpty()) {
-            player.displayClientMessage(Component.literal("No recruited illagers nearby."), true);
+            player.displayClientMessage(Component.literal("No recruited Illagers nearby."), true);
             return false;
         }
 
@@ -83,7 +83,8 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
 
         player.displayClientMessage(
-                Component.literal("Voodoo empowered " + targets.size() + " recruited illager(s)!"),
+                Component.literal("Voodoo empowered " + targets.size()
+                        + " recruited Illager" + (targets.size() == 1 ? "!" : "s!")),
                 true
         );
 
@@ -98,9 +99,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
     private static boolean isValidTarget(Mob mob, UUID ownerId) {
         if (!mob.isAlive()) return false;
 
-        if (!mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)) return false;
-        if (!mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) return false;
-        if (!ownerId.equals(mob.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER))) return false;
+        if (!RecruitOwnership.isOwnedBy(mob, ownerId)) return false;
 
         ResourceLocation id = mob.getType().builtInRegistryHolder().key().location();
         String idString = id.toString();
@@ -120,8 +119,8 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
 
         TooltipHelper.addShiftDescription(
                 tooltip,
-                TooltipHelper.line("Buffs your recruited illagers", 0xAAAAAA),
-                TooltipHelper.line("Works on most melee illagers", 0xAAAAAA),
+                TooltipHelper.line("Buffs your recruited Illagers", 0xAAAAAA),
+                TooltipHelper.line("Works on most melee Illagers", 0xAAAAAA),
                 TooltipHelper.line("15s of Speed and Strength", 0x55FF55),
                 TooltipHelper.line("Cooldown: 45s", 0xFFAA00)
         );

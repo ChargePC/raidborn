@@ -16,8 +16,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.registry.ModSounds;
 import net.randomcara.raidborn.core.util.RaidbornAdvancements;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class IllagerMerchant implements Merchant {
     private static final ResourceLocation ADV_FIRST_TRADE = ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "totally_legal_business");

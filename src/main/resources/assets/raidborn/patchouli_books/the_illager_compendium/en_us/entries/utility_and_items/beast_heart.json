@@ -12,7 +12,7 @@
     {
       "type": "patchouli:text",
       "title": "Obtaining",
-      "text": "The Beast Heart is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Its exact recipe is listed in the table's entry."
+      "text": "The Heart itself comes out of the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Its exact recipe sits in that entry."
     }
   ]
 }

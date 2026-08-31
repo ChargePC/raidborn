@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,7 +36,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public final class AttackTargetTracker {
     private static final String NEXT_BELL_RING_TICK_TAG = "RaidbornAttackNextBellRingTick";
@@ -53,7 +53,6 @@ public final class AttackTargetTracker {
 
     private AttackTargetTracker() {
     }
-
 
     public static void reinforceVillageTargets(AttackInstance attack, ServerLevel level) {
         Map<UUID, Villager> foundVillagers = new LinkedHashMap<>();

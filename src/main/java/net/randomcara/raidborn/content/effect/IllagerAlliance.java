@@ -4,9 +4,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.randomcara.raidborn.core.registry.ModEffects;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
 
 /**
  * The three pacts a player can hold with the illagers. Mutually exclusive.

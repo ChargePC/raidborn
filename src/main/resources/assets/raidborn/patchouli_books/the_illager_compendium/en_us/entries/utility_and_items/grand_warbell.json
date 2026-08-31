@@ -18,7 +18,7 @@
     {
       "type": "patchouli:text",
       "title": "Obtaining",
-      "text": "The Grand Warbell is made with the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Breaking it removes Settlement Mode from nearby linked Illagers."
+      "text": "The bell comes out of the $(l:raidborn:mechanics/transmutation_table)Transmutation Table$(/l). Breaking it cuts Settlement Mode from every linked Illager around it, so move one only if you mean to."
     }
   ]
 }

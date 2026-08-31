@@ -25,6 +25,7 @@ import net.randomcara.raidborn.content.artifact.item.RaidbornNecklaceItem;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import net.randomcara.raidborn.gameplay.recruit.RecruitSlots;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
 import net.randomcara.raidborn.world.settlement.SettlementSpawnMarkerEvents;
@@ -84,7 +85,7 @@ public class RaidBagItem extends Item {
         List<Mob> recruits = getOwnedRecruits(player, SEARCH_RADIUS);
         if (recruits.isEmpty()) {
             player.displayClientMessage(
-                    Component.literal("You have no recruited illagers nearby.")
+                    Component.literal("You have no recruited Illagers nearby.")
                             .withStyle(Style.EMPTY.withColor(0xD9534F)),
                     true
             );
@@ -152,7 +153,8 @@ public class RaidBagItem extends Item {
         }
 
         player.displayClientMessage(
-                Component.literal("Stored " + recruits.size() + " recruited illagers (" + totalStoredSlots + " slots).")
+                Component.literal("Stored " + recruits.size() + " recruited Illager" + (recruits.size() == 1 ? "" : "s")
+                        + " (" + totalStoredSlots + " slots).")
                         .withStyle(Style.EMPTY.withColor(0x76DB4C)),
                 true
         );
@@ -305,7 +307,8 @@ public class RaidBagItem extends Item {
         clearStoredPatrolData(tag);
 
         player.displayClientMessage(
-                Component.literal("Released " + addedMobs.size() + " recruited illagers.")
+                Component.literal("Released " + addedMobs.size()
+                        + " recruited Illager" + (addedMobs.size() == 1 ? "." : "s."))
                         .withStyle(Style.EMPTY.withColor(0x76DB4C)),
                 true
         );
@@ -363,21 +366,7 @@ public class RaidBagItem extends Item {
     }
 
     private static boolean isOwnedRecruit(ServerPlayer player, Mob mob) {
-        if (!mob.isAlive() || mob.isRemoved()) return false;
-        if (!isRecruited(mob)) return false;
-
-        UUID owner = getOwnerUUID(mob);
-        return owner != null && owner.equals(player.getUUID());
-    }
-
-    private static boolean isRecruited(Mob mob) {
-        return mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)
-                && mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
-    }
-
-    private static UUID getOwnerUUID(Mob mob) {
-        if (!mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) return null;
-        return mob.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER);
+        return mob.isAlive() && !mob.isRemoved() && RecruitOwnership.isYours(player, mob);
     }
 
     public static boolean hasStoredPatrol(ItemStack stack) {
@@ -567,7 +556,7 @@ public class RaidBagItem extends Item {
 
         TooltipHelper.addShiftDescription(
                 tooltip,
-                TooltipHelper.line("Right click to store or release your recruited illagers", 0xDDDDDD),
+                TooltipHelper.line("Right click to store or release your recruited Illagers", 0xDDDDDD),
                 TooltipHelper.line("Release is locked for 20s after storing", 0xD9A441),
                 TooltipHelper.line("Only the owner can use this bag", 0xC77DFF)
         );

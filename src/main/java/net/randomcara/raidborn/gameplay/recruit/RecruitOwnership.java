@@ -22,6 +22,11 @@ public final class RecruitOwnership {
         return owner != null && owner.equals(player.getUUID()) && isRecruited(mob);
     }
 
+    public static boolean isOwnedBy(Mob mob, UUID ownerId) {
+        UUID owner = getOwnerUUID(mob);
+        return owner != null && owner.equals(ownerId) && isRecruited(mob);
+    }
+
     public static boolean isSameSquad(Mob a, Mob b) {
         UUID ownerA = getOwnerUUID(a);
         UUID ownerB = getOwnerUUID(b);

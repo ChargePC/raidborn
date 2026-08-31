@@ -32,6 +32,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -41,9 +42,6 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class TotemOfProtectionItem extends Item implements ICurioItem, IActivatableCurioItem {
-
-    private static final String TAG_RECRUITED = "raidborn_recruited";
-    private static final String TAG_OWNER = "raidborn_owner";
 
     private static final String TAG_ACTIVE_UNTIL = "raidborn_totem_protection_until";
     private static final String TAG_LAST_APPLY_TICK = "raidborn_totem_protection_last_apply";
@@ -166,13 +164,7 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
     }
 
     private static boolean isOwnedAlly(Mob mob, UUID ownerId) {
-        return isRecruitedIllager(mob, ownerId) || isTamedMobOf(mob, ownerId);
-    }
-
-    private static boolean isRecruitedIllager(Mob mob, UUID ownerId) {
-        return mob.getPersistentData().getBoolean(TAG_RECRUITED)
-                && mob.getPersistentData().hasUUID(TAG_OWNER)
-                && ownerId.equals(mob.getPersistentData().getUUID(TAG_OWNER));
+        return RecruitOwnership.isOwnedBy(mob, ownerId) || isTamedMobOf(mob, ownerId);
     }
 
     private static boolean isTamedMobOf(Mob mob, UUID ownerId) {

@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:ominous_relic",
-      "text": "Each nearby recruited Illager owned by you grants half a heart of maximum health while this artifact is equipped.",
+      "text": "Every nearby recruit of yours is worth half a heart of maximum health while it is equipped, so a full patrol is worth far more than the artifact on its own.",
       "title": "Ominous Relic"
     }
   ]
