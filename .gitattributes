@@ -1,0 +1,11 @@
+# Keep the wrapper scripts usable on the platform that runs them: the shell
+# script must stay LF or /bin/sh chokes on the CR, the .bat must stay CRLF.
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+*.sh text eol=lf
+
+# Binaries git should never touch.
+*.jar binary
+*.png binary
+*.ogg binary
+*.nbt binary
