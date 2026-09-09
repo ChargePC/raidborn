@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class OminousRelicItem extends Item implements ICurioItem {
-
     private static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("b7f0151f-6d2d-4d59-8f8a-6b4cc7cb9d11");
-
     private static final double RECRUIT_RADIUS = 64.0D;
 
     public OminousRelicItem(Properties properties) {
@@ -40,7 +38,6 @@ public class OminousRelicItem extends Item implements ICurioItem {
         if (maxHealth == null) return;
 
         int recruitedIllagers = countOwnedRecruitedIllagers(player);
-
         double bonusHealth = recruitedIllagers * 1.0D;
 
         AttributeModifier oldModifier = maxHealth.getModifier(HEALTH_MODIFIER_UUID);
@@ -49,12 +46,7 @@ public class OminousRelicItem extends Item implements ICurioItem {
         }
 
         if (bonusHealth > 0.0D) {
-            AttributeModifier newModifier = new AttributeModifier(
-                    HEALTH_MODIFIER_UUID,
-                    "raidborn_ominous_relic_recruit_bonus",
-                    bonusHealth,
-                    AttributeModifier.Operation.ADDITION
-            );
+            AttributeModifier newModifier = new AttributeModifier(HEALTH_MODIFIER_UUID, "raidborn_ominous_relic_recruit_bonus", bonusHealth, AttributeModifier.Operation.ADDITION);
             maxHealth.addTransientModifier(newModifier);
         }
 
@@ -82,12 +74,7 @@ public class OminousRelicItem extends Item implements ICurioItem {
     }
 
     private int countOwnedRecruitedIllagers(ServerPlayer player) {
-        List<Mob> mobs = player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(RECRUIT_RADIUS),
-                mob -> isOwnedRecruitedIllager(player, mob)
-        );
-
+        List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RECRUIT_RADIUS), mob -> isOwnedRecruitedIllager(player, mob));
         return mobs.size();
     }
 
@@ -97,10 +84,7 @@ public class OminousRelicItem extends Item implements ICurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Gain half a heart for each nearby recruit", 0xFF44AEB9)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Gain half a heart for each nearby recruit", 0xFF44AEB9));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

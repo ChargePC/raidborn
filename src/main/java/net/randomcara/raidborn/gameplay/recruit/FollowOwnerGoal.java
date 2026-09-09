@@ -22,50 +22,23 @@ import java.util.UUID;
 public class FollowOwnerGoal extends Goal {
     public static final String TAG_RECRUITED = "raidborn_recruited";
     public static final String TAG_OWNER = "raidborn_owner";
-
-    /** Starts following at 8 blocks and settles at 4, the hysteresis vanilla uses for tamed animals. */
     private static final double START_FOLLOW_SQR = 8.0D * 8.0D;
     private static final double STOP_FOLLOW_SQR = 4.0D * 4.0D;
-
-    /** Past 18 blocks the recruit is falling behind and switches to the faster of its two speeds. */
     private static final double FAST_MOVE_DIST_SQR = 18.0D * 18.0D;
-
     private static final double CLOSE_LOOK_DIST_SQR = 10.0D * 10.0D;
 
-    /**
-     * How fast a recruit should actually travel, in blocks per tick, and how often it may repath.
-     *
-     * <p>Goal speed is a multiplier on {@link Attributes#MOVEMENT_SPEED}, and recruits can be any
-     * illager in the game plus whatever other mods throw in, so one flat multiplier has the fast
-     * ones sprinting off and the slow ones trailing. Naming the target speed and dividing it back
-     * out in {@link #getFollowSpeed} keeps the squad together.
-     */
     private record FollowTuning(double nearSpeed, double farSpeed, int repathTicks) {
     }
 
     private static final FollowTuning DEFAULT_TUNING = new FollowTuning(0.35D, 0.40D, 5);
-
-    /** Ravage &amp; Cabbage's Cabbager rides a vehicle and needs the extra margin to keep up. */
     private static final FollowTuning CABBAGER_TUNING = new FollowTuning(0.44D, 0.52D, 3);
-
     private static final double MIN_FOLLOW_SPEED_MODIFIER = 0.95D;
     private static final double MAX_FOLLOW_SPEED_MODIFIER = 2.10D;
 
-    /*
-     * Recovery when the navigation stops making headway, which in a village means a doorway, a
-     * fence corner or another recruit in the gap. Progress is sampled every
-     * STUCK_CHECK_INTERVAL_TICKS ticks; each failed sample adds that many ticks to stuckTicks.
-     *
-     *   immediately  stop and repath, and hop if the mob is walking into a wall
-     *   at 35 ticks   sidestep: aim past the obstacle instead of through it
-     *   at 70 ticks   give up and teleport, but only from far enough away that it is not visible
-     *                 as a pop next to the player
-     */
     private static final int STUCK_CHECK_INTERVAL_TICKS = 10;
     private static final int STUCK_SIDESTEP_TICKS = 35;
     private static final int STUCK_TELEPORT_TICKS = 70;
     private static final int SIDESTEP_COOLDOWN_TICKS = 10;
-
     private static final double MIN_PROGRESS_SQR = 0.035D;
     private static final double STUCK_TELEPORT_MIN_DIST_SQR = 12.0D * 12.0D;
     private static final double SIDESTEP_FORWARD_OFFSET = 2.0D;
@@ -91,14 +64,11 @@ public class FollowOwnerGoal extends Goal {
     }
 
     private boolean isRecruited() {
-        return this.mob.getPersistentData().getBoolean(TAG_RECRUITED)
-                && this.mob.getPersistentData().hasUUID(TAG_OWNER);
+        return this.mob.getPersistentData().getBoolean(TAG_RECRUITED) && this.mob.getPersistentData().hasUUID(TAG_OWNER);
     }
 
     private UUID getOwnerUUID() {
-        return this.mob.getPersistentData().hasUUID(TAG_OWNER)
-                ? this.mob.getPersistentData().getUUID(TAG_OWNER)
-                : null;
+        return this.mob.getPersistentData().hasUUID(TAG_OWNER) ? this.mob.getPersistentData().getUUID(TAG_OWNER) : null;
     }
 
     private ServerPlayer findOwner() {
@@ -108,24 +78,18 @@ public class FollowOwnerGoal extends Goal {
         return this.mob.level().getPlayerByUUID(uuid) instanceof ServerPlayer player ? player : null;
     }
 
-    /** A squad only forms behind a player wearing a banner and carrying the alliance effect. */
     private boolean ownerCanLeadSquad(ServerPlayer player) {
         return BannerSlot.isWearingBanner(player) && ModEffects.hasAllianceEffect(player);
     }
 
-    /** Village members answer to the bell, and the other squad orders park the mob somewhere. */
     private boolean isFollowing() {
-        return !this.mob.level().isClientSide
-                && !WarbellVillageData.isVillageMode(this.mob)
-                && isRecruited()
-                && SquadOrders.getOrder(this.mob) == SquadOrder.FOLLOW;
+        return !this.mob.level().isClientSide && !WarbellVillageData.isVillageMode(this.mob) && isRecruited() && SquadOrders.getOrder(this.mob) == SquadOrder.FOLLOW;
     }
 
     private boolean isSquadmate(LivingEntity entity) {
         if (!(entity instanceof Mob otherMob)) return false;
 
-        if (!otherMob.getPersistentData().getBoolean(TAG_RECRUITED)
-                || !otherMob.getPersistentData().hasUUID(TAG_OWNER)) {
+        if (!otherMob.getPersistentData().getBoolean(TAG_RECRUITED) || !otherMob.getPersistentData().hasUUID(TAG_OWNER)) {
             return false;
         }
 
@@ -134,15 +98,8 @@ public class FollowOwnerGoal extends Goal {
         return myOwner != null && myOwner.equals(otherOwner);
     }
 
-    /**
-     * True when the mob has a fight worth staying for, so the follow stands aside.
-     *
-     * <p>Dead targets, and ones that turn out to be the owner or a squadmate, get dropped here.
-     * Otherwise they block the follow for as long as the reference sticks around.
-     */
     private boolean hasBlockingCombatTarget() {
         LivingEntity target = this.mob.getTarget();
-
         if (target != null && (!target.isAlive() || target.isRemoved() || target == this.owner || isSquadmate(target))) {
             this.mob.setTarget(null);
             target = null;
@@ -164,7 +121,6 @@ public class FollowOwnerGoal extends Goal {
         FollowTuning tuning = getTuning();
         double wantedSpeed = distSqr > FAST_MOVE_DIST_SQR ? tuning.farSpeed() : tuning.nearSpeed();
         double baseSpeed = Math.max(0.001D, this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
-
         return Mth.clamp(wantedSpeed / baseSpeed, MIN_FOLLOW_SPEED_MODIFIER, MAX_FOLLOW_SPEED_MODIFIER);
     }
 
@@ -194,7 +150,6 @@ public class FollowOwnerGoal extends Goal {
 
     @Override
     public void start() {
-        // canUse() has just cleared any stale target, so there is nothing to check here.
         this.mob.getNavigation().setCanFloat(true);
 
         this.repathCooldown = 0;
@@ -223,7 +178,6 @@ public class FollowOwnerGoal extends Goal {
         }
 
         double distSqr = this.mob.distanceToSqr(this.owner);
-
         if (distSqr >= teleportDistSqr()) {
             RecruitTeleport.tryTeleportNearOwner(this.mob, this.owner);
             resetStuckTracker();
@@ -239,7 +193,6 @@ public class FollowOwnerGoal extends Goal {
         }
 
         boolean stuck = updateStuckTracker(distSqr);
-
         if (stuck) {
             this.mob.getNavigation().stop();
             this.repathCooldown = 0;
@@ -281,7 +234,6 @@ public class FollowOwnerGoal extends Goal {
         this.lastProgressPos = this.mob.position();
     }
 
-    /** Samples progress once every {@link #STUCK_CHECK_INTERVAL_TICKS} and reports whether it stalled. */
     private boolean updateStuckTracker(double distSqr) {
         if (this.sidestepCooldown > 0) {
             this.sidestepCooldown--;
@@ -300,11 +252,9 @@ public class FollowOwnerGoal extends Goal {
 
         boolean walkingIntoWall = this.mob.horizontalCollision;
         boolean stalled = this.mob.position().distanceToSqr(this.lastProgressPos) < MIN_PROGRESS_SQR;
-
         if (distSqr > STOP_FOLLOW_SQR && (walkingIntoWall || stalled)) {
             this.stuckTicks += STUCK_CHECK_INTERVAL_TICKS;
 
-            // usually just a step or a fence gate, a hop clears both
             if (walkingIntoWall && this.mob.onGround()) {
                 this.mob.getJumpControl().jump();
             }
@@ -318,7 +268,6 @@ public class FollowOwnerGoal extends Goal {
         return this.stuckTicks > 0;
     }
 
-    /** Heads diagonally past whatever is in the way instead of straight at the owner again. */
     private boolean sidestepTowardsOwner(double distSqr) {
         if (this.owner == null || this.sidestepCooldown > 0) {
             return false;
@@ -327,23 +276,19 @@ public class FollowOwnerGoal extends Goal {
         double dx = this.owner.getX() - this.mob.getX();
         double dz = this.owner.getZ() - this.mob.getZ();
         double horizontal = Math.sqrt(dx * dx + dz * dz);
-
         if (horizontal < 0.001D) {
             return false;
         }
 
         double forwardX = dx / horizontal;
         double forwardZ = dz / horizontal;
-
         double sideX = -forwardZ;
         double sideZ = forwardX;
 
         double sideSign = this.mob.getRandom().nextBoolean() ? 1.0D : -1.0D;
-
         double targetX = this.mob.getX() + forwardX * SIDESTEP_FORWARD_OFFSET + sideX * SIDESTEP_SIDEWAYS_OFFSET * sideSign;
         double targetY = this.owner.getY();
         double targetZ = this.mob.getZ() + forwardZ * SIDESTEP_FORWARD_OFFSET + sideZ * SIDESTEP_SIDEWAYS_OFFSET * sideSign;
-
         this.mob.getNavigation().moveTo(targetX, targetY, targetZ, getFollowSpeed(distSqr));
 
         this.repathCooldown = 0;

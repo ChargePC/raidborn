@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class RecruitInteractionEvents {
+public class RecruitInteractionEvents {
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide) return;
@@ -67,25 +67,16 @@ public final class RecruitInteractionEvents {
 
         BlockPos clickedPos = event.getPos();
         BlockState clickedState = player.level().getBlockState(clickedPos);
-
         if (!(clickedState.getBlock() instanceof BedBlock)) return;
 
         final BlockPos normalizedClicked;
-        if (clickedState.hasProperty(BedBlock.PART)
-                && clickedState.hasProperty(BedBlock.FACING)
-                && clickedState.getValue(BedBlock.PART) == BedPart.HEAD) {
+        if (clickedState.hasProperty(BedBlock.PART) && clickedState.hasProperty(BedBlock.FACING) && clickedState.getValue(BedBlock.PART) == BedPart.HEAD) {
             normalizedClicked = clickedPos.relative(clickedState.getValue(BedBlock.FACING).getOpposite());
         } else {
             normalizedClicked = clickedPos;
         }
 
-        List<Mob> nearby = player.level().getEntitiesOfClass(
-                Mob.class,
-                new AABB(normalizedClicked).inflate(3.0D),
-                mob -> mob.isAlive()
-                        && WarbellVillageBedData.hasBed(mob)
-                        && WarbellVillageBedData.isSameBed(mob, normalizedClicked)
-        );
+        List<Mob> nearby = player.level().getEntitiesOfClass(Mob.class, new AABB(normalizedClicked).inflate(3.0D), mob -> mob.isAlive() && WarbellVillageBedData.hasBed(mob) && WarbellVillageBedData.isSameBed(mob, normalizedClicked));
 
         boolean wokeSleepingIllager = false;
 
@@ -158,20 +149,14 @@ public final class RecruitInteractionEvents {
             RecruitmentEvents.releaseRecruit(mob);
 
             int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
-            player.displayClientMessage(Component.literal("Illager dismissed. (" + used + "/" + maxSlots + " slots)")
-                    .withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.literal("Illager dismissed. (" + used + "/" + maxSlots + " slots)").withStyle(ChatFormatting.RED), true);
         } else if (recruited && hasOwner) {
-            player.displayClientMessage(Component.literal("This mob already serves another leader.")
-                    .withStyle(ChatFormatting.GRAY), true);
+            player.displayClientMessage(Component.literal("This mob already serves another leader.").withStyle(ChatFormatting.GRAY), true);
         } else {
             if (RaidBagItem.playerHasStoredSquad(player)) {
                 int storedCount = RaidBagItem.getStoredRecruitCount(player);
                 int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
-                player.displayClientMessage(
-                        Component.literal("Your squad is stored in a Raid Bag (" + storedCount + " recruits, " + used + "/" + maxSlots + " slots used).")
-                                .withStyle(ChatFormatting.GRAY),
-                        true
-                );
+                player.displayClientMessage(Component.literal("Your squad is stored in a Raid Bag (" + storedCount + " recruits, " + used + "/" + maxSlots + " slots used).") .withStyle(ChatFormatting.GRAY), true);
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 return;
@@ -179,10 +164,8 @@ public final class RecruitInteractionEvents {
 
             int currentSlots = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
             int cost = RecruitSlots.getRecruitCost(mob);
-
             if (currentSlots + cost > maxSlots) {
-                player.displayClientMessage(Component.literal("Recruit limit reached (" + currentSlots + "/" + maxSlots + " slots used).")
-                        .withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.literal("Recruit limit reached (" + currentSlots + "/" + maxSlots + " slots used).").withStyle(ChatFormatting.RED), true);
             } else {
                 if (villageMember) {
                     WarbellVillageData.resetMobFromVillage(mob);
@@ -195,8 +178,6 @@ public final class RecruitInteractionEvents {
                     beast.setCreatorUUID(playerId);
                 }
 
-                // A worldgen settlement illager stops belonging to that structure the moment it is
-                // recruited, otherwise the return scan keeps hauling it back home mid-patrol.
                 SettlementSpawnMarkerEvents.clearSettlementHome(mob);
 
                 SquadOrders.setOrder(mob, SquadOrder.FOLLOW);
@@ -210,15 +191,11 @@ public final class RecruitInteractionEvents {
                 RaidbornAdvancements.award(player, RecruitmentEvents.ADV_RECRUIT_ILLAGER, RecruitmentEvents.CRIT_RECRUIT_ILLAGER);
 
                 int after = currentSlots + cost;
-                player.displayClientMessage(Component.literal("Illager recruited! (" + after + "/" + maxSlots + " slots)")
-                        .withStyle(ChatFormatting.GREEN), true);
+                player.displayClientMessage(Component.literal("Illager recruited! (" + after + "/" + maxSlots + " slots)").withStyle(ChatFormatting.GREEN), true);
             }
         }
 
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
-    }
-
-    private RecruitInteractionEvents() {
     }
 }

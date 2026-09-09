@@ -5,12 +5,7 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
-/**
- * Retaliation, filtered through {@link Juggernaut#isValidTarget}. Plain
- * {@code HurtByTargetGoal} makes it turn on villagers and other defenders caught in the crossfire.
- */
 class JuggernautHurtByTargetGoal extends TargetGoal {
-
     private final Juggernaut juggernaut;
 
     JuggernautHurtByTargetGoal(Juggernaut juggernaut) {
@@ -28,7 +23,6 @@ class JuggernautHurtByTargetGoal extends TargetGoal {
     @Override
     public void start() {
         LivingEntity attacker = this.juggernaut.getLastHurtByMob();
-
         if (attacker != null) {
             this.juggernaut.setTarget(attacker);
         }

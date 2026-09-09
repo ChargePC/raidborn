@@ -9,9 +9,6 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.gameplay.loot.VillagerSoulLootModifier;
 
 public class ModLootModifiers {
-    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIER_SERIALIZERS =
-            DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Raidborn.MOD_ID);
-
-    public static final RegistryObject<Codec<? extends IGlobalLootModifier>> VILLAGER_SOUL =
-            LOOT_MODIFIER_SERIALIZERS.register("villager_soul", () -> VillagerSoulLootModifier.CODEC);
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Raidborn.MOD_ID);
+    public static final RegistryObject<Codec<? extends IGlobalLootModifier>> VILLAGER_SOUL = LOOT_MODIFIER_SERIALIZERS.register("villager_soul", () -> VillagerSoulLootModifier.CODEC);
 }

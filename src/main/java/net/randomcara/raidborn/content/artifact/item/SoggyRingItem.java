@@ -34,11 +34,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SoggyRingItem extends Item implements SlotBoundCurioItem {
-
     private static final int LAVA_WALK_RADIUS = 1;
     private static final int LAVA_FIZZ_EVENT = 1501;
     private static final int RESTORE_DELAY_TICKS = 160;
-
     private static final Map<ResourceKey<Level>, Map<BlockPos, Long>> TEMPORARY_COBBLESTONE = new HashMap<>();
 
     public static void clearServerState() {
@@ -56,15 +54,7 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        if (!(slotContext.entity() instanceof ServerPlayer player)) {
-            return;
-        }
-
-        if (!(player.level() instanceof ServerLevel level)) {
-            return;
-        }
-
-        if (!player.isAlive() || player.isSpectator()) {
+        if (!(slotContext.entity() instanceof ServerPlayer player) || !(player.level() instanceof ServerLevel level) || !player.isAlive() || player.isSpectator()) {
             return;
         }
 
@@ -76,12 +66,7 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Lets you walk over lava", 0x66CCFF),
-                TooltipHelper.line("Lava beneath you becomes temporary cobblestone", 0xAAAAAA),
-                TooltipHelper.line("Grants immunity to fire damage", 0xFF8844)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Lets you walk over lava", 0x66CCFF), TooltipHelper.line("Lava beneath you becomes temporary cobblestone", 0xAAAAAA), TooltipHelper.line("Grants immunity to fire damage", 0xFF8844));
     }
 
     private static void transformLavaUnderPlayer(ServerLevel level, Player player) {
@@ -101,13 +86,11 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     private static void transformLavaAt(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-
         if (!state.getFluidState().is(FluidTags.LAVA)) {
             return;
         }
 
         BlockState above = level.getBlockState(pos.above());
-
         if (!above.isAir()) {
             return;
         }
@@ -118,17 +101,12 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
     }
 
     private static void scheduleCobblestoneRestore(ServerLevel level, BlockPos pos) {
-        Map<BlockPos, Long> levelBlocks = TEMPORARY_COBBLESTONE.computeIfAbsent(
-                level.dimension(),
-                dimension -> new HashMap<>()
-        );
-
+        Map<BlockPos, Long> levelBlocks = TEMPORARY_COBBLESTONE.computeIfAbsent(level.dimension(), dimension -> new HashMap<>());
         levelBlocks.putIfAbsent(pos.immutable(), level.getGameTime() + RESTORE_DELAY_TICKS);
     }
 
     private static void tickCobblestoneRestore(ServerLevel level) {
         Map<BlockPos, Long> levelBlocks = TEMPORARY_COBBLESTONE.get(level.dimension());
-
         if (levelBlocks == null || levelBlocks.isEmpty()) {
             return;
         }
@@ -136,19 +114,15 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
         long gameTime = level.getGameTime();
 
         Iterator<Map.Entry<BlockPos, Long>> iterator = levelBlocks.entrySet().iterator();
-
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, Long> entry = iterator.next();
-
             BlockPos pos = entry.getKey();
             long restoreTime = entry.getValue();
-
             if (gameTime < restoreTime) {
                 continue;
             }
 
             BlockState state = level.getBlockState(pos);
-
             if (state.is(Blocks.COBBLESTONE)) {
                 level.setBlock(pos, Blocks.LAVA.defaultBlockState(), 3);
                 playLavaFizz(level, pos);
@@ -168,17 +142,14 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     private static boolean hasSoggyRingEquipped(Player player) {
         Optional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(player).resolve();
-
         if (optional.isEmpty()) {
             return false;
         }
 
         ICuriosItemHandler handler = optional.get();
-
         for (ICurioStacksHandler stacksHandler : handler.getCurios().values()) {
             for (int i = 0; i < stacksHandler.getStacks().getSlots(); i++) {
                 ItemStack stack = stacksHandler.getStacks().getStackInSlot(i);
-
                 if (!stack.isEmpty() && stack.getItem() instanceof SoggyRingItem) {
                     return true;
                 }
@@ -190,14 +161,9 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class Events {
-
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) {
-                return;
-            }
-
-            if (!(event.level instanceof ServerLevel level)) {
+            if (event.phase != TickEvent.Phase.END || !(event.level instanceof ServerLevel level)) {
                 return;
             }
 
@@ -206,15 +172,7 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
-            if (!(event.getEntity() instanceof Player player)) {
-                return;
-            }
-
-            if (!event.getSource().is(DamageTypeTags.IS_FIRE)) {
-                return;
-            }
-
-            if (!hasSoggyRingEquipped(player)) {
+            if (!(event.getEntity() instanceof Player player) || !event.getSource().is(DamageTypeTags.IS_FIRE) || !hasSoggyRingEquipped(player)) {
                 return;
             }
 

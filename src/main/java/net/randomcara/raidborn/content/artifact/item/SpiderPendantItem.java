@@ -28,17 +28,13 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
-
     private static final double WALL_CLIMB_SPEED = 0.18D;
     private static final double WALL_HORIZONTAL_DAMPING = 0.72D;
-
     private static final double WALL_STICK_HORIZONTAL_DAMPING = 0.12D;
     private static final double WALL_STICK_VERTICAL_SPEED = 0.0D;
-
     private static final double CEILING_SEARCH_DISTANCE = 0.18D;
     private static final double CEILING_STICK_UPWARD_PUSH = 0.04D;
     private static final double CEILING_HORIZONTAL_DAMPING = 0.85D;
-
     private static final float FALL_DISTANCE_REDUCTION_BLOCKS = 12.0F;
     private static final float FALL_DAMAGE_MULTIPLIER = 0.65F;
 
@@ -52,10 +48,7 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
     }
 
     public static boolean isEquipped(Player player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(SpiderPendantItem::hasSpiderPendant)
-                .orElse(false);
+        return CuriosApi.getCuriosInventory(player).resolve().map(SpiderPendantItem::hasSpiderPendant).orElse(false);
     }
 
     private static boolean hasSpiderPendant(ICuriosItemHandler curiosInventory) {
@@ -65,10 +58,8 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
             }
 
             var stacks = stacksHandler.getStacks();
-
             for (int slot = 0; slot < stacks.getSlots(); slot++) {
                 ItemStack equippedStack = stacks.getStackInSlot(slot);
-
                 if (!equippedStack.isEmpty() && equippedStack.getItem() instanceof SpiderPendantItem) {
                     return true;
                 }
@@ -85,20 +76,12 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
         }
 
         Player player = event.player;
-
-        if (!SpiderPendantItem.isEquipped(player)) {
-            return;
-        }
-
-        if (shouldIgnorePlayer(player)) {
+        if (!SpiderPendantItem.isEquipped(player) || shouldIgnorePlayer(player)) {
             return;
         }
 
         if (player.level().isClientSide) {
-            DistExecutor.unsafeRunWhenOn(
-                    Dist.CLIENT,
-                    () -> () -> ClientSpiderMovement.handleClientTick(player)
-            );
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSpiderMovement.handleClientTick(player));
             return;
         }
 
@@ -110,27 +93,17 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
 
     @SubscribeEvent
     public static void onLivingFall(LivingFallEvent event) {
-        if (!(event.getEntity() instanceof Player player)) {
-            return;
-        }
-
-        if (!SpiderPendantItem.isEquipped(player)) {
+        if (!(event.getEntity() instanceof Player player) || !SpiderPendantItem.isEquipped(player)) {
             return;
         }
 
         float reducedDistance = Math.max(0.0F, event.getDistance() - FALL_DISTANCE_REDUCTION_BLOCKS);
-
         event.setDistance(reducedDistance);
         event.setDamageMultiplier(event.getDamageMultiplier() * FALL_DAMAGE_MULTIPLIER);
     }
 
     private static boolean shouldIgnorePlayer(Player player) {
-        return player.isSpectator()
-                || player.getAbilities().flying
-                || player.isFallFlying()
-                || player.isPassenger()
-                || player.isInWaterOrBubble()
-                || player.isInLava();
+        return player.isSpectator() || player.getAbilities().flying || player.isFallFlying() || player.isPassenger() || player.isInWaterOrBubble() || player.isInLava();
     }
 
     private static boolean handleSpiderMovement(Player player, boolean jumpDown, boolean shiftDown) {
@@ -161,50 +134,27 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
 
     private static boolean climbWall(Player player) {
         Vec3 motion = player.getDeltaMovement();
-
-        player.setDeltaMovement(
-                motion.x * WALL_HORIZONTAL_DAMPING,
-                Math.max(motion.y, WALL_CLIMB_SPEED),
-                motion.z * WALL_HORIZONTAL_DAMPING
-        );
+        player.setDeltaMovement(motion.x * WALL_HORIZONTAL_DAMPING, Math.max(motion.y, WALL_CLIMB_SPEED), motion.z * WALL_HORIZONTAL_DAMPING);
 
         return true;
     }
 
     private static boolean stickToWall(Player player) {
         Vec3 motion = player.getDeltaMovement();
-
-        player.setDeltaMovement(
-                motion.x * WALL_STICK_HORIZONTAL_DAMPING,
-                WALL_STICK_VERTICAL_SPEED,
-                motion.z * WALL_STICK_HORIZONTAL_DAMPING
-        );
+        player.setDeltaMovement(motion.x * WALL_STICK_HORIZONTAL_DAMPING, WALL_STICK_VERTICAL_SPEED, motion.z * WALL_STICK_HORIZONTAL_DAMPING);
 
         return true;
     }
 
     private static boolean clingToCeiling(Player player) {
         Vec3 motion = player.getDeltaMovement();
-
-        player.setDeltaMovement(
-                motion.x * CEILING_HORIZONTAL_DAMPING,
-                Math.max(motion.y, CEILING_STICK_UPWARD_PUSH),
-                motion.z * CEILING_HORIZONTAL_DAMPING
-        );
+        player.setDeltaMovement(motion.x * CEILING_HORIZONTAL_DAMPING, Math.max(motion.y, CEILING_STICK_UPWARD_PUSH), motion.z * CEILING_HORIZONTAL_DAMPING);
 
         return true;
     }
 
     private static boolean handleServerWallStick(Player player) {
-        if (player.onGround()) {
-            return false;
-        }
-
-        if (!player.isShiftKeyDown()) {
-            return false;
-        }
-
-        if (!player.horizontalCollision) {
+        if (player.onGround() || !player.isShiftKeyDown() || !player.horizontalCollision) {
             return false;
         }
 
@@ -212,26 +162,20 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
     }
 
     private static boolean hasCeilingClose(Player player) {
-        AABB checkBox = player.getBoundingBox()
-                .deflate(0.02D)
-                .move(0.0D, CEILING_SEARCH_DISTANCE, 0.0D);
-
+        AABB checkBox = player.getBoundingBox().deflate(0.02D).move(0.0D, CEILING_SEARCH_DISTANCE, 0.0D);
         return !player.level().noCollision(player, checkBox);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static final class ClientSpiderMovement {
-
+    private static class ClientSpiderMovement {
         private static void handleClientTick(Player player) {
             Minecraft minecraft = Minecraft.getInstance();
-
             if (minecraft.player == null || minecraft.player != player) {
                 return;
             }
 
             boolean jumpDown = minecraft.options.keyJump.isDown();
             boolean shiftDown = minecraft.options.keyShift.isDown();
-
             if (handleSpiderMovement(player, jumpDown, shiftDown)) {
                 player.fallDistance = 0.0F;
                 player.hasImpulse = true;
@@ -241,12 +185,7 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Hold Jump to climb walls and ceilings", 0xFFC8C2A7),
-                TooltipHelper.line("Hold Sneak while climbing to stick to walls", 0xFFC8C2A7),
-                TooltipHelper.line("Greatly reduces fall damage", 0xFFC8C2A7)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Hold Jump to climb walls and ceilings", 0xFFC8C2A7), TooltipHelper.line("Hold Sneak while climbing to stick to walls", 0xFFC8C2A7), TooltipHelper.line("Greatly reduces fall damage", 0xFFC8C2A7));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

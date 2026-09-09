@@ -15,48 +15,29 @@ import org.jetbrains.annotations.Nullable;
 
 public class BeastInventoryMenu extends AbstractContainerMenu {
     private static final int BEAST_SLOT_COUNT = 15;
-
     private static final int PLAYER_INVENTORY_START = BEAST_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;
     private static final int HOTBAR_START = PLAYER_INVENTORY_END;
     private static final int HOTBAR_END = HOTBAR_START + 9;
-
     private static final int SLOT_SPACING = 18;
-
     private static final int BEAST_SLOTS_X = 80;
     private static final int BEAST_SLOTS_Y = 18;
-
     private static final int PLAYER_INVENTORY_X = 8;
     private static final int PLAYER_INVENTORY_Y = 84;
-
     private static final int HOTBAR_X = 8;
     private static final int HOTBAR_Y = 142;
 
     private final Beast beast;
 
-    public BeastInventoryMenu(
-            int containerId,
-            Inventory playerInventory,
-            FriendlyByteBuf extraData
-    ) {
-        this(
-                containerId,
-                playerInventory,
-                findBeast(playerInventory.player, extraData.readVarInt())
-        );
+    public BeastInventoryMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
+        this(containerId, playerInventory, findBeast(playerInventory.player, extraData.readVarInt()));
     }
 
-    public BeastInventoryMenu(
-            int containerId,
-            Inventory playerInventory,
-            @Nullable Beast beast
-    ) {
+    public BeastInventoryMenu(int containerId, Inventory playerInventory, @Nullable Beast beast) {
         super(ModMenuTypes.BEAST_INVENTORY_MENU.get(), containerId);
         this.beast = beast;
 
-        ItemStackHandler handler = beast != null
-                ? beast.getBeastInventory()
-                : new ItemStackHandler(BEAST_SLOT_COUNT);
+        ItemStackHandler handler = beast != null ? beast.getBeastInventory() : new ItemStackHandler(BEAST_SLOT_COUNT);
 
         addBeastSlots(handler);
         addPlayerInventory(playerInventory);
@@ -79,7 +60,6 @@ public class BeastInventoryMenu extends AbstractContainerMenu {
                 int index = column + row * 5;
                 int x = BEAST_SLOTS_X + column * SLOT_SPACING;
                 int y = BEAST_SLOTS_Y + row * SLOT_SPACING;
-
                 this.addSlot(new SlotItemHandler(handler, index, x, y));
             }
         }
@@ -91,7 +71,6 @@ public class BeastInventoryMenu extends AbstractContainerMenu {
                 int index = column + row * 9 + 9;
                 int x = PLAYER_INVENTORY_X + column * SLOT_SPACING;
                 int y = PLAYER_INVENTORY_Y + row * SLOT_SPACING;
-
                 this.addSlot(new Slot(inventory, index, x, y));
             }
         }
@@ -148,11 +127,7 @@ public class BeastInventoryMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return this.beast != null
-                && this.beast.isAlive()
-                && this.beast.isCreator(player)
-                && !this.beast.isInCombat()
-                && player.distanceToSqr(this.beast) <= 64.0D;
+        return this.beast != null && this.beast.isAlive() && this.beast.isCreator(player) && !this.beast.isInCombat() && player.distanceToSqr(this.beast) <= 64.0D;
     }
 
     @Override

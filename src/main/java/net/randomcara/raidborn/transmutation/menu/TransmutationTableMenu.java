@@ -20,7 +20,6 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
     private static final int FUEL_SLOT = 0;
     private static final int SOUL_SLOT = 1;
     private static final int INPUT_SLOT = 2;
-
     private static final int MACHINE_SLOT_COUNT = 3;
     private static final int PLAYER_INV_START = 3;
     private static final int PLAYER_INV_END = 30;
@@ -31,12 +30,7 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public TransmutationTableMenu(int containerId, Inventory inventory, FriendlyByteBuf extraData) {
-        this(
-                containerId,
-                inventory,
-                (TransmutationTableBlockEntity) inventory.player.level().getBlockEntity(extraData.readBlockPos()),
-                new SimpleContainerData(3)
-        );
+        this(containerId, inventory, (TransmutationTableBlockEntity) inventory.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
     }
 
     public TransmutationTableMenu(int containerId, Inventory inventory, TransmutationTableBlockEntity blockEntity, ContainerData data) {
@@ -106,7 +100,6 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         Slot sourceSlot = this.slots.get(index);
-
         if (sourceSlot == null || !sourceSlot.hasItem()) {
             return ItemStack.EMPTY;
         }
@@ -146,7 +139,6 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
 
     private boolean moveOneItemToMachineSlot(ItemStack sourceStack, int slotIndex) {
         Slot targetSlot = this.slots.get(slotIndex);
-
         if (targetSlot == null || targetSlot.hasItem() || !targetSlot.mayPlace(sourceStack)) {
             return false;
         }
@@ -167,11 +159,7 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
             return false;
         }
 
-        return player.distanceToSqr(
-                this.blockEntity.getBlockPos().getX() + 0.5D,
-                this.blockEntity.getBlockPos().getY() + 0.5D,
-                this.blockEntity.getBlockPos().getZ() + 0.5D
-        ) <= 64.0D;
+        return player.distanceToSqr(this.blockEntity.getBlockPos().getX() + 0.5D, this.blockEntity.getBlockPos().getY() + 0.5D, this.blockEntity.getBlockPos().getZ() + 0.5D) <= 64.0D;
     }
 
     public boolean isCrafting() {
@@ -186,7 +174,6 @@ public class TransmutationTableMenu extends AbstractContainerMenu {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(2);
         int progressArrowSize = 28;
-
         return maxProgress > 0 && progress > 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 

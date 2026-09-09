@@ -28,16 +28,11 @@ import net.randomcara.raidborn.core.registry.ModEntities;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class IronGolletSummonEvents {
-    private IronGolletSummonEvents() {
-    }
-
-    /** Manual Iron Gollet totem: carved pumpkin over an iron block, right-clicked with a poppy. */
+public class IronGolletSummonEvents {
     @SubscribeEvent
     public static void onPlayerCreateIronGollet(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();
         ItemStack heldStack = player.getItemInHand(event.getHand());
-
         if (!heldStack.is(Items.POPPY)) {
             return;
         }
@@ -47,32 +42,23 @@ public final class IronGolletSummonEvents {
         BlockPos ironPos = pumpkinPos.below();
         BlockState ironState = event.getLevel().getBlockState(ironPos);
 
-        if (!pumpkinState.is(Blocks.CARVED_PUMPKIN)
-                || !ironState.is(Blocks.IRON_BLOCK)) {
+        if (!pumpkinState.is(Blocks.CARVED_PUMPKIN) || !ironState.is(Blocks.IRON_BLOCK)) {
             return;
         }
 
         event.setCanceled(true);
-        event.setCancellationResult(
-                InteractionResult.sidedSuccess(event.getLevel().isClientSide)
-        );
+        event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));
 
         if (!(event.getLevel() instanceof ServerLevel level)) {
             return;
         }
 
-        if (tryCreatePlayerIronGollet(level, pumpkinPos, ironPos, player)
-                && !player.getAbilities().instabuild) {
+        if (tryCreatePlayerIronGollet(level, pumpkinPos, ironPos, player) && !player.getAbilities().instabuild) {
             heldStack.shrink(1);
         }
     }
 
-    private static boolean tryCreatePlayerIronGollet(
-            ServerLevel level,
-            BlockPos pumpkinPos,
-            BlockPos ironPos,
-            Player owner
-    ) {
+    private static boolean tryCreatePlayerIronGollet(ServerLevel level, BlockPos pumpkinPos, BlockPos ironPos, Player owner) {
         if (!level.getWorldBorder().isWithinBounds(ironPos)) {
             return false;
         }
@@ -80,8 +66,7 @@ public final class IronGolletSummonEvents {
         BlockState pumpkinState = level.getBlockState(pumpkinPos);
         BlockState ironState = level.getBlockState(ironPos);
 
-        if (!pumpkinState.is(Blocks.CARVED_PUMPKIN)
-                || !ironState.is(Blocks.IRON_BLOCK)) {
+        if (!pumpkinState.is(Blocks.CARVED_PUMPKIN) || !ironState.is(Blocks.IRON_BLOCK)) {
             return false;
         }
 
@@ -93,21 +78,9 @@ public final class IronGolletSummonEvents {
         clearCreationBlock(level, pumpkinPos, pumpkinState);
         clearCreationBlock(level, ironPos, ironState);
 
-        gollet.moveTo(
-                ironPos.getX() + 0.5D,
-                ironPos.getY(),
-                ironPos.getZ() + 0.5D,
-                owner.getYRot(),
-                0.0F
-        );
+        gollet.moveTo(ironPos.getX() + 0.5D, ironPos.getY(), ironPos.getZ() + 0.5D, owner.getYRot(), 0.0F);
 
-        gollet.finalizeSpawn(
-                level,
-                level.getCurrentDifficultyAt(ironPos),
-                MobSpawnType.MOB_SUMMONED,
-                null,
-                null
-        );
+        gollet.finalizeSpawn(level, level.getCurrentDifficultyAt(ironPos), MobSpawnType.MOB_SUMMONED, null, null);
 
         gollet.setOwner(owner);
         gollet.setPersistenceRequired();
@@ -118,35 +91,14 @@ public final class IronGolletSummonEvents {
             return false;
         }
 
-        level.sendParticles(
-                ParticleTypes.POOF,
-                ironPos.getX() + 0.5D,
-                ironPos.getY() + 0.8D,
-                ironPos.getZ() + 0.5D,
-                24,
-                0.35D,
-                0.55D,
-                0.35D,
-                0.03D
-        );
+        level.sendParticles(ParticleTypes.POOF, ironPos.getX() + 0.5D, ironPos.getY() + 0.8D, ironPos.getZ() + 0.5D, 24, 0.35D, 0.55D, 0.35D, 0.03D);
 
-        level.playSound(
-                null,
-                ironPos,
-                SoundEvents.IRON_GOLEM_REPAIR,
-                SoundSource.NEUTRAL,
-                1.0F,
-                0.9F + level.random.nextFloat() * 0.1F
-        );
+        level.playSound(null, ironPos, SoundEvents.IRON_GOLEM_REPAIR, SoundSource.NEUTRAL, 1.0F, 0.9F + level.random.nextFloat() * 0.1F);
 
         return true;
     }
 
-    private static void clearCreationBlock(
-            ServerLevel level,
-            BlockPos pos,
-            BlockState state
-    ) {
+    private static void clearCreationBlock(ServerLevel level, BlockPos pos, BlockState state) {
         level.levelEvent(2001, pos, Block.getId(state));
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
     }
@@ -158,25 +110,16 @@ public final class IronGolletSummonEvents {
         }
 
         LivingEntity victim = event.getEntity();
-
         boolean victimIsVillager = victim instanceof Villager;
-        boolean victimIsIronGolem = victim instanceof IronGolem
-                && !(victim instanceof IronGollet);
-        boolean victimIsLinkedGollet = victim instanceof IronGollet gollet
-                && gollet.isVillageLinked();
+        boolean victimIsIronGolem = victim instanceof IronGolem && !(victim instanceof IronGollet);
+        boolean victimIsLinkedGollet = victim instanceof IronGollet gollet && gollet.isVillageLinked();
 
-        if (!victimIsVillager
-                && !victimIsIronGolem
-                && !victimIsLinkedGollet) {
+        if (!victimIsVillager && !victimIsIronGolem && !victimIsLinkedGollet) {
             return;
         }
 
         Entity sourceEntity = event.getSource().getEntity();
-        if (!(sourceEntity instanceof LivingEntity attacker)) {
-            return;
-        }
-
-        if (!isValidVillageAggressor(attacker)) {
+        if (!(sourceEntity instanceof LivingEntity attacker) || !isValidVillageAggressor(attacker)) {
             return;
         }
 
@@ -187,53 +130,26 @@ public final class IronGolletSummonEvents {
         }
     }
 
-    private static void notifyLinkedGollets(
-            ServerLevel level,
-            LivingEntity victim,
-            LivingEntity attacker
-    ) {
-        List<IronGollet> gollets = level.getEntitiesOfClass(
-                IronGollet.class,
-                victim.getBoundingBox().inflate(32.0D, 16.0D, 32.0D),
-                gollet -> gollet.isAlive()
-                        && gollet.isVillageLinked()
-                        && gollet.canAttackThreat(attacker)
-        );
-
+    private static void notifyLinkedGollets(ServerLevel level, LivingEntity victim, LivingEntity attacker) {
+        List<IronGollet> gollets = level.getEntitiesOfClass(IronGollet.class, victim.getBoundingBox().inflate(32.0D, 16.0D, 32.0D), gollet -> gollet.isAlive() && gollet.isVillageLinked() && gollet.canAttackThreat(attacker));
         for (IronGollet gollet : gollets) {
             gollet.setTarget(attacker);
         }
     }
 
-    private static void notifyIronGolems(
-            ServerLevel level,
-            LivingEntity victim,
-            LivingEntity attacker
-    ) {
-        List<IronGolem> golems = level.getEntitiesOfClass(
-                IronGolem.class,
-                victim.getBoundingBox().inflate(32.0D, 16.0D, 32.0D),
-                golem -> golem.isAlive()
-                        && !(golem instanceof IronGollet)
-        );
-
+    private static void notifyIronGolems(ServerLevel level, LivingEntity victim, LivingEntity attacker) {
+        List<IronGolem> golems = level.getEntitiesOfClass(IronGolem.class, victim.getBoundingBox().inflate(32.0D, 16.0D, 32.0D), golem -> golem.isAlive() && !(golem instanceof IronGollet));
         for (IronGolem golem : golems) {
             golem.setTarget(attacker);
         }
     }
 
     private static boolean isValidVillageAggressor(LivingEntity attacker) {
-        if (!attacker.isAlive()) {
+        if (!attacker.isAlive() || attacker instanceof Creeper) {
             return false;
         }
 
-        if (attacker instanceof Creeper) {
-            return false;
-        }
-
-        if (attacker instanceof Villager
-                || attacker instanceof IronGolem
-                || attacker instanceof IronGollet) {
+        if (attacker instanceof Villager || attacker instanceof IronGolem || attacker instanceof IronGollet) {
             return false;
         }
 

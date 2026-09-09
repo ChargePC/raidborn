@@ -34,14 +34,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public class OminousDaggerItem extends SwordItem {
-
     public static final String VILLAGER_KILLS_TAG = "VillagerKills";
 
-    // Halved from 2.5% to +100%, which sat on top of netherite-sword damage and tripled its DPS.
     private static final float DAMAGE_BONUS_PER_KILL = 0.0125F;
     private static final float MAX_DAMAGE_BONUS = 0.5F;
     private static final int MAX_BONUS_KILLS = 40;
-
     private static final UUID OMINOUS_DAGGER_REACH_UUID = UUID.fromString("7b1b8c5d-59c3-4f5f-b4c4-3de7dc0f4c11");
 
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -51,28 +48,11 @@ public class OminousDaggerItem extends SwordItem {
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-        // Iron tier, the way the book already described it: 5 damage a hit, under an iron sword, at
-        // 2.2 swings a second, over any of them. Shorter reach is what it pays for the speed.
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                BASE_ATTACK_DAMAGE_UUID,
-                "Weapon modifier",
-                4.0D,
-                AttributeModifier.Operation.ADDITION
-        ));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 4.0D, AttributeModifier.Operation.ADDITION));
 
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(
-                BASE_ATTACK_SPEED_UUID,
-                "Weapon modifier",
-                -1.8D,
-                AttributeModifier.Operation.ADDITION
-        ));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1.8D, AttributeModifier.Operation.ADDITION));
 
-        builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(
-                OMINOUS_DAGGER_REACH_UUID,
-                "Ominous Dagger reach modifier",
-                -0.75D,
-                AttributeModifier.Operation.ADDITION
-        ));
+        builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(OMINOUS_DAGGER_REACH_UUID, "Ominous Dagger reach modifier", -0.75D, AttributeModifier.Operation.ADDITION));
 
         this.defaultModifiers = builder.build();
     }
@@ -111,7 +91,6 @@ public class OminousDaggerItem extends SwordItem {
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(book);
-
         if (enchantments.containsKey(Enchantments.UNBREAKING) || enchantments.containsKey(Enchantments.MENDING)) {
             return false;
         }
@@ -139,7 +118,6 @@ public class OminousDaggerItem extends SwordItem {
 
     @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
     public static class Events {
-
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             ItemStack weapon = daggerThatLandedTheHit(event.getSource());
@@ -158,10 +136,6 @@ public class OminousDaggerItem extends SwordItem {
             OminousDaggerItem.addVillagerKill(weapon);
         }
 
-        /**
-         * Looking at the main hand alone also matched arrows and thrown potions, so anything shot
-         * while the dagger was held got the bonus damage and fed the kill count for free.
-         */
         private static ItemStack daggerThatLandedTheHit(DamageSource source) {
             if (!(source.getEntity() instanceof LivingEntity attacker)) return ItemStack.EMPTY;
             if (source.getDirectEntity() != attacker) return ItemStack.EMPTY;

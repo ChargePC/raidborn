@@ -9,13 +9,7 @@ import net.minecraft.world.entity.monster.Monster;
 
 import java.util.UUID;
 
-/**
- * Target protection and combat memory for recruits.
- *
- * <p>Careful in here, the vanilla revenge path breaks if you look at it funny. See
- * {@link #isRevengeTargetChange} and {@link #clearTargetKeepRevenge}.
- */
-public final class RecruitTargeting {
+public class RecruitTargeting {
     static final double FOLLOW_TARGET_LEASH_RADIUS = 48.0D;
 
     static final double FOLLOW_TARGET_LEASH_RADIUS_SQR = FOLLOW_TARGET_LEASH_RADIUS * FOLLOW_TARGET_LEASH_RADIUS;
@@ -26,14 +20,6 @@ public final class RecruitTargeting {
 
     static final String TAG_FOLLOW_TARGET_EXPIRE = "raidborn_follow_target_expire";
 
-    /**
-     * Clears the active target and movement but keeps {@code getLastHurtByMob()}. That's on purpose.
-     *
-     * <p>Vanilla {@code HurtByTargetGoal} can still be using the revenge target while it works
-     * through {@code start()}/{@code alertOthers()}. Clear both at once and the goal is left with a
-     * null target, then {@code Pillager#isAlliedTo(null)} takes the server down while the pillager
-     * is alerting its friends.
-     */
     static void clearTargetKeepRevenge(Mob mob) {
         mob.setTarget(null);
         mob.getNavigation().stop();
@@ -56,14 +42,6 @@ public final class RecruitTargeting {
         return target instanceof Mob targetMob && RecruitOwnership.isSameSquad(recruit, targetMob);
     }
 
-    /**
-     * {@code HurtByTargetGoal.start()} calls {@code setTarget(getLastHurtByMob())} and then
-     * {@code alertOthers()}, which hands {@code getTarget()} to {@code Pillager#isAlliedTo}. Blocking
-     * the target change on that path would leave {@code getTarget()} null inside {@code alertOthers()}
-     * and crash the server, so it is left to the deferred player-tick cleanup.
-     *
-     * <p>TODO: a mixin on alertOthers would be cleaner than deferring, look at this again later.
-     */
     public static boolean isRevengeTargetChange(Mob mob, LivingEntity newTarget) {
         return newTarget != null && newTarget == mob.getLastHurtByMob();
     }
@@ -111,8 +89,7 @@ public final class RecruitTargeting {
             return null;
         }
 
-        if (owner.distanceToSqr(target) > FOLLOW_TARGET_LEASH_RADIUS_SQR
-                || owner.distanceToSqr(mob) > FOLLOW_TARGET_LEASH_RADIUS_SQR) {
+        if (owner.distanceToSqr(target) > FOLLOW_TARGET_LEASH_RADIUS_SQR || owner.distanceToSqr(mob) > FOLLOW_TARGET_LEASH_RADIUS_SQR) {
             clearFollowTarget(mob);
             return null;
         }
@@ -147,14 +124,10 @@ public final class RecruitTargeting {
             return;
         }
 
-        // Preserves the revenge target: see clearTargetKeepRevenge.
         if (isProtectedRecruitTarget(mob, mob.getTarget())) {
             if (!restoreFollowTarget(owner, mob)) {
                 clearTargetKeepRevenge(mob);
             }
         }
-    }
-
-    private RecruitTargeting() {
     }
 }

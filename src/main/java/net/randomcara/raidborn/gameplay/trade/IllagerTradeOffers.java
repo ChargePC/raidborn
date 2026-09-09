@@ -23,12 +23,10 @@ import net.randomcara.raidborn.core.compat.RaidbornCompat;
 
 import java.util.List;
 
-public final class IllagerTradeOffers {
+public class IllagerTradeOffers {
     private static final float DEFAULT_PRICE_MULTIPLIER = 0.05F;
     private static final int MAX_EMERALDS_PER_STACK = 64;
-
     private static final String RAIDBORN_MODID = "raidborn";
-
     private static final String SANDR_MODID = RaidbornCompat.SAVAGE_AND_RAVAGE;
     private static final String IINV_MODID = RaidbornCompat.ILLAGER_INVASION;
     private static final String GI_MODID = RaidbornCompat.GUARD_ILLAGERS;
@@ -37,20 +35,14 @@ public final class IllagerTradeOffers {
     private static final String RAVAGE_AND_CABBAGE_MODID = RaidbornCompat.RAVAGE_AND_CABBAGE;
     private static final String ENCHANT_WITH_MOB_MODID = RaidbornCompat.ENCHANT_WITH_MOB;
 
-    // same list as IllagerTradeEvents, these have no compat switch so they stay file-local
     private static final String FNF_MODID = "friendsandfoes";
     private static final String WANDERING_BAGS_MODID = "wandering_bags";
-
     private static final ResourceLocation EWM_TRADE_BOOK_LOW = id(RAIDBORN_MODID, "trades/ewm_mob_enchant_book_low");
     private static final ResourceLocation EWM_TRADE_BOOK_MID = id(RAIDBORN_MODID, "trades/ewm_mob_enchant_book_mid");
     private static final ResourceLocation EWM_TRADE_BOOK_HIGH = id(RAIDBORN_MODID, "trades/ewm_mob_enchant_book_high");
-
     private static final List<Potion> POTION_TIER1 = List.of(Potions.SWIFTNESS, Potions.FIRE_RESISTANCE, Potions.NIGHT_VISION, Potions.WATER_BREATHING);
     private static final List<Potion> POTION_TIER2 = List.of(Potions.HEALING, Potions.REGENERATION, Potions.STRENGTH, Potions.INVISIBILITY);
     private static final List<Potion> POTION_TIER3 = List.of(Potions.STRONG_HEALING, Potions.STRONG_REGENERATION, Potions.STRONG_STRENGTH, Potions.LONG_INVISIBILITY);
-
-    private IllagerTradeOffers() {
-    }
 
     private static ResourceLocation id(String modid, String path) {
         return ResourceLocation.fromNamespaceAndPath(modid, path);
@@ -166,8 +158,6 @@ public final class IllagerTradeOffers {
                 if (!stack.isEmpty()) return stack.copy();
             }
         } catch (RuntimeException e) {
-            // The table ships with the Enchant With Mob compat pack; a datapack can still break or
-            // drop it. Fall through to the plain book rather than losing the whole offer list.
             Raidborn.LOGGER.warn("Loot table {} failed to roll a trade book", lootTableId, e);
         }
 

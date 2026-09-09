@@ -14,20 +14,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.randomcara.raidborn.client.model.IronGolletModel;
 import net.randomcara.raidborn.content.entity.iron_gollet.IronGollet;
 
-/**
- * Poppy the Gollet holds out to villagers. Same idea as {@code IronGolemFlowerLayer}, which is
- * typed on {@code IronGolem} and reads the golem model, so it can't be reused directly.
- */
 @OnlyIn(Dist.CLIENT)
 public class IronGolletFlowerLayer extends RenderLayer<IronGollet, IronGolletModel<IronGollet>> {
-    /**
-     * Flower position in the right arm's frame, in blocks. In the model the arm runs from y=-2 to y=12
-     * with its centre at x=-1, so the "hand" sits at the lower end.
-     */
     private static final float FLOWER_X = -0.16F;
     private static final float FLOWER_Y = 0.72F;
     private static final float FLOWER_Z = -0.16F;
-
     private static final float FLOWER_SCALE = 0.28F;
 
     private final BlockRenderDispatcher blockRenderer;
@@ -60,19 +51,11 @@ public class IronGolletFlowerLayer extends RenderLayer<IronGollet, IronGolletMod
 
         poseStack.translate(FLOWER_X, FLOWER_Y, FLOWER_Z);
 
-        // Scale, lay the flower down, and only then centre the block model on the origin. Vanilla
-        // centres before scaling, which makes the offset vary with the scale.
         poseStack.scale(FLOWER_SCALE, FLOWER_SCALE, FLOWER_SCALE);
         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
         poseStack.translate(-0.5F, -0.5F, -0.5F);
 
-        this.blockRenderer.renderSingleBlock(
-                Blocks.POPPY.defaultBlockState(),
-                poseStack,
-                buffer,
-                packedLight,
-                OverlayTexture.NO_OVERLAY
-        );
+        this.blockRenderer.renderSingleBlock(Blocks.POPPY.defaultBlockState(), poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
     }

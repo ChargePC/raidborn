@@ -5,12 +5,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-/**
- * Heavy swing with a wind-up, a frontal arc and its own interval. Not {@code MeleeAttackGoal},
- * whose 20 tick interval is hardcoded and too fast to fit the wind-up in.
- */
 class HeavyMeleeAttackGoal extends Goal {
-
     private static final int ATTACK_INTERVAL_TICKS = 30;
     private static final int PATH_RECALCULATE_TICKS = 10;
 
@@ -32,9 +27,7 @@ class HeavyMeleeAttackGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         LivingEntity target = this.juggernaut.getTarget();
-
-        return this.juggernaut.isValidTarget(target)
-                && this.juggernaut.distanceToSqr(target) <= Juggernaut.MAX_CHASE_RANGE * Juggernaut.MAX_CHASE_RANGE;
+        return this.juggernaut.isValidTarget(target) && this.juggernaut.distanceToSqr(target) <= Juggernaut.MAX_CHASE_RANGE * Juggernaut.MAX_CHASE_RANGE;
     }
 
     @Override
@@ -62,7 +55,6 @@ class HeavyMeleeAttackGoal extends Goal {
     @Override
     public void tick() {
         LivingEntity target = this.juggernaut.getTarget();
-
         if (target == null) {
             return;
         }

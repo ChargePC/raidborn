@@ -25,7 +25,6 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import java.util.List;
 
 public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final double SEARCH_RADIUS = 192.0D;
     private static final float EXPLOSION_RADIUS = 2.5F;
     private static final int COOLDOWN_TICKS = 2000;
@@ -39,47 +38,18 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
         Level level = player.level();
 
         List<Mob> recruits = getPlayerRecruits(player, SEARCH_RADIUS);
-
         if (recruits.isEmpty()) {
-            player.displayClientMessage(
-                    Component.literal("You have no recruited Illagers nearby.")
-                            .withStyle(Style.EMPTY.withColor(0xD9534F)),
-                    true
-            );
+            player.displayClientMessage(Component.literal("You have no recruited Illagers nearby.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return false;
         }
 
         Mob chosen = recruits.get(player.getRandom().nextInt(recruits.size()));
 
-        level.playSound(
-                null,
-                player.blockPosition(),
-                SoundEvents.STONE_BUTTON_CLICK_ON,
-                SoundSource.PLAYERS,
-                1.0F,
-                1.0F
-        );
+        level.playSound(null, player.blockPosition(), SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-        level.playSound(
-                null,
-                chosen.getX(),
-                chosen.getY(),
-                chosen.getZ(),
-                SoundEvents.TNT_PRIMED,
-                SoundSource.PLAYERS,
-                1.0F,
-                0.8F
-        );
+        level.playSound(null, chosen.getX(), chosen.getY(), chosen.getZ(), SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 1.0F, 0.8F);
 
-        level.explode(
-                null,
-                chosen.getX(),
-                chosen.getY() + 0.5D,
-                chosen.getZ(),
-                EXPLOSION_RADIUS,
-                false,
-                Level.ExplosionInteraction.NONE
-        );
+        level.explode(null, chosen.getX(), chosen.getY() + 0.5D, chosen.getZ(), EXPLOSION_RADIUS, false, Level.ExplosionInteraction.NONE);
 
         chosen.hurt(level.damageSources().magic(), Float.MAX_VALUE);
 
@@ -97,23 +67,14 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Press it. Something will happen.", 0xFFFF7777),
-                TooltipHelper.line("Cooldown: 1m 40s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Press it. Something will happen.", 0xFFFF7777), TooltipHelper.line("Cooldown: 1m 40s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
 
     private static List<Mob> getPlayerRecruits(ServerPlayer player, double radius) {
         AABB box = player.getBoundingBox().inflate(radius);
-
-        return player.level().getEntitiesOfClass(
-                Mob.class,
-                box,
-                mob -> isValidOwnedRecruit(player, mob)
-        );
+        return player.level().getEntitiesOfClass(Mob.class, box, mob -> isValidOwnedRecruit(player, mob));
     }
 
     private static boolean isValidOwnedRecruit(ServerPlayer player, Mob mob) {

@@ -19,31 +19,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.EnumSet;
 
-/**
- * Grab a hurt villager, carry them away from whatever hit them, let regen do the rest.
- *
- * <p>No ranged healing, the Gollet has to actually reach the villager and pick them up. Getting
- * interrupted halfway is normal, so this is written to pick up where it left off instead of
- * assuming it runs to the end.
- */
 class HealHurtVillagerGoal extends Goal {
-
-    /** The search costs two entity scans, and GoalSelector calls canUse every tick. */
     private static final int SEARCH_INTERVAL_TICKS = 10;
-
     private static final double PICKUP_DISTANCE_SQR = 2.25D;
-
     private static final double MOVE_SPEED = 1.05D;
     private static final double MOVE_FALLBACK_SPEED = 0.95D;
     private static final int PATH_RECALCULATE_TICKS = 8;
-
     private static final int STUCK_TICKS_LIMIT = 30;
     private static final double STUCK_MOVEMENT_SQR = 0.0025D;
-
     private static final int REGEN_DURATION_TICKS = 80;
     private static final int REGEN_REFRESH_TICKS = 10;
     private static final int REGEN_REAPPLY_BELOW_TICKS = 40;
-
     private static final int FLEE_COOLDOWN_TICKS = 18;
     private static final int FLEE_HORIZONTAL_DISTANCE = 8;
     private static final int FLEE_VERTICAL_DISTANCE = 3;
@@ -63,7 +49,6 @@ class HealHurtVillagerGoal extends Goal {
     private int pathRecalculateCooldown;
     private int stuckTicks;
 
-    /** Set when the direct path stopped working, cleared after one detour attempt. */
     private boolean preferDetour;
 
     @Nullable
@@ -101,15 +86,11 @@ class HealHurtVillagerGoal extends Goal {
         }
 
         Villager carried = this.gollet.getCarriedVillager();
-
         if (carried != null) {
             return carried.isAlive() && !this.gollet.isIgnoredVillager(carried);
         }
 
-        return this.targetVillager != null
-                && this.targetVillager.isAlive()
-                && !this.gollet.isVillagerFullyHealed(this.targetVillager)
-                && !this.gollet.isIgnoredVillager(this.targetVillager);
+        return this.targetVillager != null && this.targetVillager.isAlive() && !this.gollet.isVillagerFullyHealed(this.targetVillager) && !this.gollet.isIgnoredVillager(this.targetVillager);
     }
 
     @Override
@@ -134,7 +115,6 @@ class HealHurtVillagerGoal extends Goal {
         this.preferDetour = false;
     }
 
-    /** Published on the Gollet so neighbouring ones do not converge on the same villager. */
     private void setTargetVillager(@Nullable Villager villager) {
         this.targetVillager = villager;
         this.gollet.setHealingTarget(villager);
@@ -143,7 +123,6 @@ class HealHurtVillagerGoal extends Goal {
     @Override
     public void tick() {
         Villager carried = this.gollet.getCarriedVillager();
-
         if (carried != null) {
             this.setTargetVillager(carried);
             this.gollet.setCarryingVillager(true);
@@ -182,11 +161,7 @@ class HealHurtVillagerGoal extends Goal {
     }
 
     private boolean needsNewTarget() {
-        return this.targetVillager == null
-                || !this.targetVillager.isAlive()
-                || this.targetVillager.isPassenger()
-                || this.gollet.isVillagerFullyHealed(this.targetVillager)
-                || this.gollet.isIgnoredVillager(this.targetVillager);
+        return this.targetVillager == null || !this.targetVillager.isAlive() || this.targetVillager.isPassenger() || this.gollet.isVillagerFullyHealed(this.targetVillager) || this.gollet.isIgnoredVillager(this.targetVillager);
     }
 
     private void pickUp(Villager villager) {
@@ -201,13 +176,6 @@ class HealHurtVillagerGoal extends Goal {
         this.healCarriedVillager(villager);
     }
 
-    /**
-     * Straight at the villager, or around the houses when that isn't working.
-     *
-     * <p>The detour is just a random spot roughly toward the villager. Needed because a villager
-     * cowering indoors is somewhere the direct path keeps failing on while the door sits two blocks
-     * to the left. Walk to the general area and the next direct path usually works.
-     */
     private void moveToVillager(Villager villager) {
         if (!this.preferDetour && this.gollet.getNavigation().moveTo(villager, MOVE_SPEED)) {
             return;
@@ -216,13 +184,11 @@ class HealHurtVillagerGoal extends Goal {
         this.preferDetour = false;
 
         Vec3 toward = DefaultRandomPos.getPosTowards(this.gollet, 8, 4, villager.position(), Mth.HALF_PI);
-
         if (toward != null) {
             this.gollet.getNavigation().moveTo(toward.x, toward.y, toward.z, MOVE_FALLBACK_SPEED);
         }
     }
 
-    /** Standing still for {@link #STUCK_TICKS_LIMIT} ticks sends the next move through the detour. */
     private void updateStuckDetection() {
         if (this.lastPosition == null) {
             this.lastPosition = this.gollet.position();
@@ -259,7 +225,6 @@ class HealHurtVillagerGoal extends Goal {
         }
 
         MobEffectInstance current = villager.getEffect(MobEffects.REGENERATION);
-
         if (current == null || current.getAmplifier() < 1 || current.getDuration() <= REGEN_REAPPLY_BELOW_TICKS) {
             villager.addEffect(new MobEffectInstance(MobEffects.REGENERATION, REGEN_DURATION_TICKS, 1, false, true, true));
         }
@@ -269,7 +234,6 @@ class HealHurtVillagerGoal extends Goal {
 
     private void fleeFromNearbyThreats(Villager carried) {
         LivingEntity nearestThreat = this.findNearestThreat(carried);
-
         if (nearestThreat == null) {
             if (!this.gollet.getNavigation().isDone()) {
                 this.gollet.getNavigation().stop();
@@ -285,27 +249,15 @@ class HealHurtVillagerGoal extends Goal {
 
         this.fleeCooldown = FLEE_COOLDOWN_TICKS;
 
-        Vec3 fleePos = DefaultRandomPos.getPosAway(
-                this.gollet,
-                FLEE_HORIZONTAL_DISTANCE,
-                FLEE_VERTICAL_DISTANCE,
-                nearestThreat.position()
-        );
-
+        Vec3 fleePos = DefaultRandomPos.getPosAway(this.gollet, FLEE_HORIZONTAL_DISTANCE, FLEE_VERTICAL_DISTANCE, nearestThreat.position());
         if (fleePos != null) {
             this.gollet.getNavigation().moveTo(fleePos.x, fleePos.y, fleePos.z, FLEE_SPEED);
             return;
         }
 
-        // Cornered: no valid position away from the threat, so just shove off in a straight line.
         Vec3 away = this.gollet.position().subtract(nearestThreat.position());
-
         if (away.lengthSqr() < 0.01D) {
-            away = new Vec3(
-                    this.gollet.getRandom().nextDouble() - 0.5D,
-                    0.0D,
-                    this.gollet.getRandom().nextDouble() - 0.5D
-            );
+            away = new Vec3(this.gollet.getRandom().nextDouble() - 0.5D, 0.0D, this.gollet.getRandom().nextDouble() - 0.5D);
         }
 
         Vec3 fallback = this.gollet.position().add(away.normalize().scale(FLEE_FALLBACK_DISTANCE));
@@ -315,28 +267,12 @@ class HealHurtVillagerGoal extends Goal {
 
     @Nullable
     private LivingEntity findNearestThreat(Villager carried) {
-        AABB box = this.gollet.getBoundingBox().inflate(
-                FLEE_THREAT_SEARCH_XZ,
-                FLEE_THREAT_SEARCH_Y,
-                FLEE_THREAT_SEARCH_XZ
-        );
-
-        return this.gollet.level().getEntitiesOfClass(LivingEntity.class, box, living -> this.isThreat(living, carried))
-                .stream()
-                .min(Comparator.comparingDouble(this.gollet::distanceToSqr))
-                .orElse(null);
+        AABB box = this.gollet.getBoundingBox().inflate(FLEE_THREAT_SEARCH_XZ, FLEE_THREAT_SEARCH_Y, FLEE_THREAT_SEARCH_XZ);
+        return this.gollet.level().getEntitiesOfClass(LivingEntity.class, box, living -> this.isThreat(living, carried)).stream().min(Comparator.comparingDouble(this.gollet::distanceToSqr)).orElse(null);
     }
 
-    /**
-     * Wider than {@link IronGollet#canAttackThreat}: while carrying, anything already aimed at the
-     * village counts as a reason to walk away, even something the Gollet would not attack.
-     */
     private boolean isThreat(LivingEntity living, Villager carried) {
-        if (!living.isAlive() || living == this.gollet || living == carried) {
-            return false;
-        }
-
-        if (living instanceof Villager || living instanceof IronGolem || living instanceof Creeper) {
+        if (!living.isAlive() || living == this.gollet || living == carried || living instanceof Villager || living instanceof IronGolem || living instanceof Creeper) {
             return false;
         }
 
@@ -357,12 +293,7 @@ class HealHurtVillagerGoal extends Goal {
         }
 
         LivingEntity target = mob.getTarget();
-
-        return target != null
-                && (target == this.gollet
-                || target == carried
-                || target instanceof Villager
-                || target instanceof IronGolem);
+        return target != null && (target == this.gollet || target == carried || target instanceof Villager || target instanceof IronGolem);
     }
 
     private static boolean hasRecentlyHurt(LivingEntity victim, LivingEntity suspect) {

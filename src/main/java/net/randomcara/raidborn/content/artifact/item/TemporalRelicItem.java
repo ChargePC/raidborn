@@ -20,7 +20,6 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
-
     private static final String TAG_EXTRA_CD_COUNTER = "raidborn_temporal_relic_cd_counter";
 
     public TemporalRelicItem(Properties props) {
@@ -34,10 +33,7 @@ public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Cooldowns recover 30% faster", 0xFFBBA6FF)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Cooldowns recover 30% faster", 0xFFBBA6FF));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -54,7 +50,6 @@ public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
         }
 
         int counter = player.getPersistentData().getInt(TAG_EXTRA_CD_COUNTER) + 1;
-
         if (counter >= 10) {
             counter = 0;
 
@@ -67,9 +62,6 @@ public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
     }
 
     private static boolean hasTemporalRelicEquipped(ServerPlayer player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.TEMPORAL_RELIC.get())).isPresent())
-                .orElse(false);
+        return CuriosApi.getCuriosInventory(player).resolve().map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.TEMPORAL_RELIC.get())).isPresent()).orElse(false);
     }
 }

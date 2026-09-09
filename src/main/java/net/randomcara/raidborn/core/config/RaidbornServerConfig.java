@@ -9,75 +9,24 @@ import java.util.List;
 import java.util.Set;
 
 public class RaidbornServerConfig {
-    /** How many configurable extra defender slots [attack.extra_defenders] exposes. */
     private static final int EXTRA_DEFENDER_SLOTS = 3;
-
-    /** Per-slot ceiling, high enough that the practical limit is the village size. */
     private static final int EXTRA_DEFENDER_MAX_PER_TIER = 128;
-
-    /**
-     * One [attack.extra_defenders.extraDefenderN] block.
-     *
-     * <p>All the slots take the same five options, so they're declared once and looped instead of
-     * written out three times. Option paths are identical, existing raidborn-server.toml files
-     * still load.
-     */
-    public record ExtraDefenderSlot(
-            ForgeConfigSpec.BooleanValue enabled,
-            ForgeConfigSpec.ConfigValue<String> entityId,
-            ForgeConfigSpec.IntValue loyaltyMax,
-            ForgeConfigSpec.IntValue honorMax,
-            ForgeConfigSpec.IntValue heroMax) {
-    }
-
-    private static ExtraDefenderSlot defineExtraDefender(ForgeConfigSpec.Builder b, int slot) {
-        b.push("extraDefender" + slot);
-
-        // Left-to-right argument evaluation keeps the options in the order they were written in
-        // before, so the generated file does not get reshuffled.
-        ExtraDefenderSlot defined = new ExtraDefenderSlot(
-                b.comment("If true, this configurable extra defender can spawn during Attacks.")
-                        .define("enabled", false),
-                b.comment(
-                                "Entity ID for configurable extra defender " + slot + ".",
-                                "Leave empty to disable.",
-                                "Format: \"namespace:id\". Example: \"minecraft:iron_golem\".",
-                                "The entity must be a Mob to be spawned by this system."
-                        )
-                        .define("entityId", ""),
-                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Illager Loyalty.")
-                        .defineInRange("loyaltyMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER),
-                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Illager Honor.")
-                        .defineInRange("honorMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER),
-                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Hero of the Illage.")
-                        .defineInRange("heroMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER)
-        );
-
-        b.pop();
-        return defined;
-    }
 
     public static final ForgeConfigSpec SPEC;
     public static final Values VALUES;
-
     public static final ForgeConfigSpec.BooleanValue ARTIFACT_CHEST_LOOT_ENABLED;
     public static final ForgeConfigSpec.DoubleValue ARTIFACT_LOOT_CHANCE;
     public static final ForgeConfigSpec.DoubleValue VILLAGER_SOUL_DROP_CHANCE;
-
     public static final ForgeConfigSpec.IntValue LOYALTY_RECRUIT_SLOTS;
     public static final ForgeConfigSpec.IntValue HONOR_RECRUIT_SLOTS;
     public static final ForgeConfigSpec.IntValue HERO_RECRUIT_SLOTS;
     public static final ForgeConfigSpec.BooleanValue SUPPORT_HEALER_AI_ENABLED;
-
     public static final ForgeConfigSpec.IntValue SETTLEMENT_DEFAULT_RADIUS;
     public static final ForgeConfigSpec.IntValue SETTLEMENT_MAX_RADIUS;
-
     public static final ForgeConfigSpec.IntValue TRANSMUTATION_CRAFT_TIME_TICKS;
-
     public static final ForgeConfigSpec.DoubleValue TOTEM_HEALING_RADIUS;
     public static final ForgeConfigSpec.DoubleValue TOTEM_PROTECTION_RADIUS;
     public static final ForgeConfigSpec.DoubleValue TOTEM_RESISTANCE_RADIUS;
-
     public static final ForgeConfigSpec.BooleanValue ATTACK_ENABLED;
     public static final ForgeConfigSpec.IntValue ATTACK_CHECK_INTERVAL_TICKS;
     public static final ForgeConfigSpec.IntValue ATTACK_DETECTION_RADIUS;
@@ -102,10 +51,7 @@ public class RaidbornServerConfig {
     public static final ForgeConfigSpec.IntValue ATTACK_HONOR_MAX_IRON_GOLLETS;
     public static final ForgeConfigSpec.IntValue ATTACK_HERO_MAX_IRON_GOLEMS;
     public static final ForgeConfigSpec.IntValue ATTACK_HERO_MAX_IRON_GOLLETS;
-
-    /** The [attack.extra_defenders] slots, in config order. */
     public static final List<ExtraDefenderSlot> ATTACK_EXTRA_DEFENDERS;
-
     public static final ForgeConfigSpec.BooleanValue ATTACK_HERO_SUPER_DEFENDER_ENABLED;
     public static final ForgeConfigSpec.ConfigValue<String> ATTACK_HERO_SUPER_DEFENDER_ENTITY_ID;
     public static final ForgeConfigSpec.BooleanValue ATTACK_EXTRA_DEFENDERS_PERSISTENT;
@@ -115,7 +61,6 @@ public class RaidbornServerConfig {
     public static final ForgeConfigSpec.IntValue ATTACK_COOLDOWN_TICKS;
     public static final ForgeConfigSpec.IntValue ATTACK_COOLDOWN_MATCH_EXTRA_RADIUS;
     public static final ForgeConfigSpec.DoubleValue ATTACK_VILLAGER_PANIC_SPEED;
-
     private static final Set<String> TRADES_DISABLED_CACHE = new HashSet<>();
     private static final Set<String> RECRUIT_DISABLED_CACHE = new HashSet<>();
 
@@ -284,265 +229,149 @@ public class RaidbornServerConfig {
         Values(ForgeConfigSpec.Builder b) {
             b.push("loot");
 
-            artifactChestLootEnabled = b
-                    .comment("Allows Raidborn artifacts to be injected into vanilla chest loot.")
-                    .define("artifactChestLootEnabled", true);
+            artifactChestLootEnabled = b.comment("Allows Raidborn artifacts to be injected into vanilla chest loot.").define("artifactChestLootEnabled", true);
 
-            artifactLootChance = b
-                    .comment("Chance for the injected artifact loot pool to roll. 0.33 is roughly one in three chests.")
-                    .defineInRange("artifactLootChance", 0.33D, 0.0D, 1.0D);
+            artifactLootChance = b.comment("Chance for the injected artifact loot pool to roll. 0.33 is roughly one in three chests.").defineInRange("artifactLootChance", 0.33D, 0.0D, 1.0D);
 
-            villagerSoulDropChance = b
-                    .comment("Chance for Villagers to drop a Villager Soul when the Raidborn soul drop event is used.")
-                    .defineInRange("villagerSoulDropChance", 0.10D, 0.0D, 1.0D);
+            villagerSoulDropChance = b.comment("Chance for Villagers to drop a Villager Soul when the Raidborn soul drop event is used.").defineInRange("villagerSoulDropChance", 0.10D, 0.0D, 1.0D);
 
             b.pop();
 
             b.push("trades");
 
-            tradesEnabledGlobal = b
-                    .comment("If false, disables all Raidborn trades.")
-                    .define("enabledGlobal", true);
+            tradesEnabledGlobal = b.comment("If false, disables all Raidborn trades.").define("enabledGlobal", true);
 
-            tradesDisabledFor = b
-                    .comment(
-                            "Entity IDs that should not get Raidborn trades.",
-                            "Format: \"namespace:id\". Example: \"minecraft:pillager\"."
-                    )
-                    .defineListAllowEmpty("disabledFor", List.of(), o -> o instanceof String s && isValidRL(s));
+            tradesDisabledFor = b.comment("Entity IDs that should not get Raidborn trades.", "Format: \"namespace:id\". Example: \"minecraft:pillager\".").defineListAllowEmpty("disabledFor", List.of(), o -> o instanceof String s && isValidRL(s));
 
             b.pop();
 
             b.push("recruitment");
 
-            recruitmentEnabledGlobal = b
-                    .comment("If false, disables all Raidborn recruitment.")
-                    .define("enabledGlobal", true);
+            recruitmentEnabledGlobal = b.comment("If false, disables all Raidborn recruitment.").define("enabledGlobal", true);
 
-            recruitmentDisabledFor = b
-                    .comment(
-                            "Entity IDs that should not be recruited by Raidborn.",
-                            "Format: \"namespace:id\". Example: \"minecraft:pillager\"."
-                    )
-                    .defineListAllowEmpty("disabledFor", List.of(), o -> o instanceof String s && isValidRL(s));
+            recruitmentDisabledFor = b.comment("Entity IDs that should not be recruited by Raidborn.", "Format: \"namespace:id\". Example: \"minecraft:pillager\".").defineListAllowEmpty("disabledFor", List.of(), o -> o instanceof String s && isValidRL(s));
 
-            loyaltyRecruitSlots = b
-                    .comment("Maximum recruit slots granted by Illager Loyalty.")
-                    .defineInRange("loyaltyRecruitSlots", 5, 0, 128);
+            loyaltyRecruitSlots = b.comment("Maximum recruit slots granted by Illager Loyalty.").defineInRange("loyaltyRecruitSlots", 5, 0, 128);
 
-            honorRecruitSlots = b
-                    .comment("Maximum recruit slots granted by Illager Honor.")
-                    .defineInRange("honorRecruitSlots", 10, 0, 128);
+            honorRecruitSlots = b.comment("Maximum recruit slots granted by Illager Honor.").defineInRange("honorRecruitSlots", 10, 0, 128);
 
-            heroRecruitSlots = b
-                    .comment("Maximum recruit slots granted by Hero of the Illage.")
-                    .defineInRange("heroRecruitSlots", 15, 0, 128);
+            heroRecruitSlots = b.comment("Maximum recruit slots granted by Hero of the Illage.").defineInRange("heroRecruitSlots", 15, 0, 128);
 
-            supportHealerAiEnabled = b
-                    .comment("Allows recruited Witches and Alchemists to heal the player and allied recruits.")
-                    .define("supportHealerAiEnabled", true);
+            supportHealerAiEnabled = b.comment("Allows recruited Witches and Alchemists to heal the player and allied recruits.").define("supportHealerAiEnabled", true);
 
-            witchRecruitable = b
-                    .comment("If true, witches can be recruited by Raidborn.")
-                    .define("witchRecruitable", true);
+            witchRecruitable = b.comment("If true, witches can be recruited by Raidborn.").define("witchRecruitable", true);
 
             b.push("special_units");
 
-            iceologerRecruitable = b
-                    .comment("If true, Iceologers can be recruited by Raidborn.")
-                    .define("iceologerRecruitable", true);
+            iceologerRecruitable = b.comment("If true, Iceologers can be recruited by Raidborn.").define("iceologerRecruitable", true);
 
-            tricksterRecruitable = b
-                    .comment("If true, Tricksters can be recruited by Raidborn.")
-                    .define("tricksterRecruitable", true);
+            tricksterRecruitable = b.comment("If true, Tricksters can be recruited by Raidborn.").define("tricksterRecruitable", true);
 
-            archivistRecruitable = b
-                    .comment("If true, Archivists can be recruited by Raidborn.")
-                    .define("archivistRecruitable", true);
+            archivistRecruitable = b.comment("If true, Archivists can be recruited by Raidborn.").define("archivistRecruitable", true);
 
-            firecallerRecruitable = b
-                    .comment("If true, Firecallers can be recruited by Raidborn.")
-                    .define("firecallerRecruitable", true);
+            firecallerRecruitable = b.comment("If true, Firecallers can be recruited by Raidborn.").define("firecallerRecruitable", true);
 
             b.pop();
 
             b.push("grumblager");
 
-            grumblagerArmorEquippingEnabled = b
-                    .comment("If true, recruited Grumblagers can be equipped with armor by right-clicking them with armor pieces.")
-                    .define("armorEquippingEnabled", false);
+            grumblagerArmorEquippingEnabled = b.comment("If true, recruited Grumblagers can be equipped with armor by right-clicking them with armor pieces.").define("armorEquippingEnabled", false);
 
             b.pop();
             b.pop();
 
             b.push("settlement");
 
-            settlementDefaultRadius = b
-                    .comment("Default radius used when recruits are linked to a Grand Warbell settlement.")
-                    .defineInRange("defaultRadius", 48, 16, 256);
+            settlementDefaultRadius = b.comment("Default radius used when recruits are linked to a Grand Warbell settlement.").defineInRange("defaultRadius", 48, 16, 256);
 
-            settlementMaxRadius = b
-                    .comment("Maximum allowed Grand Warbell settlement radius.")
-                    .defineInRange("maxRadius", 96, 16, 512);
+            settlementMaxRadius = b.comment("Maximum allowed Grand Warbell settlement radius.").defineInRange("maxRadius", 96, 16, 512);
 
             b.pop();
 
             b.push("transmutation");
 
-            transmutationCraftTimeTicks = b
-                    .comment("Ticks needed for the Transmutation Table to finish one recipe. 200 ticks = 10 seconds.")
-                    .defineInRange("craftTimeTicks", 200, 20, 20 * 60 * 10);
+            transmutationCraftTimeTicks = b.comment("Ticks needed for the Transmutation Table to finish one recipe. 200 ticks = 10 seconds.").defineInRange("craftTimeTicks", 200, 20, 20 * 60 * 10);
 
             b.pop();
 
             b.push("totems");
 
-            totemHealingRadius = b
-                    .comment("Area radius used by the Totem of Healing.")
-                    .defineInRange("healingRadius", 8.0D, 1.0D, 64.0D);
+            totemHealingRadius = b.comment("Area radius used by the Totem of Healing.").defineInRange("healingRadius", 8.0D, 1.0D, 64.0D);
 
-            totemProtectionRadius = b
-                    .comment("Area radius used by the Totem of Protection.")
-                    .defineInRange("protectionRadius", 8.0D, 1.0D, 64.0D);
+            totemProtectionRadius = b.comment("Area radius used by the Totem of Protection.").defineInRange("protectionRadius", 8.0D, 1.0D, 64.0D);
 
-            totemResistanceRadius = b
-                    .comment("Area radius used by the Totem of Resistance.")
-                    .defineInRange("resistanceRadius", 8.0D, 1.0D, 64.0D);
+            totemResistanceRadius = b.comment("Area radius used by the Totem of Resistance.").defineInRange("resistanceRadius", 8.0D, 1.0D, 64.0D);
 
             b.pop();
 
             b.push("attack");
 
-            attackEnabled = b
-                    .comment("Enables the Raidborn Attack event system.")
-                    .define("enabled", true);
+            attackEnabled = b.comment("Enables the Raidborn Attack event system.").define("enabled", true);
 
-            attackCheckIntervalTicks = b
-                    .comment("How often each player is checked for Attack activation.")
-                    .defineInRange("checkIntervalTicks", 40, 5, 200);
+            attackCheckIntervalTicks = b.comment("How often each player is checked for Attack activation.").defineInRange("checkIntervalTicks", 40, 5, 200);
 
-            attackDetectionRadius = b
-                    .comment("Radius used to detect a valid village around the player.")
-                    .defineInRange("detectionRadius", 64, 16, 256);
+            attackDetectionRadius = b.comment("Radius used to detect a valid village around the player.").defineInRange("detectionRadius", 64, 16, 256);
 
-            attackRequiredVillagers = b
-                    .comment("Minimum living Villagers required to start an Attack.")
-                    .defineInRange("requiredVillagers", 3, 1, 128);
+            attackRequiredVillagers = b.comment("Minimum living Villagers required to start an Attack.").defineInRange("requiredVillagers", 3, 1, 128);
 
-            attackRequiredPois = b
-                    .comment("Minimum valid village POIs required to start an Attack.")
-                    .defineInRange("requiredPois", 3, 1, 256);
+            attackRequiredPois = b.comment("Minimum valid village POIs required to start an Attack.").defineInRange("requiredPois", 3, 1, 256);
 
-            attackRequireNaturalGolem = b
-                    .comment("If true, at least one naturally spawned Iron Golem is required to start an Attack.")
-                    .define("requireNaturalGolem", true);
+            attackRequireNaturalGolem = b.comment("If true, at least one naturally spawned Iron Golem is required to start an Attack.").define("requireNaturalGolem", true);
 
-            attackIgnoreVillagersInVehicles = b
-                    .comment("If true, Villagers inside boats or minecarts are ignored for Attack activation and objectives.")
-                    .define("ignoreVillagersInVehicles", true);
+            attackIgnoreVillagersInVehicles = b.comment("If true, Villagers inside boats or minecarts are ignored for Attack activation and objectives.").define("ignoreVillagersInVehicles", true);
 
-            attackRallyRecruitsOnStart = b
-                    .comment(
-                            "If true, the owner's recruits are teleported next to them when an Attack starts.",
-                            "Recruits in Settlement Mode are never rallied. Rallied recruits are set back to the Follow order."
-                    )
-                    .define("rallyRecruitsOnStart", true);
+            attackRallyRecruitsOnStart = b.comment("If true, the owner's recruits are teleported next to them when an Attack starts.", "Recruits in Settlement Mode are never rallied. Rallied recruits are set back to the Follow order.").define("rallyRecruitsOnStart", true);
 
-            attackRallyRadius = b
-                    .comment(
-                            "Radius around the owner searched for recruits to rally when an Attack starts.",
-                            "Recruits in unloaded chunks cannot be found regardless of this value."
-                    )
-                    .defineInRange("rallyRadius", 128, 16, 512);
+            attackRallyRadius = b.comment("Radius around the owner searched for recruits to rally when an Attack starts.", "Recruits in unloaded chunks cannot be found regardless of this value.").defineInRange("rallyRadius", 128, 16, 512);
 
-            attackAbandonRadius = b
-                    .comment("Distance from the Attack center before the owner starts abandoning the Attack.")
-                    .defineInRange("abandonRadius", 96, 32, 512);
+            attackAbandonRadius = b.comment("Distance from the Attack center before the owner starts abandoning the Attack.").defineInRange("abandonRadius", 96, 32, 512);
 
-            attackAbandonTimeTicks = b
-                    .comment("How long the owner may stay outside the abandon radius before the Attack is abandoned. 600 ticks = 30 seconds.")
-                    .defineInRange("abandonTimeTicks", 600, 20, 20 * 60 * 10);
+            attackAbandonTimeTicks = b.comment("How long the owner may stay outside the abandon radius before the Attack is abandoned. 600 ticks = 30 seconds.").defineInRange("abandonTimeTicks", 600, 20, 20 * 60 * 10);
 
-            attackSmallTimeLimitTicks = b
-                    .comment("Time limit for small villages. 12000 ticks = 10 minutes.")
-                    .defineInRange("smallTimeLimitTicks", 12000, 20 * 60, 20 * 60 * 60);
+            attackSmallTimeLimitTicks = b.comment("Time limit for small villages. 12000 ticks = 10 minutes.").defineInRange("smallTimeLimitTicks", 12000, 20 * 60, 20 * 60 * 60);
 
-            attackMediumTimeLimitTicks = b
-                    .comment("Time limit for medium villages. 18000 ticks = 15 minutes.")
-                    .defineInRange("mediumTimeLimitTicks", 18000, 20 * 60, 20 * 60 * 60);
+            attackMediumTimeLimitTicks = b.comment("Time limit for medium villages. 18000 ticks = 15 minutes.").defineInRange("mediumTimeLimitTicks", 18000, 20 * 60, 20 * 60 * 60);
 
-            attackLargeTimeLimitTicks = b
-                    .comment("Time limit for large villages. 24000 ticks = 20 minutes.")
-                    .defineInRange("largeTimeLimitTicks", 24000, 20 * 60, 20 * 60 * 60);
+            attackLargeTimeLimitTicks = b.comment("Time limit for large villages. 24000 ticks = 20 minutes.").defineInRange("largeTimeLimitTicks", 24000, 20 * 60, 20 * 60 * 60);
 
-            attackMaxExtraDefendersSmall = b
-                    .comment("Global maximum extra defenders spawned for villages with 3 to 5 registered Villagers.")
-                    .defineInRange("maxExtraDefendersSmall", 8, 0, 128);
+            attackMaxExtraDefendersSmall = b.comment("Global maximum extra defenders spawned for villages with 3 to 5 registered Villagers.").defineInRange("maxExtraDefendersSmall", 8, 0, 128);
 
-            attackMaxExtraDefendersMedium = b
-                    .comment("Global maximum extra defenders spawned for villages with 6 to 12 registered Villagers.")
-                    .defineInRange("maxExtraDefendersMedium", 18, 0, 256);
+            attackMaxExtraDefendersMedium = b.comment("Global maximum extra defenders spawned for villages with 6 to 12 registered Villagers.").defineInRange("maxExtraDefendersMedium", 18, 0, 256);
 
-            attackMaxExtraDefendersLarge = b
-                    .comment("Global maximum extra defenders spawned for villages with 13 or more registered Villagers.")
-                    .defineInRange("maxExtraDefendersLarge", 28, 0, 512);
+            attackMaxExtraDefendersLarge = b.comment("Global maximum extra defenders spawned for villages with 13 or more registered Villagers.").defineInRange("maxExtraDefendersLarge", 28, 0, 512);
 
-            attackSpawnDefendersPerVillager = b
-                    .comment("If true, the Attack tries to spawn extra village defenders near registered Villagers.")
-                    .define("spawnDefendersPerVillager", true);
+            attackSpawnDefendersPerVillager = b.comment("If true, the Attack tries to spawn extra village defenders near registered Villagers.").define("spawnDefendersPerVillager", true);
 
             b.push("loyalty");
 
-            attackLoyaltyMaxIronGolems = b
-                    .comment("Maximum extra Iron Golems spawned by an Attack started with Illager Loyalty.")
-                    .defineInRange("maxIronGolems", 1, 0, 128);
+            attackLoyaltyMaxIronGolems = b.comment("Maximum extra Iron Golems spawned by an Attack started with Illager Loyalty.").defineInRange("maxIronGolems", 1, 0, 128);
 
-            attackLoyaltyMaxIronGollets = b
-                    .comment("Maximum extra Iron Gollets spawned by an Attack started with Illager Loyalty.")
-                    .defineInRange("maxIronGollets", 3, 0, 128);
+            attackLoyaltyMaxIronGollets = b.comment("Maximum extra Iron Gollets spawned by an Attack started with Illager Loyalty.").defineInRange("maxIronGollets", 3, 0, 128);
 
             b.pop();
 
             b.push("honor");
 
-            attackHonorMaxIronGolems = b
-                    .comment("Maximum extra Iron Golems spawned by an Attack started with Illager Honor.")
-                    .defineInRange("maxIronGolems", 2, 0, 128);
+            attackHonorMaxIronGolems = b.comment("Maximum extra Iron Golems spawned by an Attack started with Illager Honor.").defineInRange("maxIronGolems", 2, 0, 128);
 
-            attackHonorMaxIronGollets = b
-                    .comment("Maximum extra Iron Gollets spawned by an Attack started with Illager Honor.")
-                    .defineInRange("maxIronGollets", 5, 0, 128);
+            attackHonorMaxIronGollets = b.comment("Maximum extra Iron Gollets spawned by an Attack started with Illager Honor.").defineInRange("maxIronGollets", 5, 0, 128);
 
             b.pop();
 
             b.push("hero");
 
-            attackHeroMaxIronGolems = b
-                    .comment(
-                            "Maximum extra Iron Golems spawned by an Attack started with Hero of the Illage.",
-                            "Default: 0. At this tier the village is defended by the Iron Juggernaut and Iron Gollets instead."
-                    )
-                    .defineInRange("maxIronGolems", 0, 0, 128);
+            attackHeroMaxIronGolems = b.comment("Maximum extra Iron Golems spawned by an Attack started with Hero of the Illage.", "Default: 0. At this tier the village is defended by the Iron Juggernaut and Iron Gollets instead.").defineInRange("maxIronGolems", 0, 0, 128);
 
-            attackHeroMaxIronGollets = b
-                    .comment("Maximum extra Iron Gollets spawned by an Attack started with Hero of the Illage.")
-                    .defineInRange("maxIronGollets", 7, 0, 128);
+            attackHeroMaxIronGollets = b.comment("Maximum extra Iron Gollets spawned by an Attack started with Hero of the Illage.").defineInRange("maxIronGollets", 7, 0, 128);
 
-            attackHeroSuperDefenderEnabled = b
-                    .comment(
-                            "If true, Hero of the Illage Attacks spawn one special configurable defender.",
-                            "Default: false."
-                    )
-                    .define("superDefenderEnabled", false);
+            attackHeroSuperDefenderEnabled = b.comment("If true, Hero of the Illage Attacks spawn one special configurable defender.", "Default: false.").define("superDefenderEnabled", false);
 
-            attackHeroSuperDefenderEntityId = b
-                    .comment(
+            attackHeroSuperDefenderEntityId = b.comment(
                             "Entity ID for the special Hero Attack defender.",
                             "This entity is spawned only once when a Hero of the Illage Attack starts.",
                             "Format: \"namespace:id\". Example: \"minecraft:iron_golem\", \"minecraft:warden\", or a modded entity ID.",
                             "The entity must be a Mob to be spawned by this system."
-                    )
-                    .define("superDefenderEntityId", "minecraft:iron_golem");
+                    ).define("superDefenderEntityId", "minecraft:iron_golem");
 
             b.pop();
 
@@ -556,143 +385,72 @@ public class RaidbornServerConfig {
 
             b.pop();
 
-            attackExtraDefendersPersistent = b
-                    .comment("If true, spawned Attack defenders are marked persistent while the event is active.")
-                    .define("extraDefendersPersistent", true);
+            attackExtraDefendersPersistent = b.comment("If true, spawned Attack defenders are marked persistent while the event is active.").define("extraDefendersPersistent", true);
 
-            attackDespawnSpawnedDefendersAfterEnd = b
-                    .comment("If true, defenders spawned by the Attack are removed when the Attack ends.")
-                    .define("despawnSpawnedDefendersAfterEnd", true);
+            attackDespawnSpawnedDefendersAfterEnd = b.comment("If true, defenders spawned by the Attack are removed when the Attack ends.").define("despawnSpawnedDefendersAfterEnd", true);
 
-            attackVictoryCelebrationTicks = b
-                    .comment("How long allied Illagers celebrate after winning an Attack. 300 ticks = 15 seconds.")
-                    .defineInRange("victoryCelebrationTicks", 300, 20, 20 * 60 * 5);
+            attackVictoryCelebrationTicks = b.comment("How long allied Illagers celebrate after winning an Attack. 300 ticks = 15 seconds.").defineInRange("victoryCelebrationTicks", 300, 20, 20 * 60 * 5);
 
-            attackEndBossbarDelayTicks = b
-                    .comment("How long the victory/failure bossbar stays visible after the Attack ends.")
-                    .defineInRange("endBossbarDelayTicks", 100, 20, 20 * 60);
+            attackEndBossbarDelayTicks = b.comment("How long the victory/failure bossbar stays visible after the Attack ends.").defineInRange("endBossbarDelayTicks", 100, 20, 20 * 60);
 
-            attackCooldownTicks = b
-                    .comment("Village cooldown after an Attack ends. 12000 ticks = 10 minutes.")
-                    .defineInRange("cooldownTicks", 12000, 0, 20 * 60 * 60);
+            attackCooldownTicks = b.comment("Village cooldown after an Attack ends. 12000 ticks = 10 minutes.").defineInRange("cooldownTicks", 12000, 0, 20 * 60 * 60);
 
-            attackCooldownMatchExtraRadius = b
-                    .comment("Extra radius used when checking whether a village center is still on cooldown.")
-                    .defineInRange("cooldownMatchExtraRadius", 32, 0, 256);
+            attackCooldownMatchExtraRadius = b.comment("Extra radius used when checking whether a village center is still on cooldown.").defineInRange("cooldownMatchExtraRadius", 32, 0, 256);
 
-            attackVillagerPanicSpeed = b
-                    .comment("Navigation speed used by registered Villagers when fleeing during an Attack.")
-                    .defineInRange("villagerPanicSpeed", 0.85D, 0.1D, 2.0D);
+            attackVillagerPanicSpeed = b.comment("Navigation speed used by registered Villagers when fleeing during an Attack.").defineInRange("villagerPanicSpeed", 0.85D, 0.1D, 2.0D);
 
             b.pop();
 
             b.push("juggernaut");
 
-            juggernautNaturalSpawnEnabled = b
-                    .comment(
-                            "If true, eligible villages can gain an Iron Juggernaut on their own.",
-                            "Turn this off to keep Juggernauts as Attack defenders and raid rewards only."
-                    )
-                    .define("naturalSpawnEnabled", true);
+            juggernautNaturalSpawnEnabled = b.comment("If true, eligible villages can gain an Iron Juggernaut on their own.", "Turn this off to keep Juggernauts as Attack defenders and raid rewards only.").define("naturalSpawnEnabled", true);
 
-            juggernautNaturalSpawnChance = b
-                    .comment("Chance for an eligible village to receive a natural Juggernaut when scanned.")
-                    .defineInRange("naturalSpawnChance", 0.25D, 0.0D, 1.0D);
+            juggernautNaturalSpawnChance = b.comment("Chance for an eligible village to receive a natural Juggernaut when scanned.").defineInRange("naturalSpawnChance", 0.25D, 0.0D, 1.0D);
 
-            juggernautMinVillagers = b
-                    .comment("Minimum living Villagers for a village to be eligible for a natural Juggernaut.")
-                    .defineInRange("minVillagers", 2, 1, 64);
+            juggernautMinVillagers = b.comment("Minimum living Villagers for a village to be eligible for a natural Juggernaut.").defineInRange("minVillagers", 2, 1, 64);
 
-            juggernautVillageScanRadius = b
-                    .comment("Radius around a village bell scanned for Juggernaut bookkeeping.")
-                    .defineInRange("villageScanRadius", 96, 16, 256);
+            juggernautVillageScanRadius = b.comment("Radius around a village bell scanned for Juggernaut bookkeeping.").defineInRange("villageScanRadius", 96, 16, 256);
 
-            juggernautReplacementDelayDays = b
-                    .comment("In-game days a village waits before it may replace a dead natural Juggernaut.")
-                    .defineInRange("replacementDelayDays", 5, 0, 1000);
+            juggernautReplacementDelayDays = b.comment("In-game days a village waits before it may replace a dead natural Juggernaut.").defineInRange("replacementDelayDays", 5, 0, 1000);
 
-            juggernautReplacementDailyChance = b
-                    .comment("Daily chance to replace a dead natural Juggernaut once the delay has passed.")
-                    .defineInRange("replacementDailyChance", 0.10D, 0.0D, 1.0D);
+            juggernautReplacementDailyChance = b.comment("Daily chance to replace a dead natural Juggernaut once the delay has passed.").defineInRange("replacementDailyChance", 0.10D, 0.0D, 1.0D);
 
-            juggernautRaidRewardEnabled = b
-                    .comment("If true, a village that survives a strong raid is granted a Juggernaut.")
-                    .define("raidRewardEnabled", true);
+            juggernautRaidRewardEnabled = b.comment("If true, a village that survives a strong raid is granted a Juggernaut.").define("raidRewardEnabled", true);
 
-            juggernautRaidRewardMinBadOmen = b
-                    .comment("Minimum Bad Omen level of the survived raid for the Juggernaut reward.")
-                    .defineInRange("raidRewardMinBadOmenLevel", 5, 1, 10);
+            juggernautRaidRewardMinBadOmen = b.comment("Minimum Bad Omen level of the survived raid for the Juggernaut reward.").defineInRange("raidRewardMinBadOmenLevel", 5, 1, 10);
 
-            juggernautRaidRewardMinDelayTicks = b
-                    .comment("Shortest delay between the raid victory and the reward Juggernaut appearing.")
-                    .defineInRange("raidRewardMinDelayTicks", 1200, 0, 20 * 60 * 60 * 2);
+            juggernautRaidRewardMinDelayTicks = b.comment("Shortest delay between the raid victory and the reward Juggernaut appearing.").defineInRange("raidRewardMinDelayTicks", 1200, 0, 20 * 60 * 60 * 2);
 
-            juggernautRaidRewardMaxDelayTicks = b
-                    .comment(
-                            "Longest delay between the raid victory and the reward Juggernaut appearing.",
-                            "Values below the minimum are clamped up to it at runtime."
-                    )
-                    .defineInRange("raidRewardMaxDelayTicks", 24000, 0, 20 * 60 * 60 * 2);
+            juggernautRaidRewardMaxDelayTicks = b.comment("Longest delay between the raid victory and the reward Juggernaut appearing.", "Values below the minimum are clamped up to it at runtime.").defineInRange("raidRewardMaxDelayTicks", 24000, 0, 20 * 60 * 60 * 2);
 
             b.pop();
 
             b.push("squad");
 
-            squadCommandRadius = b
-                    .comment("How far the Illager Warhorn reaches when issuing an order.")
-                    .defineInRange("commandRadius", 48.0D, 8.0D, 256.0D);
+            squadCommandRadius = b.comment("How far the Illager Warhorn reaches when issuing an order.").defineInRange("commandRadius", 48.0D, 8.0D, 256.0D);
 
-            squadHoldScanRadius = b
-                    .comment("How far a recruit on Hold looks for threats around its hold position.")
-                    .defineInRange("holdScanRadius", 14.0D, 2.0D, 128.0D);
+            squadHoldScanRadius = b.comment("How far a recruit on Hold looks for threats around its hold position.").defineInRange("holdScanRadius", 14.0D, 2.0D, 128.0D);
 
-            squadHoldLeashRadius = b
-                    .comment("How far a recruit on Hold may stray before returning to its hold position.")
-                    .defineInRange("holdLeashRadius", 20.0D, 2.0D, 128.0D);
+            squadHoldLeashRadius = b.comment("How far a recruit on Hold may stray before returning to its hold position.").defineInRange("holdLeashRadius", 20.0D, 2.0D, 128.0D);
 
-            squadHoldWanderRadius = b
-                    .comment("How far a recruit on Hold wanders while idle.")
-                    .defineInRange("holdWanderRadius", 6.0D, 0.0D, 64.0D);
+            squadHoldWanderRadius = b.comment("How far a recruit on Hold wanders while idle.").defineInRange("holdWanderRadius", 6.0D, 0.0D, 64.0D);
 
-            squadAttackOrderChaseRadius = b
-                    .comment("How far a recruit chases the target of an explicit Attack order.")
-                    .defineInRange("attackOrderChaseRadius", 48.0D, 8.0D, 256.0D);
+            squadAttackOrderChaseRadius = b.comment("How far a recruit chases the target of an explicit Attack order.").defineInRange("attackOrderChaseRadius", 48.0D, 8.0D, 256.0D);
 
-            squadAttackOrderDurationTicks = b
-                    .comment("How long an explicit Attack order lasts. 400 ticks = 20 seconds.")
-                    .defineInRange("attackOrderDurationTicks", 400, 20, 20 * 60 * 10);
+            squadAttackOrderDurationTicks = b.comment("How long an explicit Attack order lasts. 400 ticks = 20 seconds.").defineInRange("attackOrderDurationTicks", 400, 20, 20 * 60 * 10);
 
-            squadFollowTeleportDistance = b
-                    .comment(
-                            "Distance at which a following recruit teleports to its owner instead of walking.",
-                            "Lower values make the squad stick closer but teleport more visibly."
-                    )
-                    .defineInRange("followTeleportDistance", 40.0D, 8.0D, 128.0D);
+            squadFollowTeleportDistance = b.comment("Distance at which a following recruit teleports to its owner instead of walking.", "Lower values make the squad stick closer but teleport more visibly.").defineInRange("followTeleportDistance", 40.0D, 8.0D, 128.0D);
 
-            squadSlotScanRadius = b
-                    .comment(
-                            "Radius around the owner searched when counting recruits against the slot limit.",
-                            "Recruits farther away than this stop consuming slots."
-                    )
-                    .defineInRange("slotScanRadius", 160.0D, 16.0D, 512.0D);
+            squadSlotScanRadius = b.comment("Radius around the owner searched when counting recruits against the slot limit.", "Recruits farther away than this stop consuming slots.").defineInRange("slotScanRadius", 160.0D, 16.0D, 512.0D);
 
-            squadSupportHealRadius = b
-                    .comment("Range within which recruited healers throw healing potions at allies.")
-                    .defineInRange("supportHealRadius", 10.0D, 2.0D, 64.0D);
+            squadSupportHealRadius = b.comment("Range within which recruited healers throw healing potions at allies.").defineInRange("supportHealRadius", 10.0D, 2.0D, 64.0D);
 
-            squadSupportHealCooldownTicks = b
-                    .comment("Cooldown between healing potions thrown by a recruited healer.")
-                    .defineInRange("supportHealCooldownTicks", 120, 20, 20 * 60 * 5);
+            squadSupportHealCooldownTicks = b.comment("Cooldown between healing potions thrown by a recruited healer.").defineInRange("supportHealCooldownTicks", 120, 20, 20 * 60 * 5);
 
             b.pop();
 
             b.push("compat");
-            b.comment(
-                    "Per-mod switches for Raidborn's optional integrations.",
-                    "Turning one off makes Raidborn behave as if that mod were not installed:",
-                    "its creatures stop being recruitable, tradeable and settlement-eligible.",
-                    "A switch has no effect when the mod is absent."
-            );
+            b.comment("Per-mod switches for Raidborn's optional integrations.", "Turning one off makes Raidborn behave as if that mod were not installed:", "its creatures stop being recruitable, tradeable and settlement-eligible.", "A switch has no effect when the mod is absent.");
 
             compatIllagerInvasion = b.define("illagerInvasion", true);
             compatSavageAndRavage = b.define("savageAndRavage", true);
@@ -767,12 +525,8 @@ public class RaidbornServerConfig {
         return VALUES.juggernautRaidRewardMinDelayTicks.get();
     }
 
-    /** Never below the minimum: a max under it would break the delay roll. */
     public static int getJuggernautRaidRewardMaxDelayTicks() {
-        return Math.max(
-                VALUES.juggernautRaidRewardMaxDelayTicks.get(),
-                VALUES.juggernautRaidRewardMinDelayTicks.get()
-        );
+        return Math.max(VALUES.juggernautRaidRewardMaxDelayTicks.get(), VALUES.juggernautRaidRewardMinDelayTicks.get());
     }
 
     public static double getSquadCommandRadius() {
@@ -942,5 +696,28 @@ public class RaidbornServerConfig {
 
     public static double getTotemResistanceRadius() {
         return VALUES.totemResistanceRadius.get();
+    }
+
+    public record ExtraDefenderSlot(
+            ForgeConfigSpec.BooleanValue enabled,
+            ForgeConfigSpec.ConfigValue<String> entityId,
+            ForgeConfigSpec.IntValue loyaltyMax,
+            ForgeConfigSpec.IntValue honorMax,
+            ForgeConfigSpec.IntValue heroMax) {
+    }
+
+    private static ExtraDefenderSlot defineExtraDefender(ForgeConfigSpec.Builder b, int slot) {
+        b.push("extraDefender" + slot);
+
+        ExtraDefenderSlot defined = new ExtraDefenderSlot(
+                b.comment("If true, this configurable extra defender can spawn during Attacks.").define("enabled", false),
+                b.comment("Entity ID for configurable extra defender " + slot + ".", "Leave empty to disable.", "Format: \"namespace:id\". Example: \"minecraft:iron_golem\".", "The entity must be a Mob to be spawned by this system.").define("entityId", ""),
+                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Illager Loyalty.").defineInRange("loyaltyMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER),
+                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Illager Honor.").defineInRange("honorMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER),
+                b.comment("Maximum extra defender " + slot + " spawned by an Attack started with Hero of the Illage.").defineInRange("heroMax", 0, 0, EXTRA_DEFENDER_MAX_PER_TIER)
+        );
+
+        b.pop();
+        return defined;
     }
 }

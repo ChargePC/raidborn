@@ -36,11 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class AnywherePillowItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final int COOLDOWN_TICKS = 20 * 20;
     private static final double MONSTER_HORIZONTAL_RADIUS = 8.0D;
     private static final double MONSTER_VERTICAL_RADIUS = 5.0D;
-
     private static final Set<UUID> PILLOW_SLEEPERS = ConcurrentHashMap.newKeySet();
 
     public static void clearServerState() {
@@ -93,7 +91,6 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
 
         BlockPos feetPos = player.blockPosition();
         BlockPos groundPos = feetPos.below();
-
         if (!hasValidGround(level, groundPos)) {
             player.displayClientMessage(Component.literal("The pillow needs solid ground."), true);
             return false;
@@ -118,16 +115,7 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
 
         level.updateSleepingPlayerList();
 
-        level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.WOOL_PLACE,
-                SoundSource.PLAYERS,
-                0.8F,
-                0.9F
-        );
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 0.8F, 0.9F);
 
         player.getCooldowns().addCooldown(ModItems.ANYWHERE_PILLOW.get(), COOLDOWN_TICKS);
 
@@ -135,27 +123,9 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
     }
 
     private static void explodeWrongDimension(ServerPlayer player, ServerLevel level) {
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 0.8F);
 
-        level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.GENERIC_EXPLODE,
-                SoundSource.PLAYERS,
-                1.0F,
-                0.8F
-        );
-
-        level.explode(
-                player,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                4.0F,
-                true,
-                Level.ExplosionInteraction.TNT
-        );
+        level.explode(player, player.getX(), player.getY(), player.getZ(), 4.0F, true, Level.ExplosionInteraction.TNT);
     }
 
     @Override
@@ -169,31 +139,17 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
     }
 
     private static boolean hasEnoughRoom(ServerLevel level, BlockPos feetPos) {
-        return level.getBlockState(feetPos).getCollisionShape(level, feetPos).isEmpty()
-                && level.getBlockState(feetPos.above()).getCollisionShape(level, feetPos.above()).isEmpty();
+        return level.getBlockState(feetPos).getCollisionShape(level, feetPos).isEmpty() && level.getBlockState(feetPos.above()).getCollisionShape(level, feetPos.above()).isEmpty();
     }
 
     private static boolean hasNearbyMonster(ServerLevel level, ServerPlayer player) {
-        List<Monster> monsters = level.getEntitiesOfClass(
-                Monster.class,
-                player.getBoundingBox().inflate(
-                        MONSTER_HORIZONTAL_RADIUS,
-                        MONSTER_VERTICAL_RADIUS,
-                        MONSTER_HORIZONTAL_RADIUS
-                ),
-                monster -> monster.isAlive() && monster.isPreventingPlayerRest(player)
-        );
-
+        List<Monster> monsters = level.getEntitiesOfClass(Monster.class, player.getBoundingBox().inflate(MONSTER_HORIZONTAL_RADIUS, MONSTER_VERTICAL_RADIUS, MONSTER_HORIZONTAL_RADIUS), monster -> monster.isAlive() && monster.isPreventingPlayerRest(player));
         return !monsters.isEmpty();
     }
 
     @SubscribeEvent
     public static void onSleepingLocationCheck(SleepingLocationCheckEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) {
-            return;
-        }
-
-        if (!PILLOW_SLEEPERS.contains(player.getUUID())) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || !PILLOW_SLEEPERS.contains(player.getUUID())) {
             return;
         }
 
@@ -213,11 +169,7 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                Component.literal("Sleep almost anywhere"),
-                TooltipHelper.line("Cooldown: 20s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, Component.literal("Sleep almost anywhere"), TooltipHelper.line("Cooldown: 20s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

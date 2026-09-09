@@ -41,12 +41,9 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class TotemOfResistanceItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final String TAG_ACTIVE_UNTIL = "raidborn_totem_resistance_until";
-
     private static final int COOLDOWN_TICKS = 20 * 45;
     private static final int DURATION_TICKS = 20 * 15;
-
     private static final int ABSORPTION_DURATION_TICKS = 20 * 15;
     private static final int ABSORPTION_AMPLIFIER = 3;
 
@@ -71,23 +68,9 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
 
         Raidborn.showItemActivation(player, stack.copy());
 
-        player.level().playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.TOTEM_USE,
-                SoundSource.PLAYERS,
-                1.0F,
-                0.9F
-        );
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 0.9F);
 
-        Raidborn.showTotemAreaVisual(
-                player,
-                AREA_COLOR,
-                (float) getRadius(),
-                DURATION_TICKS
-        );
+        Raidborn.showTotemAreaVisual(player, AREA_COLOR, (float) getRadius(), DURATION_TICKS);
 
         return true;
     }
@@ -105,47 +88,20 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
 
     private static void applyAbsorptionOnUse(ServerPlayer player) {
         for (ServerPlayer nearbyPlayer : getPlayersInArea(player)) {
-            nearbyPlayer.addEffect(new MobEffectInstance(
-                    MobEffects.ABSORPTION,
-                    ABSORPTION_DURATION_TICKS,
-                    ABSORPTION_AMPLIFIER,
-                    false,
-                    false,
-                    true
-            ));
+            nearbyPlayer.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, ABSORPTION_DURATION_TICKS, ABSORPTION_AMPLIFIER, false, false, true));
         }
 
         UUID ownerId = player.getUUID();
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        List<Mob> allies = player.serverLevel().getEntitiesOfClass(
-                Mob.class,
-                box,
-                mob -> mob.isAlive()
-                        && isOwnedAlly(mob, ownerId)
-                        && isInsideSquareArea(player, mob)
-        );
-
+        List<Mob> allies = player.serverLevel().getEntitiesOfClass(Mob.class, box, mob -> mob.isAlive() && isOwnedAlly(mob, ownerId) && isInsideSquareArea(player, mob));
         for (Mob mob : allies) {
-            mob.addEffect(new MobEffectInstance(
-                    MobEffects.ABSORPTION,
-                    ABSORPTION_DURATION_TICKS,
-                    ABSORPTION_AMPLIFIER,
-                    false,
-                    false,
-                    true
-            ));
+            mob.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, ABSORPTION_DURATION_TICKS, ABSORPTION_AMPLIFIER, false, false, true));
         }
     }
 
     private static List<ServerPlayer> getPlayersInArea(ServerPlayer player) {
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        return player.serverLevel().getPlayers(
-                otherPlayer -> otherPlayer.isAlive()
-                        && box.intersects(otherPlayer.getBoundingBox())
-                        && isInsideSquareArea(player, otherPlayer)
-        );
+        return player.serverLevel().getPlayers(otherPlayer -> otherPlayer.isAlive() && box.intersects(otherPlayer.getBoundingBox()) && isInsideSquareArea(player, otherPlayer));
     }
 
     @SubscribeEvent
@@ -165,13 +121,7 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
     private static void blockProjectiles(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
         AABB box = player.getBoundingBox().inflate(getRadius(), 4.0D, getRadius());
-
-        List<Projectile> projectiles = level.getEntitiesOfClass(
-                Projectile.class,
-                box,
-                projectile -> projectile.isAlive()
-                        && isInsideSquareArea(player, projectile)
-        );
+        List<Projectile> projectiles = level.getEntitiesOfClass(Projectile.class, box, projectile -> projectile.isAlive() && isInsideSquareArea(player, projectile));
 
         UUID ownerId = player.getUUID();
 
@@ -182,31 +132,22 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
                 continue;
             }
 
-            level.sendParticles(
-                    new DustParticleOptions(new Vector3f(1.0F, 0.48F, 0.0F), 0.55F),
-                    projectile.getX(), projectile.getY(), projectile.getZ(),
-                    8,
-                    0.04D, 0.04D, 0.04D,
-                    0.01D
-            );
+            level.sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.48F, 0.0F), 0.55F), projectile.getX(), projectile.getY(), projectile.getZ(), 8, 0.04D, 0.04D, 0.04D, 0.01D);
 
             projectile.discard();
         }
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Mob mob) {
-        return Math.abs(mob.getX() - player.getX()) <= getRadius()
-                && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(mob.getX() - player.getX()) <= getRadius() && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Player otherPlayer) {
-        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius()
-                && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius() && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Projectile projectile) {
-        return Math.abs(projectile.getX() - player.getX()) <= getRadius()
-                && Math.abs(projectile.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(projectile.getX() - player.getX()) <= getRadius() && Math.abs(projectile.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isOwnedAlly(Mob mob, UUID ownerId) {
@@ -233,12 +174,7 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Creates a field that blocks projectiles", 0xFFE39A),
-                TooltipHelper.line("Gives Absorption IV to players and allies", 0xFFE39A),
-                TooltipHelper.line("Cooldown: 45s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Creates a field that blocks projectiles", 0xFFE39A), TooltipHelper.line("Gives Absorption IV to players and allies", 0xFFE39A), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

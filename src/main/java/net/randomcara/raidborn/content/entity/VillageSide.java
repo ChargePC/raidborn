@@ -13,15 +13,9 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.randomcara.raidborn.core.registry.ModTags;
 import org.jetbrains.annotations.Nullable;
 
-/** Iron Gollet and Iron Juggernaut both extend {@link IronGolem}, so the golem test covers them. */
-public final class VillageSide {
-    private VillageSide() {
-    }
-
+public class VillageSide {
     public static boolean isDefender(@Nullable Entity entity) {
-        return entity instanceof AbstractVillager
-                || entity instanceof IronGolem
-                || entity instanceof SnowGolem;
+        return entity instanceof AbstractVillager || entity instanceof IronGolem || entity instanceof SnowGolem;
     }
 
     public static boolean isAttackingVillage(@Nullable Entity entity) {
@@ -29,16 +23,10 @@ public final class VillageSide {
     }
 
     public static boolean isIllagerSide(@Nullable Entity entity) {
-        return entity instanceof AbstractIllager
-                || entity instanceof Ravager
-                || entity instanceof Witch
-                || entity instanceof Vex;
+        return entity instanceof AbstractIllager || entity instanceof Ravager || entity instanceof Witch || entity instanceof Vex;
     }
 
     public static boolean isIllagerThreat(@Nullable Entity entity) {
-        return entity instanceof LivingEntity living
-                && living.isAlive()
-                && !isDefender(living)
-                && living.getType().is(ModTags.EntityTypes.ILLAGER_THREATS);
+        return entity instanceof LivingEntity living && living.isAlive() && !isDefender(living) && living.getType().is(ModTags.EntityTypes.ILLAGER_THREATS);
     }
 }

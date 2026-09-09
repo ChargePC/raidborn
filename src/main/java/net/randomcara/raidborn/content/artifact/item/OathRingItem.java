@@ -25,12 +25,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class OathRingItem extends Item implements SlotBoundCurioItem {
-
     private static final double SHARE_RADIUS = 64.0D;
-
     private static final String TAG_RECRUITED = "raidborn_recruited";
     private static final String TAG_OWNER = "raidborn_owner";
-
     private static final Map<UUID, Map<MobEffect, EffectSnapshot>> PLAYER_EFFECT_CACHE = new HashMap<>();
 
     public static void clearServerState() {
@@ -48,11 +45,7 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        if (!(slotContext.entity() instanceof ServerPlayer player)) {
-            return;
-        }
-
-        if (!(player.level() instanceof ServerLevel level)) {
+        if (!(slotContext.entity() instanceof ServerPlayer player) || !(player.level() instanceof ServerLevel level)) {
             return;
         }
 
@@ -84,16 +77,11 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("When you gain an effect, your recruited Illagers gain it too", 0xC8A2FF),
-                TooltipHelper.line("Only works while equipped", 0xAAAAAA)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("When you gain an effect, your recruited Illagers gain it too", 0xC8A2FF), TooltipHelper.line("Only works while equipped", 0xAAAAAA));
     }
 
     private static void tickOathRing(ServerLevel level, ServerPlayer player) {
         UUID playerId = player.getUUID();
-
         Map<MobEffect, EffectSnapshot> previous = PLAYER_EFFECT_CACHE.get(playerId);
         Map<MobEffect, EffectSnapshot> current = snapshotEffects(player.getActiveEffects());
 
@@ -105,7 +93,6 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
         for (MobEffectInstance effect : player.getActiveEffects()) {
             MobEffect mobEffect = effect.getEffect();
             EffectSnapshot oldSnapshot = previous.get(mobEffect);
-
             if (shouldShareEffect(effect, oldSnapshot)) {
                 shareEffectToRecruits(level, player, effect);
             }
@@ -115,46 +102,25 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
     }
 
     private static boolean shouldShareEffect(MobEffectInstance current, @Nullable EffectSnapshot previous) {
-        if (previous == null) {
+        if (previous == null || current.getAmplifier() > previous.amplifier()) {
             return true;
         }
 
-        if (current.getAmplifier() > previous.amplifier()) {
-            return true;
-        }
-
-        return current.getAmplifier() == previous.amplifier()
-                && current.getDuration() > previous.duration() + 20;
+        return current.getAmplifier() == previous.amplifier() && current.getDuration() > previous.duration() + 20;
     }
 
     private static void shareEffectToRecruits(ServerLevel level, ServerPlayer player, MobEffectInstance original) {
         AABB area = player.getBoundingBox().inflate(SHARE_RADIUS);
-
-        List<LivingEntity> recruits = level.getEntitiesOfClass(
-                LivingEntity.class,
-                area,
-                entity -> entity != player && entity.isAlive() && isOwnedRecruit(player, entity)
-        );
-
+        List<LivingEntity> recruits = level.getEntitiesOfClass(LivingEntity.class, area, entity -> entity != player && entity.isAlive() && isOwnedRecruit(player, entity));
         for (LivingEntity recruit : recruits) {
-            MobEffectInstance copy = new MobEffectInstance(
-                    original.getEffect(),
-                    original.getDuration(),
-                    original.getAmplifier(),
-                    original.isAmbient(),
-                    original.isVisible(),
-                    original.showIcon()
-            );
-
+            MobEffectInstance copy = new MobEffectInstance(original.getEffect(), original.getDuration(), original.getAmplifier(), original.isAmbient(), original.isVisible(), original.showIcon());
             recruit.addEffect(copy, player);
         }
     }
 
     private static boolean isOwnedRecruit(Player player, LivingEntity entity) {
         CompoundTag data = entity.getPersistentData();
-
         boolean recruited = data.getBoolean(TAG_RECRUITED) || entity.getTags().contains(TAG_RECRUITED);
-
         if (!recruited) {
             return false;
         }
@@ -190,10 +156,7 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
         Map<MobEffect, EffectSnapshot> snapshot = new HashMap<>();
 
         for (MobEffectInstance effect : effects) {
-            snapshot.put(
-                    effect.getEffect(),
-                    new EffectSnapshot(effect.getAmplifier(), effect.getDuration())
-            );
+            snapshot.put(effect.getEffect(), new EffectSnapshot(effect.getAmplifier(), effect.getDuration()));
         }
 
         return snapshot;

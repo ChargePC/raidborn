@@ -37,17 +37,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SacredSunItem extends Item implements SlotBoundCurioItem {
-
     private static final int LIGHT_LEVEL = 14;
     private static final double BURN_RADIUS = 8.0D;
     private static final int BURN_SECONDS = 4;
     private static final int BURN_INTERVAL_TICKS = 10;
-
     private static final String TAG_LIGHT_X = "raidborn_sacred_sun_light_x";
     private static final String TAG_LIGHT_Y = "raidborn_sacred_sun_light_y";
     private static final String TAG_LIGHT_Z = "raidborn_sacred_sun_light_z";
     private static final String TAG_LIGHT_DIM = "raidborn_sacred_sun_light_dim";
-
     private static final Map<UUID, LightPoint> ACTIVE_LIGHTS = new HashMap<>();
 
     public static void clearServerState() {
@@ -65,11 +62,7 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        if (!(slotContext.entity() instanceof ServerPlayer player)) {
-            return;
-        }
-
-        if (!(player.level() instanceof ServerLevel level)) {
+        if (!(slotContext.entity() instanceof ServerPlayer player) || !(player.level() instanceof ServerLevel level)) {
             return;
         }
 
@@ -94,23 +87,17 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Emits sacred sunlight while equipped", 0xFFE27A),
-                TooltipHelper.line("Nearby undead burn under its holy sun", 0xFFB347)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Emits sacred sunlight while equipped", 0xFFE27A), TooltipHelper.line("Nearby undead burn under its holy sun", 0xFFB347));
     }
 
     private static void tickSacredSun(ServerLevel level, ServerPlayer player) {
         BlockPos lightPos = findLightPosition(level, player);
-
         if (lightPos == null) {
             removeStoredLight(player);
             return;
         }
 
         LightPoint previous = getKnownLight(player);
-
         if (previous != null && (!previous.dimension().equals(level.dimension()) || !previous.pos().equals(lightPos))) {
             removeLight(previous, player.getUUID(), player.getServer());
         }
@@ -150,7 +137,6 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     private static void placeLight(ServerLevel level, BlockPos pos) {
         BlockState current = level.getBlockState(pos);
-
         if (current.is(Blocks.LIGHT) && current.getValue(LightBlock.LEVEL) == LIGHT_LEVEL) {
             return;
         }
@@ -160,32 +146,12 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     private static void burnNearbyUndead(ServerLevel level, Player player) {
         AABB area = player.getBoundingBox().inflate(BURN_RADIUS);
-
-        List<LivingEntity> targets = level.getEntitiesOfClass(
-                LivingEntity.class,
-                area,
-                target -> target != player
-                        && target.isAlive()
-                        && target.getMobType() == MobType.UNDEAD
-                        && !target.fireImmune()
-        );
+        List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, area, target -> target != player && target.isAlive() && target.getMobType() == MobType.UNDEAD && !target.fireImmune());
 
         double maxDistance = BURN_RADIUS * BURN_RADIUS;
 
         for (LivingEntity target : targets) {
-            if (target.distanceToSqr(player) > maxDistance) {
-                continue;
-            }
-
-            if (!player.hasLineOfSight(target)) {
-                continue;
-            }
-
-            if (target.isInWaterRainOrBubble()) {
-                continue;
-            }
-
-            if (target instanceof Zombie zombie && zombie.isBaby()) {
+            if (target.distanceToSqr(player) > maxDistance || !player.hasLineOfSight(target) || target.isInWaterRainOrBubble() || (target instanceof Zombie zombie && zombie.isBaby())) {
                 continue;
             }
 
@@ -199,13 +165,11 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     private static LightPoint getKnownLight(Player player) {
         LightPoint cached = ACTIVE_LIGHTS.get(player.getUUID());
-
         if (cached != null) {
             return cached;
         }
 
         CompoundTag data = player.getPersistentData();
-
         if (!data.contains(TAG_LIGHT_X) || !data.contains(TAG_LIGHT_Y) || !data.contains(TAG_LIGHT_Z)) {
             return null;
         }
@@ -214,18 +178,12 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
         if (data.contains(TAG_LIGHT_DIM)) {
             ResourceLocation id = ResourceLocation.tryParse(data.getString(TAG_LIGHT_DIM));
-
             if (id != null) {
                 dimension = ResourceKey.create(Registries.DIMENSION, id);
             }
         }
 
-        BlockPos pos = new BlockPos(
-                data.getInt(TAG_LIGHT_X),
-                data.getInt(TAG_LIGHT_Y),
-                data.getInt(TAG_LIGHT_Z)
-        );
-
+        BlockPos pos = new BlockPos(data.getInt(TAG_LIGHT_X), data.getInt(TAG_LIGHT_Y), data.getInt(TAG_LIGHT_Z));
         LightPoint point = new LightPoint(dimension, pos);
         ACTIVE_LIGHTS.put(player.getUUID(), point);
         return point;
@@ -253,7 +211,6 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     private static void removeStoredLight(Player player) {
         LightPoint point = getKnownLight(player);
-
         if (point != null) {
             removeLight(point, player.getUUID(), player.getServer());
         }
@@ -262,22 +219,16 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
     }
 
     private static void removeLight(LightPoint point, UUID owner, MinecraftServer server) {
-        if (server == null) {
-            return;
-        }
-
-        if (isLightUsedByOtherPlayer(point, owner)) {
+        if (server == null || isLightUsedByOtherPlayer(point, owner)) {
             return;
         }
 
         ServerLevel level = server.getLevel(point.dimension());
-
         if (level == null) {
             return;
         }
 
         BlockState state = level.getBlockState(point.pos());
-
         if (state.is(Blocks.LIGHT)) {
             level.setBlock(point.pos(), Blocks.AIR.defaultBlockState(), 3);
         }
@@ -290,7 +241,6 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
             }
 
             LightPoint other = entry.getValue();
-
             if (other.dimension().equals(point.dimension()) && other.pos().equals(point.pos())) {
                 return true;
             }
@@ -304,7 +254,6 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class Events {
-
         @SubscribeEvent
         public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
             removeStoredLight(event.getEntity());

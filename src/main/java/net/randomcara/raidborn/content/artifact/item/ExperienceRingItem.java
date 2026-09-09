@@ -28,11 +28,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
-
     private static final String TAG_STORED_XP = "RaidbornStoredXp";
     private static final int MAX_STORED_LEVELS = 30;
     private static final int MAX_STORED_XP = getXpForLevel(MAX_STORED_LEVELS);
-
     private static final Set<UUID> RESTORING_XP = new HashSet<>();
 
     public static void clearServerState() {
@@ -70,17 +68,11 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         int storedXp = getStoredExperience(stack);
-
         if (storedXp > 0) {
             tooltip.add(TooltipHelper.line("Stored Experience: " + storedXp + " XP", 0xFFA1FF99));
         }
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Doubles experience gained while equipped", 0xFFA1FF99),
-                TooltipHelper.line("Stores up to 30 levels when you die", 0xFFB7E45A),
-                TooltipHelper.line("Pick up the ring after death to recover the stored XP", 0xFFB7E45A)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Doubles experience gained while equipped", 0xFFA1FF99), TooltipHelper.line("Stores up to 30 levels when you die", 0xFFB7E45A), TooltipHelper.line("Pick up the ring after death to recover the stored XP", 0xFFB7E45A));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -88,14 +80,12 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     private static Optional<ItemStack> findEquippedRing(ServerPlayer player) {
         return CuriosApi.getCuriosInventory(player).resolve().flatMap(handler -> {
             ICurioStacksHandler ringHandler = handler.getCurios().get("ring");
-
             if (ringHandler == null) {
                 return Optional.empty();
             }
 
             for (int i = 0; i < ringHandler.getStacks().getSlots(); i++) {
                 ItemStack stack = ringHandler.getStacks().getStackInSlot(i);
-
                 if (stack.getItem() instanceof ExperienceRingItem) {
                     return Optional.of(stack);
                 }
@@ -111,7 +101,6 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
 
     private static int getStoredExperience(ItemStack stack) {
         CompoundTag tag = stack.getTag();
-
         if (tag == null) {
             return 0;
         }
@@ -122,7 +111,6 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     private static void setStoredExperience(ItemStack stack, int amount) {
         if (amount <= 0) {
             CompoundTag tag = stack.getTag();
-
             if (tag != null) {
                 tag.remove(TAG_STORED_XP);
             }
@@ -139,7 +127,6 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
         }
 
         int storedXp = getStoredExperience(stack);
-
         if (storedXp <= 0) {
             return;
         }
@@ -158,7 +145,6 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     private static int getPlayerTotalExperience(Player player) {
         int levelXp = getXpForLevel(player.experienceLevel);
         int progressXp = Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
-
         return Math.max(0, levelXp + progressXp);
     }
 
@@ -180,7 +166,6 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
 
     @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
     public static class Events {
-
         @SubscribeEvent
         public static void onPlayerDeath(LivingDeathEvent event) {
             if (!(event.getEntity() instanceof ServerPlayer player)) {
@@ -188,39 +173,24 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
             }
 
             Optional<ItemStack> ringStack = findEquippedRing(player);
-
             if (ringStack.isEmpty()) {
                 return;
             }
 
             int playerXp = getPlayerTotalExperience(player);
             int xpToStore = Math.min(playerXp, MAX_STORED_XP);
-
             if (xpToStore <= 0) {
                 return;
             }
 
             ItemStack stack = ringStack.get();
             int alreadyStored = getStoredExperience(stack);
-
             setStoredExperience(stack, Math.max(alreadyStored, xpToStore));
         }
 
         @SubscribeEvent
         public static void onXpChange(PlayerXpEvent.XpChange event) {
-            if (!(event.getEntity() instanceof ServerPlayer player)) {
-                return;
-            }
-
-            if (event.getAmount() <= 0) {
-                return;
-            }
-
-            if (RESTORING_XP.contains(player.getUUID())) {
-                return;
-            }
-
-            if (!hasEquippedRing(player)) {
+            if (!(event.getEntity() instanceof ServerPlayer player) || event.getAmount() <= 0 || RESTORING_XP.contains(player.getUUID()) || !hasEquippedRing(player)) {
                 return;
             }
 

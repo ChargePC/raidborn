@@ -18,26 +18,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-public final class AttackManager {
+public class AttackManager {
     private static final Map<UUID, AttackInstance> ACTIVE_ATTACKS = new HashMap<>();
 
-    private AttackManager() {
-    }
-
     public static void tryStartAttack(ServerPlayer player) {
-        if (!RaidbornServerConfig.ATTACK_ENABLED.get()) {
-            return;
-        }
-
-        if (!ModEffects.hasAllianceEffect(player)) {
-            return;
-        }
-
-        if (!(player.level() instanceof ServerLevel level)) {
-            return;
-        }
-
-        if (!level.dimension().equals(Level.OVERWORLD)) {
+        if (!RaidbornServerConfig.ATTACK_ENABLED.get() || !ModEffects.hasAllianceEffect(player) || !(player.level() instanceof ServerLevel level) || !level.dimension().equals(Level.OVERWORLD)) {
             return;
         }
 
@@ -51,7 +36,6 @@ public final class AttackManager {
         }
 
         AttackDetectionResult result = detection.get();
-
         if (hasActiveAttackNear(level.dimension(), result.center(), RaidbornServerConfig.ATTACK_ABANDON_RADIUS.get())) {
             return;
         }
@@ -69,18 +53,7 @@ public final class AttackManager {
         AttackRaidbornHooks.AttackTier attackTier = AttackRaidbornHooks.getAttackTier(player);
 
         Set<BlockPos> poiPositions = new HashSet<>(result.poiPositions());
-
-        AttackInstance attack = new AttackInstance(
-                UUID.randomUUID(),
-                player.getUUID(),
-                level.dimension(),
-                result.center(),
-                result.radius(),
-                villagerUuids,
-                poiPositions,
-                attackTier
-        );
-
+        AttackInstance attack = new AttackInstance(UUID.randomUUID(), player.getUUID(), level.dimension(), result.center(), result.radius(), villagerUuids, poiPositions, attackTier);
         ACTIVE_ATTACKS.put(attack.getAttackId(), attack);
         attack.start(level, player, result);
     }
@@ -105,14 +78,9 @@ public final class AttackManager {
         }
     }
 
-    /**
-     * Attack state lives in memory only. On shutdown each one is ended with the full cleanup,
-     * otherwise the marks written on entities outlive the restart with no event owning them.
-     */
     public static void shutdown(MinecraftServer server) {
         for (AttackInstance attack : new ArrayList<>(ACTIVE_ATTACKS.values())) {
             ServerLevel level = server.getLevel(attack.getDimension());
-
             if (level != null) {
                 attack.shutdown(level);
             }
@@ -157,11 +125,7 @@ public final class AttackManager {
         double radiusSqr = radius * radius;
 
         for (AttackInstance attack : ACTIVE_ATTACKS.values()) {
-            if (attack.isEnded()) {
-                continue;
-            }
-
-            if (!attack.getDimension().equals(dimension)) {
+            if (attack.isEnded() || !attack.getDimension().equals(dimension)) {
                 continue;
             }
 

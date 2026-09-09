@@ -26,7 +26,6 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
-
     private static final float HEAL_AMOUNT = 6.0F;
     private static final double PATROL_RADIUS = 96.0D;
 
@@ -41,11 +40,7 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("When your patrol gets a kill, you heal 3 hearts", 0xAA0000),
-                TooltipHelper.line("When you get a kill, your patrol heals 3 hearts", 0xFF5555)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("When your patrol gets a kill, you heal 3 hearts", 0xAA0000), TooltipHelper.line("When you get a kill, your patrol heals 3 hearts", 0xFF5555));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -75,9 +70,7 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
             UUID ownerId = RecruitOwnership.getOwnerUUID(mobKiller);
             if (ownerId == null) return;
 
-            ServerPlayer owner = mobKiller.getServer() != null
-                    ? mobKiller.getServer().getPlayerList().getPlayer(ownerId)
-                    : null;
+            ServerPlayer owner = mobKiller.getServer() != null ? mobKiller.getServer().getPlayerList().getPlayer(ownerId) : null;
 
             if (owner == null) return;
             if (owner.level() != mobKiller.level()) return;
@@ -93,11 +86,6 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
 
     private static List<Mob> getOwnedPatrolIllagers(ServerPlayer player) {
         UUID ownerId = player.getUUID();
-
-        return player.serverLevel().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(PATROL_RADIUS),
-                mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId)
-        );
+        return player.serverLevel().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(PATROL_RADIUS), mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId));
     }
 }

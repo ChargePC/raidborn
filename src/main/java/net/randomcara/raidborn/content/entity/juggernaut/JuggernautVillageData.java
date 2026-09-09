@@ -15,35 +15,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Per-village Juggernaut state, keyed by the meeting POI (bell) position.
- *
- * <p>It's {@link SavedData} so the natural spawn roll only ever happens once and the post-raid
- * timer keeps ticking while the chunk is unloaded.
- */
 public class JuggernautVillageData extends SavedData {
     private static final String DATA_NAME = Raidborn.MOD_ID + "_juggernaut_villages";
-
-    /** Bells closer than this to each other are treated as the same village. */
     public static final int VILLAGE_MERGE_DISTANCE = 64;
 
-    /**
-     * Grouped by dimension: the bell lookup runs on every hit taken by a villager, and scanning the
-     * whole world list each time gets expensive after a lot of exploration.
-     */
     private final Map<String, List<VillageRecord>> recordsByDimension = new HashMap<>();
 
     public static JuggernautVillageData get(ServerLevel level) {
-        return level.getServer()
-                .overworld()
-                .getDataStorage()
-                .computeIfAbsent(JuggernautVillageData::load, JuggernautVillageData::new, DATA_NAME);
+        return level.getServer().overworld().getDataStorage().computeIfAbsent(JuggernautVillageData::load, JuggernautVillageData::new, DATA_NAME);
     }
 
     public static JuggernautVillageData load(CompoundTag tag) {
         JuggernautVillageData data = new JuggernautVillageData();
         ListTag list = tag.getList("Villages", Tag.TAG_COMPOUND);
-
         for (int i = 0; i < list.size(); i++) {
             VillageRecord record = VillageRecord.load(list.getCompound(i));
             data.recordsByDimension.computeIfAbsent(record.dimensionId, id -> new ArrayList<>()).add(record);
@@ -77,7 +61,6 @@ public class JuggernautVillageData extends SavedData {
 
         for (VillageRecord record : this.getRecords(dimensionId)) {
             double distance = record.getBellPos().distSqr(bellPos);
-
             if (distance <= bestDistance) {
                 bestDistance = distance;
                 best = record;
@@ -89,7 +72,6 @@ public class JuggernautVillageData extends SavedData {
 
     public VillageRecord getOrCreateRecord(String dimensionId, BlockPos bellPos) {
         VillageRecord existing = this.findRecord(dimensionId, bellPos);
-
         if (existing != null) {
             return existing;
         }
@@ -102,7 +84,6 @@ public class JuggernautVillageData extends SavedData {
 
     public void removeRecord(String dimensionId, VillageRecord record) {
         List<VillageRecord> records = this.recordsByDimension.get(dimensionId);
-
         if (records != null && records.remove(record)) {
             this.setDirty();
         }
@@ -118,7 +99,6 @@ public class JuggernautVillageData extends SavedData {
         @Nullable
         private UUID naturalJuggernautId;
 
-        /** Minecraft day the natural Juggernaut died, or -1 if it never existed or never died. */
         private long naturalDeathDay = -1L;
         private long lastReplacementAttemptDay = -1L;
         private long lastVillagerDangerDay = -1L;
@@ -126,7 +106,6 @@ public class JuggernautVillageData extends SavedData {
         @Nullable
         private UUID raidJuggernautId;
 
-        /** Game time at which the raid Juggernaut is due, or -1. */
         private long pendingRaidSpawnGameTime = -1L;
         private int lastHandledRaidId = -1;
         private int observedRaidId = -1;

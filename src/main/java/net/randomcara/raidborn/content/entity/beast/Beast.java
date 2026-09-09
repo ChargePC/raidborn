@@ -45,13 +45,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class Beast extends AbstractIllager {
-    private static final EntityDataAccessor<Integer> ATTACK_TICK =
-            SynchedEntityData.defineId(Beast.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> INVENTORY_OPEN =
-            SynchedEntityData.defineId(Beast.class, EntityDataSerializers.BOOLEAN);
-
+    private static final EntityDataAccessor<Integer> ATTACK_TICK = SynchedEntityData.defineId(Beast.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> INVENTORY_OPEN = SynchedEntityData.defineId(Beast.class, EntityDataSerializers.BOOLEAN);
     private static final int ATTACK_ANIMATION_TIME = 16;
-
     private static final double ATTACK_LAUNCH_STRENGTH = 0.4D;
     private static final String TAG_CREATOR = "Creator";
     private static final String TAG_INVENTORY = "BeastInventory";
@@ -81,14 +77,7 @@ public class Beast extends AbstractIllager {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return AbstractIllager.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 80.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
-                .add(Attributes.ATTACK_DAMAGE, 12.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D)
-                .add(Attributes.ARMOR, 8.0D);
+        return AbstractIllager.createMonsterAttributes().add(Attributes.MAX_HEALTH, 80.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 12.0D).add(Attributes.ATTACK_KNOCKBACK, 1.0D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.FOLLOW_RANGE, 32.0D).add(Attributes.ARMOR, 8.0D);
     }
 
     @Override
@@ -100,7 +89,6 @@ public class Beast extends AbstractIllager {
 
     @Override
     protected void registerGoals() {
-        // Raider.registerGoals() already installs FloatGoal at priority 0.
         super.registerGoals();
 
         this.goalSelector.addGoal(3, new BeastMeleeAttackGoal());
@@ -111,8 +99,6 @@ public class Beast extends AbstractIllager {
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class));
 
-        // Always hostile to golems and villagers, in or out of a raid. IronGollet is covered because
-        // it extends IronGolem.
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true));
     }
@@ -126,8 +112,7 @@ public class Beast extends AbstractIllager {
     }
 
     private boolean isRaidAlly(LivingEntity entity) {
-        return entity != this
-                && (entity instanceof Raider || entity.getMobType() == MobType.ILLAGER);
+        return entity != this && (entity instanceof Raider || entity.getMobType() == MobType.ILLAGER);
     }
 
     private boolean isCurrentLeashHolder(Entity entity) {
@@ -140,10 +125,7 @@ public class Beast extends AbstractIllager {
 
     private boolean hasValidCombatTarget() {
         LivingEntity target = this.getTarget();
-        return target != null
-                && target.isAlive()
-                && !target.isRemoved()
-                && !isProtectedTarget(target);
+        return target != null && target.isAlive() && !target.isRemoved() && !isProtectedTarget(target);
     }
 
     public void setCreatorUUID(@Nullable UUID creatorUUID) {
@@ -160,8 +142,7 @@ public class Beast extends AbstractIllager {
             return true;
         }
 
-        return RecruitOwnership.isRecruited(this)
-                && entity.getUUID().equals(RecruitOwnership.getOwnerUUID(this));
+        return RecruitOwnership.isRecruited(this) && entity.getUUID().equals(RecruitOwnership.getOwnerUUID(this));
     }
 
     public ItemStackHandler getBeastInventory() {
@@ -179,9 +160,7 @@ public class Beast extends AbstractIllager {
         }
 
         LivingEntity lastAttacker = this.getLastHurtByMob();
-        return lastAttacker != null
-                && lastAttacker.isAlive()
-                && this.tickCount - this.getLastHurtByMobTimestamp() < COMBAT_MEMORY_TICKS;
+        return lastAttacker != null && lastAttacker.isAlive() && this.tickCount - this.getLastHurtByMobTimestamp() < COMBAT_MEMORY_TICKS;
     }
 
     public boolean isInventoryOpen() {
@@ -259,18 +238,9 @@ public class Beast extends AbstractIllager {
     private void tickChestLid() {
         this.previousChestLidProgress = this.chestLidProgress;
         float target = isInventoryOpen() ? 1.0F : 0.0F;
-        this.chestLidProgress = Mth.clamp(
-                this.chestLidProgress + Mth.clamp(target - this.chestLidProgress, -0.2F, 0.2F),
-                0.0F,
-                1.0F
-        );
+        this.chestLidProgress = Mth.clamp(this.chestLidProgress + Mth.clamp(target - this.chestLidProgress, -0.2F, 0.2F), 0.0F, 1.0F);
     }
 
-    /**
-     * The raid leash helps while the party travels but fights melee navigation once the Beast has a
-     * target. In combat it is removed without dropping a lead; afterwards the Beast waits briefly and
-     * can be attached to another pillager or vindicator from the same wave.
-     */
     private void releaseRaidLeashForCombat() {
         if (!hasValidCombatTarget() || !this.isLeashed()) {
             return;
@@ -286,10 +256,8 @@ public class Beast extends AbstractIllager {
         this.getNavigation().stop();
     }
 
-    /** Repaths periodically: without it the Beast stalls when leaving march movement. */
     private void refreshCombatNavigation() {
         LivingEntity target = this.getTarget();
-
         if (!hasValidCombatTarget() || target == null) {
             this.navigationRefreshCooldown = 0;
             return;
@@ -305,12 +273,7 @@ public class Beast extends AbstractIllager {
     }
 
     private void tryAttachToRaidIllager() {
-        if (this.isLeashed()
-                || isPlayerControlled()
-                || hasValidCombatTarget()
-                || !this.hasActiveRaid()
-                || this.getCurrentRaid() == null
-                || this.getCurrentRaid().isOver()) {
+        if (this.isLeashed() || isPlayerControlled() || hasValidCombatTarget() || !this.hasActiveRaid() || this.getCurrentRaid() == null || this.getCurrentRaid().isOver()) {
             return;
         }
 
@@ -342,10 +305,7 @@ public class Beast extends AbstractIllager {
     }
 
     private boolean isValidRaidLeashHandler(Raider raider) {
-        if (!raider.isAlive()
-                || (!(raider instanceof Pillager) && !(raider instanceof Vindicator))
-                || raider.getCurrentRaid() != this.getCurrentRaid()
-                || raider.getWave() != this.getWave()) {
+        if (!raider.isAlive() || (!(raider instanceof Pillager) && !(raider instanceof Vindicator)) || raider.getCurrentRaid() != this.getCurrentRaid() || raider.getWave() != this.getWave()) {
             return false;
         }
 
@@ -353,14 +313,7 @@ public class Beast extends AbstractIllager {
     }
 
     private boolean isLeadingAnotherBeast(Raider raider) {
-        return !this.level().getEntitiesOfClass(
-                Beast.class,
-                raider.getBoundingBox().inflate(RAID_LEASH_SEARCH_RADIUS),
-                beast -> beast != this
-                        && beast.isAlive()
-                        && beast.isLeashed()
-                        && beast.getLeashHolder() == raider
-        ).isEmpty();
+        return !this.level().getEntitiesOfClass(Beast.class, raider.getBoundingBox().inflate(RAID_LEASH_SEARCH_RADIUS), beast -> beast != this && beast.isAlive() && beast.isLeashed() && beast.getLeashHolder() == raider).isEmpty();
     }
 
     private void tickAttackAnimation() {
@@ -424,17 +377,10 @@ public class Beast extends AbstractIllager {
         startAttackAnimation();
 
         float attackDamage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float damage = attackDamage > 0.0F
-                ? attackDamage / 2.0F + this.random.nextInt(Mth.floor(attackDamage))
-                : attackDamage;
+        float damage = attackDamage > 0.0F ? attackDamage / 2.0F + this.random.nextInt(Mth.floor(attackDamage)) : attackDamage;
         boolean hurt = target.hurt(this.damageSources().mobAttack(this), damage);
-
         if (hurt) {
-            // Scaled by target resistance like the vanilla golem. Without it a knockback-immune target was
-            // still launched upwards.
-            double resistance = target instanceof LivingEntity hitTarget
-                    ? hitTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)
-                    : 0.0D;
+            double resistance = target instanceof LivingEntity hitTarget ? hitTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0D;
 
             double launch = ATTACK_LAUNCH_STRENGTH * Math.max(0.0D, 1.0D - resistance);
             target.setDeltaMovement(target.getDeltaMovement().add(0.0D, launch, 0.0D));
@@ -454,8 +400,6 @@ public class Beast extends AbstractIllager {
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 4) {
-            // Animation only. The sound comes from doHurtTarget: the server playSound already reaches the
-            // clients, and playing it again here doubled every hit.
             this.entityData.set(ATTACK_TICK, ATTACK_ANIMATION_TIME);
             return;
         }
@@ -475,23 +419,12 @@ public class Beast extends AbstractIllager {
         }
     }
 
-    /**
-     * The automatic leash used by raid illagers consumes no real lead, so breaking it by distance or
-     * in combat must not drop one. Leads placed by the player keep vanilla behaviour.
-     */
     @Override
     public void dropLeash(boolean broadcastPacket, boolean dropLead) {
         Entity leashHolder = this.getLeashHolder();
+        boolean automaticRaidLeash = leashHolder instanceof Raider raider && this.hasActiveRaid() && this.getCurrentRaid() != null && raider.getCurrentRaid() == this.getCurrentRaid();
 
-        boolean automaticRaidLeash = leashHolder instanceof Raider raider
-                && this.hasActiveRaid()
-                && this.getCurrentRaid() != null
-                && raider.getCurrentRaid() == this.getCurrentRaid();
-
-        super.dropLeash(
-                broadcastPacket,
-                automaticRaidLeash ? false : dropLead
-        );
+        super.dropLeash(broadcastPacket, automaticRaidLeash ? false : dropLead);
     }
 
     @Override
@@ -529,7 +462,6 @@ public class Beast extends AbstractIllager {
         populateRaidSupplies(wave);
     }
 
-    /** A player-made Beast has a creatorUUID and never receives automatic raid cargo. */
     private void populateRaidSupplies(int wave) {
         if (this.level().isClientSide || this.raidSuppliesGenerated || this.creatorUUID != null) {
             return;
@@ -538,7 +470,6 @@ public class Beast extends AbstractIllager {
         this.raidSuppliesGenerated = true;
 
         int waveBonus = Mth.clamp(wave / 3, 0, 2);
-
         addRaidSupply(new ItemStack(Items.ARROW, randomCount(8 + waveBonus * 2, 16 + waveBonus * 3)));
         addRaidSupply(createRaidFood(waveBonus));
         addRaidSupply(new ItemStack(Items.STICK, randomCount(3, 8 + waveBonus)));
@@ -568,7 +499,6 @@ public class Beast extends AbstractIllager {
 
     private ItemStack createRaidFood(int waveBonus) {
         float roll = this.random.nextFloat();
-
         if (roll < 0.55F) {
             return new ItemStack(Items.BREAD, randomCount(2, 4 + waveBonus));
         }
@@ -595,7 +525,6 @@ public class Beast extends AbstractIllager {
 
     private ItemStack createWornRaidWeapon() {
         float roll = this.random.nextFloat();
-
         if (roll < 0.55F) {
             return createDamagedItem(Items.CROSSBOW, 0.55F, 0.82F);
         }
@@ -610,7 +539,6 @@ public class Beast extends AbstractIllager {
     private ItemStack createDamagedItem(Item item, float minimumDamage, float maximumDamage) {
         ItemStack stack = new ItemStack(item);
         int maximumDurability = stack.getMaxDamage();
-
         if (maximumDurability <= 1) {
             return stack;
         }
@@ -684,9 +612,8 @@ public class Beast extends AbstractIllager {
         this.playSound(SoundEvents.RAVAGER_STEP, 1.0F, 1.0F);
     }
 
-    private final class BeastMeleeAttackGoal extends MeleeAttackGoal {
+    private class BeastMeleeAttackGoal extends MeleeAttackGoal {
         private BeastMeleeAttackGoal() {
-            // longMemory false, otherwise it fixates on targets it can't reach
             super(Beast.this, 1.05D, false);
         }
 
@@ -702,5 +629,4 @@ public class Beast extends AbstractIllager {
             Beast.this.setAggressive(false);
         }
     }
-
 }

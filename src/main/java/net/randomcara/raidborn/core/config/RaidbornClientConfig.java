@@ -28,34 +28,19 @@ public class RaidbornClientConfig {
         Values(ForgeConfigSpec.Builder builder) {
             builder.push("hud");
 
-            showArtifactHud = builder
-                    .comment("Shows the equipped activatable artifact on the HUD.")
-                    .define("showArtifactHud", true);
+            showArtifactHud = builder.comment("Shows the equipped activatable artifact on the HUD.").define("showArtifactHud", true);
 
-            useDefaultArtifactHudPosition = builder
-                    .comment(
-                            "Uses Raidborn's default artifact HUD position.",
-                            "Turn this off to place the artifact slot near the offhand slot."
-                    )
-                    .define("useDefaultArtifactHudPosition", true);
+            useDefaultArtifactHudPosition = builder.comment("Uses Raidborn's default artifact HUD position.", "Turn this off to place the artifact slot near the offhand slot.").define("useDefaultArtifactHudPosition", true);
 
             recruitTooltipPosition = builder
-                    .comment(
-                            "Position of the recruitable entity tooltip shown while holding Shift and looking at a recruitable mob.",
-                            "RIGHT = right side of the crosshair.",
-                            "LEFT = left side of the crosshair.",
-                            "TOP = centered at the top of the screen.",
-                            "HIDDEN = disables the recruitable tooltip."
-                    )
+                    .comment("Position of the recruitable entity tooltip shown while holding Shift and looking at a recruitable mob.", "RIGHT = right side of the crosshair.", "LEFT = left side of the crosshair.", "TOP = centered at the top of the screen.", "HIDDEN = disables the recruitable tooltip.")
                     .defineEnum("recruitTooltipPosition", RecruitTooltipPosition.RIGHT);
 
             builder.pop();
 
             builder.push("visuals");
 
-            showTotemAreaVisual = builder
-                    .comment("Shows the area preview when a totem artifact is activated.")
-                    .define("showTotemAreaVisual", true);
+            showTotemAreaVisual = builder.comment("Shows the area preview when a totem artifact is activated.").define("showTotemAreaVisual", true);
 
             builder.pop();
         }

@@ -50,14 +50,12 @@ public class IllagerTradeEvents {
     public static final int[] LEVEL_XP = {0, 10, 65, 155, 280};
     public static final int MAX_TRADE_LEVEL = 5;
     public static final int GIGA_EMERALD_REPUTATION_BONUS = 100;
-
     private static final String TRADE_BUCKET_PREFIX = "raidborn_trades_";
     private static final String TAG_GIGA_SNAPSHOT = "raidborn_giga_trade_snapshot";
     private static final String TAG_GIGA_SNAPSHOT_CONTAINER = "ContainerId";
     private static final String TAG_GIGA_SNAPSHOT_DIFFS = "Diffs";
     private static final String TAG_LAST_COMPLETED_WORKDAY = "raidborn_trade_last_completed_workday";
     private static final long WORK_PERIOD_END_TIME = 6000L;
-
     private static final String SANDR_MODID = RaidbornCompat.SAVAGE_AND_RAVAGE;
     private static final String IINV_MODID = RaidbornCompat.ILLAGER_INVASION;
     private static final String TAP_MODID = RaidbornCompat.TAKES_A_PILLAGE;
@@ -67,10 +65,8 @@ public class IllagerTradeEvents {
     private static final String RNC_MODID = RaidbornCompat.RAVAGE_AND_CABBAGE;
     private static final String EWM_MODID = RaidbornCompat.ENCHANT_WITH_MOB;
 
-    // trade-only integrations, no compat switch of their own so they just live here
     private static final String FNF_MODID = "friendsandfoes";
     private static final String WANDERING_BAGS_MODID = "wandering_bags";
-
     private static final ResourceLocation MC_PILLAGER = id("minecraft", "pillager");
     private static final ResourceLocation MC_VINDICATOR = id("minecraft", "vindicator");
     private static final ResourceLocation MC_EVOKER = id("minecraft", "evoker");
@@ -276,11 +272,7 @@ public class IllagerTradeEvents {
         if (resultId.equals(EWM_ENCHANTER_HAT)) return true;
         if (resultId.equals(EWM_ENCHANTER_BOOTS)) return true;
 
-        return resultId.equals(id(SANDR_MODID, "conch_of_conjuring"))
-                || resultId.equals(id(SANDR_MODID, "wand_of_freezing"))
-                || resultId.equals(id(SANDR_MODID, "wand_of_ice"))
-                || resultId.equals(id(SANDR_MODID, "cleaver_of_beheading"))
-                || resultId.equals(id(SANDR_MODID, "mask_of_dishonesty"));
+        return resultId.equals(id(SANDR_MODID, "conch_of_conjuring")) || resultId.equals(id(SANDR_MODID, "wand_of_freezing")) || resultId.equals(id(SANDR_MODID, "wand_of_ice")) || resultId.equals(id(SANDR_MODID, "cleaver_of_beheading")) || resultId.equals(id(SANDR_MODID, "mask_of_dishonesty"));
     }
 
     @SubscribeEvent
@@ -433,7 +425,6 @@ public class IllagerTradeEvents {
     public static MerchantOffers generateOffers(String type, ServerPlayer player, int level) {
         MerchantOffers allOffers = new MerchantOffers();
         int clampedLevel = Mth.clamp(level, 1, MAX_TRADE_LEVEL);
-
         for (int currentLevel = 1; currentLevel <= clampedLevel; currentLevel++) {
             MerchantOffers levelOffers = generateOffersForLevel(type, player, currentLevel);
             for (MerchantOffer offer : levelOffers) {
@@ -507,7 +498,6 @@ public class IllagerTradeEvents {
         MerchantOffers result = copyOffers(currentOffers);
         int clampedOldLevel = Mth.clamp(oldLevel, 1, MAX_TRADE_LEVEL);
         int clampedNewLevel = Mth.clamp(newLevel, 1, MAX_TRADE_LEVEL);
-
         if (clampedNewLevel <= clampedOldLevel) {
             normalizeOffersForStorage(result);
             return result;

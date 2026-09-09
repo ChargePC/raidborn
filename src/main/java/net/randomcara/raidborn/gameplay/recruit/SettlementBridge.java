@@ -27,11 +27,9 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstatio
 
 import java.util.List;
 
-/** Converts a recruit into a settlement resident bound to a bell, and clears the link when it goes. */
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class SettlementBridge {
-    static final ResourceLocation ADV_BOUND_TO_THE_BELL =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "bound_to_the_bell");
+public class SettlementBridge {
+    static final ResourceLocation ADV_BOUND_TO_THE_BELL = Raidborn.id("bound_to_the_bell");
 
     static final String CRIT_BOUND_TO_THE_BELL = "link_settlement_illager";
 
@@ -51,36 +49,20 @@ public final class SettlementBridge {
     }
 
     public static boolean isProtectedVillageTarget(Mob mob, LivingEntity target) {
-        return target != null
-                && WarbellVillageData.isVillageMode(mob)
-                && target instanceof Player player
-                && RecruitmentEvents.ownerHasAllianceEffect(player);
+        return target != null && WarbellVillageData.isVillageMode(mob) && target instanceof Player player && RecruitmentEvents.ownerHasAllianceEffect(player);
     }
 
     static void clearProtectedPlayerTarget(Mob mob) {
         if (!WarbellVillageData.isVillageMode(mob)) return;
         if (!isProtectedVillageTarget(mob, mob.getTarget())) return;
 
-        // Revenge memory left intact for the same reason as recruits: see RecruitTargeting.
         RecruitTargeting.clearTargetKeepRevenge(mob);
     }
 
-    /**
-     * Re-checks everything a settlement member claims but does not own.
-     *
-     * <p>The bell, bed and workstation are all blocks and the player can mine any of them while the
-     * mob is nowhere near. Breaking a bell fires {@link #clearVillageOnBrokenBell} for members
-     * loaded around it, but one sitting in an unloaded chunk never hears, and there's no event at
-     * all for a bed or workstation vanishing. So this runs whenever the member ticks near a player,
-     * which is the earliest it could react anyway.
-     *
-     * <p>That's why this one is periodic and {@link RecruitmentEvents#sanitizeRecruitState} isn't.
-     */
     static void sanitizeVillageState(Mob mob) {
         if (!WarbellVillageData.isVillageMember(mob)) return;
 
-        if (mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)
-                || mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) {
+        if (mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED) || mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)) {
             mob.getPersistentData().putBoolean(FollowOwnerGoal.TAG_RECRUITED, false);
             mob.getPersistentData().remove(FollowOwnerGoal.TAG_OWNER);
             SquadOrders.clearOrderData(mob);
@@ -100,8 +82,7 @@ public final class SettlementBridge {
             WarbellVillageBedData.clearBed(mob);
         }
 
-        if (WarbellVillageWorkstationData.hasWorkstation(mob)
-                && !WarbellVillageWorkstationData.isWorkstationValid(mob)) {
+        if (WarbellVillageWorkstationData.hasWorkstation(mob) && !WarbellVillageWorkstationData.isWorkstationValid(mob)) {
             WarbellVillageWorkstationData.clearWorkstation(mob);
         }
 
@@ -113,18 +94,12 @@ public final class SettlementBridge {
         if (player == null || player.level().isClientSide) return;
 
         if (!RecruitmentEvents.canCommandRecruits(player)) {
-            player.displayClientMessage(Component.literal("You cannot command recruits right now.")
-                    .withStyle(ChatFormatting.GRAY), true);
+            player.displayClientMessage(Component.literal("You cannot command recruits right now.").withStyle(ChatFormatting.GRAY), true);
             return;
         }
 
         AABB area = new AABB(bellPos).inflate(WarbellVillageData.ACTIVATION_SCAN_RADIUS);
-
-        List<Mob> mobs = player.level().getEntitiesOfClass(
-                Mob.class,
-                area,
-                mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive() && RecruitmentEvents.isRecruitable(mob) && RecruitmentEvents.supportsVillageMode(mob)
-        );
+        List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, area, mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive() && RecruitmentEvents.isRecruitable(mob) && RecruitmentEvents.supportsVillageMode(mob));
 
         int affected = 0;
         int radius = WarbellVillageData.getDefaultVillageRadius();
@@ -147,12 +122,9 @@ public final class SettlementBridge {
 
         if (affected > 0) {
             RaidbornAdvancements.award(player, ADV_BOUND_TO_THE_BELL, CRIT_BOUND_TO_THE_BELL);
-            player.displayClientMessage(Component.literal("Settlement mode enabled for " + affected
-                    + " Illager" + (affected == 1 ? "." : "s."))
-                    .withStyle(ChatFormatting.GREEN), true);
+            player.displayClientMessage(Component.literal("Settlement mode enabled for " + affected + " Illager" + (affected == 1 ? "." : "s.")).withStyle(ChatFormatting.GREEN), true);
         } else {
-            player.displayClientMessage(Component.literal("No valid recruited Illagers found.")
-                    .withStyle(ChatFormatting.GRAY), true);
+            player.displayClientMessage(Component.literal("No valid recruited Illagers found.").withStyle(ChatFormatting.GRAY), true);
         }
     }
 
@@ -160,13 +132,7 @@ public final class SettlementBridge {
         if (level == null || level.isClientSide) return;
 
         AABB area = new AABB(bellPos).inflate(WarbellVillageData.BREAK_CLEAR_RADIUS);
-
-        List<Mob> mobs = level.getEntitiesOfClass(
-                Mob.class,
-                area,
-                mob -> WarbellVillageData.isVillageMember(mob) && WarbellVillageData.isLinkedToBell(mob, bellPos)
-        );
-
+        List<Mob> mobs = level.getEntitiesOfClass(Mob.class, area, mob -> WarbellVillageData.isVillageMember(mob) && WarbellVillageData.isLinkedToBell(mob, bellPos));
         for (Mob mob : mobs) {
             WarbellVillageData.resetMobFromVillage(mob);
         }
@@ -178,9 +144,7 @@ public final class SettlementBridge {
         }
 
         BlockPos normalizedBroken = brokenPos;
-        if (brokenState.hasProperty(BedBlock.PART)
-                && brokenState.hasProperty(BedBlock.FACING)
-                && brokenState.getValue(BedBlock.PART) == BedPart.HEAD) {
+        if (brokenState.hasProperty(BedBlock.PART) && brokenState.hasProperty(BedBlock.FACING) && brokenState.getValue(BedBlock.PART) == BedPart.HEAD) {
             normalizedBroken = brokenPos.relative(brokenState.getValue(BedBlock.FACING).getOpposite());
         }
 
@@ -194,7 +158,6 @@ public final class SettlementBridge {
 
         BlockPos brokenPos = event.getPos();
         BlockState brokenState = event.getState();
-
         if (brokenState.is(ModBlocks.GRAND_WARBELL.get())) {
             clearVillageOnBrokenBell(level, brokenPos);
             return;
@@ -204,12 +167,7 @@ public final class SettlementBridge {
         boolean workstationBroken = WarbellVillageWorkstationData.isWorkBenchState(brokenState);
         if (!bedBroken && !workstationBroken) return;
 
-        List<Mob> mobs = level.getEntitiesOfClass(
-                Mob.class,
-                new AABB(brokenPos).inflate(WarbellVillageData.BREAK_CLEAR_RADIUS),
-                mob -> WarbellVillageData.isVillageMode(mob) && mob.isAlive()
-        );
-
+        List<Mob> mobs = level.getEntitiesOfClass(Mob.class, new AABB(brokenPos).inflate(WarbellVillageData.BREAK_CLEAR_RADIUS), mob -> WarbellVillageData.isVillageMode(mob) && mob.isAlive());
         for (Mob mob : mobs) {
             boolean changed = false;
 
@@ -223,9 +181,7 @@ public final class SettlementBridge {
                 changed = true;
             }
 
-            if (workstationBroken
-                    && WarbellVillageWorkstationData.hasWorkstation(mob)
-                    && brokenPos.equals(WarbellVillageWorkstationData.getWorkstationPos(mob))) {
+            if (workstationBroken && WarbellVillageWorkstationData.hasWorkstation(mob) && brokenPos.equals(WarbellVillageWorkstationData.getWorkstationPos(mob))) {
                 WarbellVillageWorkstationData.clearWorkstation(mob);
                 WarbellVillageWorkstationData.setWorkSearchCooldown(mob, 0);
                 changed = true;
@@ -247,12 +203,7 @@ public final class SettlementBridge {
         if (!bedPlaced && !workstationPlaced) return;
 
         BlockPos placedPos = event.getPos();
-        List<Mob> mobs = level.getEntitiesOfClass(
-                Mob.class,
-                new AABB(placedPos).inflate(WarbellVillageData.BREAK_CLEAR_RADIUS),
-                mob -> WarbellVillageData.isVillageMode(mob) && mob.isAlive()
-        );
-
+        List<Mob> mobs = level.getEntitiesOfClass(Mob.class, new AABB(placedPos).inflate(WarbellVillageData.BREAK_CLEAR_RADIUS), mob -> WarbellVillageData.isVillageMode(mob) && mob.isAlive());
         for (Mob mob : mobs) {
             if (bedPlaced && (!WarbellVillageBedData.hasBed(mob) || !WarbellVillageBedData.isBedValid(mob))) {
                 WarbellVillageBedData.setBedSearchCooldown(mob, 0);
@@ -262,8 +213,5 @@ public final class SettlementBridge {
                 WarbellVillageWorkstationData.setWorkSearchCooldown(mob, 0);
             }
         }
-    }
-
-    private SettlementBridge() {
     }
 }

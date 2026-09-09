@@ -42,10 +42,8 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class TotemOfProtectionItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final String TAG_ACTIVE_UNTIL = "raidborn_totem_protection_until";
     private static final String TAG_LAST_APPLY_TICK = "raidborn_totem_protection_last_apply";
-
     private static final int COOLDOWN_TICKS = 20 * 45;
     private static final int DURATION_TICKS = 20 * 15;
     private static final int APPLY_INTERVAL_TICKS = 10;
@@ -71,23 +69,9 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
 
         Raidborn.showItemActivation(player, stack.copy());
 
-        player.level().playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.TOTEM_USE,
-                SoundSource.PLAYERS,
-                1.0F,
-                1.1F
-        );
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.1F);
 
-        Raidborn.showTotemAreaVisual(
-                player,
-                AREA_COLOR,
-                (float) getRadius(),
-                DURATION_TICKS
-        );
+        Raidborn.showTotemAreaVisual(player, AREA_COLOR, (float) getRadius(), DURATION_TICKS);
 
         return true;
     }
@@ -129,15 +113,7 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
 
         UUID ownerId = player.getUUID();
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        List<Mob> allies = player.serverLevel().getEntitiesOfClass(
-                Mob.class,
-                box,
-                mob -> mob.isAlive()
-                        && isOwnedAlly(mob, ownerId)
-                        && isInsideSquareArea(player, mob)
-        );
-
+        List<Mob> allies = player.serverLevel().getEntitiesOfClass(Mob.class, box, mob -> mob.isAlive() && isOwnedAlly(mob, ownerId) && isInsideSquareArea(player, mob));
         for (Mob mob : allies) {
             applyCleanseAndResistance(mob);
         }
@@ -145,22 +121,15 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
 
     private static List<ServerPlayer> getPlayersInArea(ServerPlayer player) {
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        return player.serverLevel().getPlayers(
-                otherPlayer -> otherPlayer.isAlive()
-                        && box.intersects(otherPlayer.getBoundingBox())
-                        && isInsideSquareArea(player, otherPlayer)
-        );
+        return player.serverLevel().getPlayers(otherPlayer -> otherPlayer.isAlive() && box.intersects(otherPlayer.getBoundingBox()) && isInsideSquareArea(player, otherPlayer));
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Mob mob) {
-        return Math.abs(mob.getX() - player.getX()) <= getRadius()
-                && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(mob.getX() - player.getX()) <= getRadius() && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Player otherPlayer) {
-        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius()
-                && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius() && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isOwnedAlly(Mob mob, UUID ownerId) {
@@ -197,26 +166,14 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
             entity.removeEffect(effect);
         }
 
-        entity.addEffect(new MobEffectInstance(
-                MobEffects.DAMAGE_RESISTANCE,
-                30,
-                2,
-                false,
-                true,
-                true
-        ));
+        entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 30, 2, false, true, true));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Gives Resistance III to players and allies", 0x9FE6FF),
-                TooltipHelper.line("Removes fire and harmful effects", 0xCFEFFF),
-                TooltipHelper.line("Cooldown: 45s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Gives Resistance III to players and allies", 0x9FE6FF), TooltipHelper.line("Removes fire and harmful effects", 0xCFEFFF), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

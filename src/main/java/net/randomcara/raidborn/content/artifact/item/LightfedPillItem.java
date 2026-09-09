@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LightfedPillItem extends Item implements SlotBoundCurioItem {
-
     private static final int REQUIRED_STILL_TICKS = 100;
     private static final int FEED_INTERVAL_TICKS = 40;
     private static final int MIN_LIGHT_LEVEL = 6;
@@ -41,11 +40,7 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Feeds from light while you remain still", 0xFF7A9A22),
-                TooltipHelper.line("Restores 1 hunger every 2 seconds after charging", 0xFFE5AD25)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Feeds from light while you remain still", 0xFF7A9A22), TooltipHelper.line("Restores 1 hunger every 2 seconds after charging", 0xFFE5AD25));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -53,14 +48,12 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
     private static boolean hasEquipped(ServerPlayer player) {
         return CuriosApi.getCuriosInventory(player).resolve().map(handler -> {
             ICurioStacksHandler charmHandler = handler.getCurios().get("charm");
-
             if (charmHandler == null) {
                 return false;
             }
 
             for (int i = 0; i < charmHandler.getStacks().getSlots(); i++) {
                 ItemStack stack = charmHandler.getStacks().getStackInSlot(i);
-
                 if (stack.getItem() instanceof LightfedPillItem) {
                     return true;
                 }
@@ -72,7 +65,6 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
 
     @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
     public static class Events {
-
         private static final Map<UUID, LightfedData> DATA = new HashMap<>();
 
         public static void clearServerState() {
@@ -81,11 +73,7 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
 
         @SubscribeEvent
         public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) {
-                return;
-            }
-
-            if (!(event.player instanceof ServerPlayer player)) {
+            if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) {
                 return;
             }
 
@@ -97,10 +85,8 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
             }
 
             LightfedData data = DATA.computeIfAbsent(uuid, id -> new LightfedData(player));
-
             boolean moved = data.hasMoved(player);
             boolean enoughLight = player.level().getMaxLocalRawBrightness(player.blockPosition()) >= MIN_LIGHT_LEVEL;
-
             if (moved || !enoughLight || player.isPassenger() || player.isSwimming() || player.isFallFlying()) {
                 data.reset(player);
                 return;
@@ -118,7 +104,6 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
             }
 
             FoodData foodData = player.getFoodData();
-
             if (foodData.getFoodLevel() < 20) {
                 foodData.eat(1, 0.0F);
             }
@@ -133,7 +118,6 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
     }
 
     private static class LightfedData {
-
         private double lastX;
         private double lastY;
         private double lastZ;
@@ -150,7 +134,6 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
             double dx = player.getX() - lastX;
             double dy = player.getY() - lastY;
             double dz = player.getZ() - lastZ;
-
             return dx * dx + dy * dy + dz * dz > 0.003D;
         }
 

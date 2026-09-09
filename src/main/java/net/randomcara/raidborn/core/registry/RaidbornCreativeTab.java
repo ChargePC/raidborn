@@ -9,14 +9,9 @@ import net.minecraftforge.registries.RegistryObject;
 import net.randomcara.raidborn.Raidborn;
 
 public class RaidbornCreativeTab {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Raidborn.MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Raidborn.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> RAIDBORN_TAB =
-            CREATIVE_TABS.register("raidborn_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.raidborn"))
-                    .icon(() -> ModItems.GIGA_EMERALD.get().getDefaultInstance())
-                    .displayItems((parameters, output) -> {
+    public static final RegistryObject<CreativeModeTab> RAIDBORN_TAB = CREATIVE_TABS.register("raidborn_tab", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.raidborn")).icon(() -> ModItems.GIGA_EMERALD.get().getDefaultInstance()).displayItems((parameters, output) -> {
                         add(output,
                                 ModItems.VILLAGER_SOUL,
                                 ModItems.SOUL_OF_MANY_VILLAGERS,

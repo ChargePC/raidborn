@@ -15,10 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public final class AttackRaidbornHooks {
-    private AttackRaidbornHooks() {
-    }
-
+public class AttackRaidbornHooks {
     public enum AttackTier {
         LOYALTY,
         HONOR,
@@ -31,7 +28,6 @@ public final class AttackRaidbornHooks {
     private static final String TAG_EXISTING_ATTACK_DEFENDER = "RaidbornExistingAttackDefender";
     private static final String TAG_ATTACK_ALLY = "RaidbornAttackAlly";
     private static final String TAG_ATTACK_OWNER = "RaidbornAttackOwner";
-
     private static final int MARK_EXTRA_LIFETIME_TICKS = 1200;
 
     public static AttackTier getAttackTier(ServerPlayer player) {
@@ -46,11 +42,6 @@ public final class AttackRaidbornHooks {
         return AttackTier.LOYALTY;
     }
 
-    /**
-     * Marks live in persistent data because they must survive a chunk unload, and each carries an
-     * expiry: if the server goes down mid-Attack, or the entity is unloaded when the cleanup runs,
-     * the mark stops counting on its own instead of leaving the mob an event defender forever.
-     */
     private static void mark(Entity entity, String flag, UUID attackId) {
         CompoundTag tag = entity.getPersistentData();
         tag.putBoolean(flag, true);
@@ -59,14 +50,11 @@ public final class AttackRaidbornHooks {
     }
 
     private static int markLifetimeTicks() {
-        return RaidbornServerConfig.ATTACK_LARGE_TIME_LIMIT_TICKS.get()
-                + RaidbornServerConfig.ATTACK_VICTORY_CELEBRATION_TICKS.get()
-                + MARK_EXTRA_LIFETIME_TICKS;
+        return RaidbornServerConfig.ATTACK_LARGE_TIME_LIMIT_TICKS.get() + RaidbornServerConfig.ATTACK_VICTORY_CELEBRATION_TICKS.get() + MARK_EXTRA_LIFETIME_TICKS;
     }
 
     private static boolean hasLiveMark(Entity entity, String flag) {
         CompoundTag tag = entity.getPersistentData();
-
         if (!tag.getBoolean(flag)) {
             return false;
         }
@@ -97,8 +85,7 @@ public final class AttackRaidbornHooks {
     }
 
     public static boolean isAttackDefender(Entity entity) {
-        return hasLiveMark(entity, TAG_SPAWNED_ATTACK_DEFENDER)
-                || hasLiveMark(entity, TAG_EXISTING_ATTACK_DEFENDER);
+        return hasLiveMark(entity, TAG_SPAWNED_ATTACK_DEFENDER) || hasLiveMark(entity, TAG_EXISTING_ATTACK_DEFENDER);
     }
 
     public static boolean isAttackDefender(Entity entity, UUID attackId) {
@@ -130,16 +117,13 @@ public final class AttackRaidbornHooks {
     }
 
     public static boolean isRecruitOwnedBy(Entity entity, UUID ownerUuid) {
-        return entity instanceof Mob mob
-                && RecruitOwnership.isRecruited(mob)
-                && ownerUuid.equals(RecruitOwnership.getOwnerUUID(mob));
+        return entity instanceof Mob mob && RecruitOwnership.isRecruited(mob) && ownerUuid.equals(RecruitOwnership.getOwnerUUID(mob));
     }
 
     public static boolean isValidAttackOwnerTarget(Player player) {
         return player.isAlive() && !player.isCreative() && !player.isSpectator();
     }
 
-    /** Extended by datapack through the {@code raidborn:illager_threats} tag. */
     public static boolean isPotentialIllagerThreat(Entity entity) {
         return VillageSide.isIllagerThreat(entity);
     }
@@ -158,11 +142,7 @@ public final class AttackRaidbornHooks {
         }
 
         double radius = Math.max(attack.getRadius(), RaidbornServerConfig.ATTACK_ABANDON_RADIUS.get());
-        return entity.distanceToSqr(
-                attack.getCenter().getX() + 0.5D,
-                attack.getCenter().getY() + 0.5D,
-                attack.getCenter().getZ() + 0.5D
-        ) <= radius * radius;
+        return entity.distanceToSqr(attack.getCenter().getX() + 0.5D, attack.getCenter().getY() + 0.5D, attack.getCenter().getZ() + 0.5D) <= radius * radius;
     }
 
     public static boolean canMobBeAttackAlly(Mob mob, AttackInstance attack, UUID ownerUuid) {
@@ -196,7 +176,6 @@ public final class AttackRaidbornHooks {
 
         if (entity instanceof Mob mob && mob.getTarget() != null) {
             LivingEntity target = mob.getTarget();
-
             if (target.getUUID().equals(ownerUuid) || isVillageSideEntity(target, attack)) {
                 return true;
             }

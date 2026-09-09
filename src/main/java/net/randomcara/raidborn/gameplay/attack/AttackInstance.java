@@ -24,7 +24,6 @@ import java.util.UUID;
 
 public class AttackInstance {
     private static final int START_BOSSBAR_FILL_TICKS = 300;
-
     private static final int AREA_SCAN_INTERVAL_TICKS = 10;
 
     private final UUID attackId;
@@ -37,12 +36,10 @@ public class AttackInstance {
     private final Set<UUID> initialVillagerUuids = new LinkedHashSet<>();
     private final Set<UUID> aliveVillagerUuids = new LinkedHashSet<>();
     private final Set<UUID> spawnedDefenderUuids = new LinkedHashSet<>();
-    /** Spawned plus pre-existing, kept together so the per-tick lookup does not allocate. */
     private final Set<UUID> allDefenderUuids = new LinkedHashSet<>();
     private final Set<UUID> participatingRecruitUuids = new LinkedHashSet<>();
     private final Set<BlockPos> villagePoiPositions = new LinkedHashSet<>();
 
-    /** Resolved once on start, the event center doesn't move. */
     @Nullable
     private BlockPos bellPos;
 
@@ -52,7 +49,6 @@ public class AttackInstance {
 
     private AttackState state = AttackState.ACTIVE;
 
-    /** Cleanup runs from several paths (victory, defeat, server shutdown) and must only run once. */
     private boolean cleanupDone;
 
     private boolean cooldownRegistered;
@@ -81,7 +77,6 @@ public class AttackInstance {
     public void start(ServerLevel level, ServerPlayer owner, AttackDetectionResult result) {
         this.bellPos = AttackTargetTracker.findVillageBell(level, center);
 
-        // Before registering allies, so anyone teleported now already counts as a participant.
         AttackRecruitRally.rallyRecruitsToOwner(level, owner);
 
         AttackDefenderSpawner.prepareDefenders(this, level, result);
@@ -93,16 +88,7 @@ public class AttackInstance {
     }
 
     private void playAttackStartSound(ServerLevel level, ServerPlayer owner) {
-        level.playSound(
-                null,
-                owner.getX(),
-                owner.getY(),
-                owner.getZ(),
-                SoundEvents.RAID_HORN.value(),
-                SoundSource.HOSTILE,
-                64.0F,
-                1.0F
-        );
+        level.playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.RAID_HORN.value(), SoundSource.HOSTILE, 64.0F, 1.0F);
     }
 
     public void tick(MinecraftServer server) {
@@ -134,14 +120,9 @@ public class AttackInstance {
         if (!owner.level().dimension().equals(dimension)) {
             tickAbandon(level, owner);
         } else {
-            double distanceSqr = owner.distanceToSqr(
-                    center.getX() + 0.5D,
-                    center.getY() + 0.5D,
-                    center.getZ() + 0.5D
-            );
+            double distanceSqr = owner.distanceToSqr(center.getX() + 0.5D, center.getY() + 0.5D, center.getZ() + 0.5D);
 
             double abandonRadius = RaidbornServerConfig.ATTACK_ABANDON_RADIUS.get();
-
             if (distanceSqr > abandonRadius * abandonRadius) {
                 tickAbandon(level, owner);
             } else {
@@ -168,11 +149,6 @@ public class AttackInstance {
             AttackTargetTracker.updateAliveVillagers(this, level);
         }
 
-        /*
-         * The three routines below scan the whole event area for entities. None of them needs a
-         * one-tick response: panic memories last 100 ticks and the defender retarget window is ~40.
-         * Running them on different phases keeps it to at most one scan per tick instead of three.
-         */
         if (activeTickCount % AREA_SCAN_INTERVAL_TICKS == 0) {
             AttackTargetTracker.tickVillagerPanic(this, level, owner);
         }
@@ -217,7 +193,6 @@ public class AttackInstance {
         updateBossBar(owner);
     }
 
-    /** Only reachable from an ACTIVE tick, so the rewards are granted exactly once. */
     private void completeVictory(ServerLevel level, ServerPlayer owner) {
         state = AttackState.VICTORY;
         abandonTickCount = 0;
@@ -252,8 +227,6 @@ public class AttackInstance {
             AttackDefenderSpawner.removeSpawnedDefenders(this, level);
         }
 
-        // Every mark is cleared here, including on defenders that already lived in the village.
-        // Leaving it written made the Juggernaut treat that golem as an event defender forever.
         clearMarks(level, allDefenderUuids);
 
         if (state != AttackState.VICTORY) {
@@ -266,17 +239,12 @@ public class AttackInstance {
     private static void clearMarks(ServerLevel level, Set<UUID> uuids) {
         for (UUID uuid : uuids) {
             Entity entity = level.getEntity(uuid);
-
             if (entity != null) {
                 AttackRaidbornHooks.clearAttackMarks(entity);
             }
         }
     }
 
-    /**
-     * Forced shutdown. Attack state is not persisted, so everything it spread through the world has
-     * to be undone before the final save.
-     */
     void shutdown(ServerLevel level) {
         if (state == AttackState.ACTIVE) {
             state = AttackState.FAILED;
@@ -289,7 +257,6 @@ public class AttackInstance {
 
     private int getTimeLimitTicks() {
         int villagers = getInitialVillagerCount();
-
         if (villagers <= 5) {
             return RaidbornServerConfig.ATTACK_SMALL_TIME_LIMIT_TICKS.get();
         }
@@ -306,19 +273,11 @@ public class AttackInstance {
             return false;
         }
 
-        return endedTickCount >= (state == AttackState.VICTORY
-                ? RaidbornServerConfig.ATTACK_VICTORY_CELEBRATION_TICKS.get()
-                : RaidbornServerConfig.ATTACK_END_BOSSBAR_DELAY_TICKS.get());
+        return endedTickCount >= (state == AttackState.VICTORY ? RaidbornServerConfig.ATTACK_VICTORY_CELEBRATION_TICKS.get() : RaidbornServerConfig.ATTACK_END_BOSSBAR_DELAY_TICKS.get());
     }
 
     private void createBossBar(ServerPlayer owner) {
-        EventBossBarController.create(
-                attackId,
-                Component.translatable("event.raidborn.attack"),
-                BossEvent.BossBarColor.RED,
-                BossEvent.BossBarOverlay.NOTCHED_10,
-                owner
-        );
+        EventBossBarController.create(attackId, Component.translatable("event.raidborn.attack"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10, owner);
 
         updateBossBar(owner);
     }
@@ -338,20 +297,11 @@ public class AttackInstance {
             case FAILED -> Component.translatable("event.raidborn.attack.failed");
             case ACTIVE -> {
                 int alive = aliveVillagerUuids.size();
-
-                yield !isStartBossBarFilling() && alive > 0 && alive <= 2
-                        ? Component.translatable(alive == 1
-                                ? "event.raidborn.attack.remaining_one"
-                                : "event.raidborn.attack.remaining", alive)
-                        : Component.translatable("event.raidborn.attack");
+                yield !isStartBossBarFilling() && alive > 0 && alive <= 2 ? Component.translatable(alive == 1 ? "event.raidborn.attack.remaining_one" : "event.raidborn.attack.remaining", alive) : Component.translatable("event.raidborn.attack");
             }
         };
     }
 
-    /**
-     * Fills up over the first {@link #START_BOSSBAR_FILL_TICKS} so the bar reads as the village
-     * mustering, then tracks the villagers still standing and empties on victory.
-     */
     private float bossBarProgress() {
         if (state == AttackState.VICTORY) {
             return 0.0F;
@@ -367,7 +317,6 @@ public class AttackInstance {
 
         int initial = Math.max(1, initialVillagerUuids.size());
         int alive = Math.max(0, aliveVillagerUuids.size());
-
         return Mth.clamp((float) alive / (float) initial, 0.0F, 1.0F);
     }
 
@@ -377,7 +326,6 @@ public class AttackInstance {
 
     private void grantRewards(ServerPlayer owner) {
         ItemStack loot = VillageLootItem.createForTier(attackTier);
-
         if (loot.isEmpty()) {
             return;
         }

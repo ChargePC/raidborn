@@ -22,37 +22,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-public final class AttackVillageDetector {
+public class AttackVillageDetector {
     private static final int EXTRA_SCAN_AROUND_POI_RADIUS = 48;
     private static final int EXTRA_SCAN_AROUND_CENTER_RADIUS = 64;
     private static final int EXTRA_VERTICAL_SCAN_RADIUS = 24;
-
     private static final int POI_CLUSTER_DISTANCE = 32;
 
-    private static final Set<String> VALID_MINECRAFT_POI_PATHS = Set.of(
-            "home",
-            "meeting",
-            "armorer",
-            "butcher",
-            "cartographer",
-            "cleric",
-            "farmer",
-            "fisherman",
-            "fletcher",
-            "leatherworker",
-            "librarian",
-            "mason",
-            "shepherd",
-            "toolsmith",
-            "weaponsmith"
-    );
-
-    private AttackVillageDetector() {
-    }
+    private static final Set<String> VALID_MINECRAFT_POI_PATHS = Set.of("home", "meeting", "armorer", "butcher", "cartographer", "cleric", "farmer", "fisherman", "fletcher", "leatherworker", "librarian", "mason", "shepherd", "toolsmith", "weaponsmith");
 
     public static Optional<AttackDetectionResult> detect(ServerLevel level, BlockPos origin) {
         int radius = RaidbornServerConfig.ATTACK_DETECTION_RADIUS.get();
-
         List<AttackPoiData> validPois = collectValidPois(level, origin, radius);
         if (validPois.size() < RaidbornServerConfig.ATTACK_REQUIRED_POIS.get()) {
             return Optional.empty();
@@ -69,35 +48,14 @@ public final class AttackVillageDetector {
         }
 
         BlockPos attackCenter = center.get();
-
-        List<IronGolem> naturalIronGolems = collectNaturalIronGolems(
-                level,
-                origin,
-                attackCenter,
-                radius,
-                validPois
-        );
-
+        List<IronGolem> naturalIronGolems = collectNaturalIronGolems(level, origin, attackCenter, radius, validPois);
         if (RaidbornServerConfig.ATTACK_REQUIRE_NATURAL_GOLEM.get() && naturalIronGolems.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(new AttackDetectionResult(
-                attackCenter,
-                radius,
-                villagers,
-                clusterPoiPositions(validPois),
-                List.copyOf(naturalIronGolems)
-        ));
+        return Optional.of(new AttackDetectionResult(attackCenter, radius, villagers, clusterPoiPositions(validPois), List.copyOf(naturalIronGolems)));
     }
 
-    /**
-     * Cuts the POI list down to one per 32 block cell.
-     *
-     * <p>The {@code home} tag hits every bed in the village, so an average one came back with dozens
-     * of positions and each turned into a 96 block entity scan, here and again in the periodic
-     * reinforcement pass. 32 is a guess that worked, could probably go wider.
-     */
     private static List<BlockPos> clusterPoiPositions(List<AttackPoiData> pois) {
         List<BlockPos> clustered = new ArrayList<>();
 
@@ -124,45 +82,16 @@ public final class AttackVillageDetector {
                                                           int radius,
                                                           List<AttackPoiData> validPois) {
         Map<UUID, Villager> villagers = new LinkedHashMap<>();
-
-        collectVillagersInBox(
-                level,
-                AABB.ofSize(
-                        Vec3.atCenterOf(origin),
-                        radius * 2.0D,
-                        Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D),
-                        radius * 2.0D
-                ),
-                villagers
-        );
+        collectVillagersInBox(level, AABB.ofSize(Vec3.atCenterOf(origin), radius * 2.0D, Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D), radius * 2.0D), villagers);
 
         BlockPos averagePoiCenter = averageBlockPos(validPois.stream().map(AttackPoiData::pos).toList());
         int centerRadius = Math.max(radius, EXTRA_SCAN_AROUND_CENTER_RADIUS);
-
-        collectVillagersInBox(
-                level,
-                AABB.ofSize(
-                        Vec3.atCenterOf(averagePoiCenter),
-                        centerRadius * 2.0D,
-                        Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D),
-                        centerRadius * 2.0D
-                ),
-                villagers
-        );
+        collectVillagersInBox(level, AABB.ofSize(Vec3.atCenterOf(averagePoiCenter), centerRadius * 2.0D, Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D), centerRadius * 2.0D), villagers);
 
         int poiScanRadius = Math.max(32, Math.min(Math.max(radius, EXTRA_SCAN_AROUND_POI_RADIUS), 80));
 
         for (AttackPoiData poi : validPois) {
-            collectVillagersInBox(
-                    level,
-                    AABB.ofSize(
-                            Vec3.atCenterOf(poi.pos()),
-                            poiScanRadius * 2.0D,
-                            EXTRA_VERTICAL_SCAN_RADIUS * 2.0D,
-                            poiScanRadius * 2.0D
-                    ),
-                    villagers
-            );
+            collectVillagersInBox(level, AABB.ofSize(Vec3.atCenterOf(poi.pos()), poiScanRadius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D, poiScanRadius * 2.0D), villagers);
         }
 
         List<Villager> result = new ArrayList<>(villagers.values());
@@ -179,8 +108,7 @@ public final class AttackVillageDetector {
     }
 
     private static boolean isUsableVillager(Villager villager) {
-        return villager.isAlive()
-                && (!RaidbornServerConfig.ATTACK_IGNORE_VILLAGERS_IN_VEHICLES.get() || !villager.isPassenger());
+        return villager.isAlive() && (!RaidbornServerConfig.ATTACK_IGNORE_VILLAGERS_IN_VEHICLES.get() || !villager.isPassenger());
     }
 
     private static List<IronGolem> collectNaturalIronGolems(ServerLevel level,
@@ -189,43 +117,15 @@ public final class AttackVillageDetector {
                                                             int radius,
                                                             List<AttackPoiData> validPois) {
         Map<UUID, IronGolem> golems = new LinkedHashMap<>();
-
-        collectNaturalIronGolemsInBox(
-                level,
-                AABB.ofSize(
-                        Vec3.atCenterOf(origin),
-                        radius * 2.0D,
-                        Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D),
-                        radius * 2.0D
-                ),
-                golems
-        );
+        collectNaturalIronGolemsInBox(level, AABB.ofSize(Vec3.atCenterOf(origin), radius * 2.0D, Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D), radius * 2.0D), golems);
 
         int centerRadius = Math.max(radius, EXTRA_SCAN_AROUND_CENTER_RADIUS);
-        collectNaturalIronGolemsInBox(
-                level,
-                AABB.ofSize(
-                        Vec3.atCenterOf(attackCenter),
-                        centerRadius * 2.0D,
-                        Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D),
-                        centerRadius * 2.0D
-                ),
-                golems
-        );
+        collectNaturalIronGolemsInBox(level, AABB.ofSize(Vec3.atCenterOf(attackCenter), centerRadius * 2.0D, Math.max(radius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D), centerRadius * 2.0D), golems);
 
         int poiScanRadius = Math.max(32, Math.min(Math.max(radius, EXTRA_SCAN_AROUND_POI_RADIUS), 80));
 
         for (AttackPoiData poi : validPois) {
-            collectNaturalIronGolemsInBox(
-                    level,
-                    AABB.ofSize(
-                            Vec3.atCenterOf(poi.pos()),
-                            poiScanRadius * 2.0D,
-                            EXTRA_VERTICAL_SCAN_RADIUS * 2.0D,
-                            poiScanRadius * 2.0D
-                    ),
-                    golems
-            );
+            collectNaturalIronGolemsInBox(level, AABB.ofSize(Vec3.atCenterOf(poi.pos()), poiScanRadius * 2.0D, EXTRA_VERTICAL_SCAN_RADIUS * 2.0D, poiScanRadius * 2.0D), golems);
         }
 
         List<IronGolem> result = new ArrayList<>(golems.values());
@@ -238,19 +138,13 @@ public final class AttackVillageDetector {
                                                       AABB box,
                                                       Map<UUID, IronGolem> result) {
         for (IronGolem golem : level.getEntitiesOfClass(IronGolem.class, box, golem ->
-                golem.isAlive()
-                        && !golem.isPlayerCreated()
-                        && !AttackRaidbornHooks.isSpawnedAttackDefender(golem))) {
+                golem.isAlive() && !golem.isPlayerCreated() && !AttackRaidbornHooks.isSpawnedAttackDefender(golem))) {
             result.putIfAbsent(golem.getUUID(), golem);
         }
     }
 
     private static List<AttackPoiData> collectValidPois(ServerLevel level, BlockPos origin, int radius) {
-        return level.getPoiManager()
-                .getInRange(AttackVillageDetector::isValidVillagePoi, origin, radius, PoiManager.Occupancy.ANY)
-                .map(record -> new AttackPoiData(record.getPos(), getPoiPath(record.getPoiType()).orElse("")))
-                .distinct()
-                .toList();
+        return level.getPoiManager().getInRange(AttackVillageDetector::isValidVillagePoi, origin, radius, PoiManager.Occupancy.ANY).map(record -> new AttackPoiData(record.getPos(), getPoiPath(record.getPoiType()).orElse(""))).distinct().toList();
     }
 
     private static boolean isValidVillagePoi(Holder<PoiType> holder) {
@@ -259,18 +153,11 @@ public final class AttackVillageDetector {
     }
 
     private static Optional<String> getPoiPath(Holder<PoiType> holder) {
-        return holder.unwrapKey()
-                .map(ResourceKey::location)
-                .filter(location -> "minecraft".equals(location.getNamespace()))
-                .map(ResourceLocation::getPath);
+        return holder.unwrapKey().map(ResourceKey::location).filter(location -> "minecraft".equals(location.getNamespace())).map(ResourceLocation::getPath);
     }
 
     private static Optional<BlockPos> calculateAttackCenter(List<AttackPoiData> pois, List<Villager> villagers) {
-        Optional<BlockPos> bell = pois.stream()
-                .filter(poi -> "meeting".equals(poi.path()))
-                .map(AttackPoiData::pos)
-                .min(Comparator.comparingDouble(pos -> averageDistanceToVillagers(pos, villagers)));
-
+        Optional<BlockPos> bell = pois.stream().filter(poi -> "meeting".equals(poi.path())).map(AttackPoiData::pos).min(Comparator.comparingDouble(pos -> averageDistanceToVillagers(pos, villagers)));
         if (bell.isPresent()) {
             return bell;
         }

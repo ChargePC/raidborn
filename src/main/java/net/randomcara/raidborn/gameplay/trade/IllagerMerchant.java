@@ -19,9 +19,8 @@ import net.randomcara.raidborn.core.util.RaidbornAdvancements;
 import org.jetbrains.annotations.Nullable;
 
 public class IllagerMerchant implements Merchant {
-    private static final ResourceLocation ADV_FIRST_TRADE = ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "totally_legal_business");
+    private static final ResourceLocation ADV_FIRST_TRADE = Raidborn.id("totally_legal_business");
     private static final String CRIT_FIRST_TRADE = "first_trade";
-
     private static final float ACCEPT_VOLUME = 1.0F;
     private static final float ACCEPT_PITCH = 1.0F;
     private static final float XP_SOUND_VOLUME = 0.5F;

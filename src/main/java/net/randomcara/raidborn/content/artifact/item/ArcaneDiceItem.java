@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final int COOLDOWN_TICKS = 20 * 90;
     private static final double RADIUS = 96.0D;
 
@@ -40,21 +39,13 @@ public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCuri
     public boolean activate(ServerPlayer player, ItemStack stack) {
         List<Mob> patrol = getOwnedPatrolIllagers(player);
         RandomSource random = player.getRandom();
-
         player.addEffect(createRandomBuff(random));
 
         for (Mob mob : patrol) {
             mob.addEffect(createRandomBuff(random));
         }
 
-        player.level().playSound(
-                null,
-                player.blockPosition(),
-                SoundEvents.AMETHYST_BLOCK_CHIME,
-                SoundSource.PLAYERS,
-                1.0F,
-                0.9F + random.nextFloat() * 0.3F
-        );
+        player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 0.9F + random.nextFloat() * 0.3F);
 
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
 
@@ -68,17 +59,11 @@ public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCuri
 
     private static List<Mob> getOwnedPatrolIllagers(ServerPlayer player) {
         UUID ownerId = player.getUUID();
-
-        return player.serverLevel().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(RADIUS),
-                mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId)
-        );
+        return player.serverLevel().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RADIUS), mob -> mob.isAlive() && RecruitOwnership.isOwnedBy(mob, ownerId));
     }
 
     private static MobEffectInstance createRandomBuff(RandomSource random) {
         int roll = random.nextInt(8);
-
         return switch (roll) {
             case 0 -> effect(MobEffects.MOVEMENT_SPEED, 20 * 45, 1);
             case 1 -> effect(MobEffects.DAMAGE_BOOST, 20 * 45, 0);
@@ -99,14 +84,7 @@ public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCuri
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                Component.literal("Rolls a random buff for you and your recruits")
-                        .withStyle(ChatFormatting.LIGHT_PURPLE),
-                Component.literal("Every target gets its own effect")
-                        .withStyle(ChatFormatting.DARK_PURPLE),
-                TooltipHelper.line("Cooldown: 90s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, Component.literal("Rolls a random buff for you and your recruits") .withStyle(ChatFormatting.LIGHT_PURPLE), Component.literal("Every target gets its own effect") .withStyle(ChatFormatting.DARK_PURPLE), TooltipHelper.line("Cooldown: 90s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

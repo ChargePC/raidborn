@@ -23,7 +23,7 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 import java.util.List;
 import java.util.UUID;
 
-public final class SupportHealerGoal {
+public class SupportHealerGoal {
     static final float SUPPORT_HEAL_MIN_MISSING_HEALTH = 1.0F;
 
     static double supportHealRadius() {
@@ -69,22 +69,12 @@ public final class SupportHealerGoal {
         double dy = target.getY() + target.getEyeHeight() - 1.1D - potion.getY();
         double dz = target.getZ() - healer.getZ();
         double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
-
         potion.shoot(dx, dy + horizontalDistance * 0.2D, dz, 0.75F, 8.0F);
 
         healer.level().addFreshEntity(potion);
         healer.swing(InteractionHand.MAIN_HAND);
 
-        healer.level().playSound(
-                null,
-                healer.getX(),
-                healer.getY(),
-                healer.getZ(),
-                SoundEvents.WITCH_THROW,
-                SoundSource.HOSTILE,
-                1.0F,
-                0.8F + healer.getRandom().nextFloat() * 0.4F
-        );
+        healer.level().playSound(null, healer.getX(), healer.getY(), healer.getZ(), SoundEvents.WITCH_THROW, SoundSource.HOSTILE, 1.0F, 0.8F + healer.getRandom().nextFloat() * 0.4F);
     }
 
     static class RaidbornSupportHealerGoal extends Goal {
@@ -129,10 +119,7 @@ public final class SupportHealerGoal {
                 throwSupportHealingPotion(this.mob, this.healTarget);
             }
 
-            this.mob.getPersistentData().putLong(
-                    TAG_SUPPORT_HEAL_NEXT,
-                    this.mob.level().getGameTime() + supportHealCooldownTicks() + this.mob.getRandom().nextInt(20)
-            );
+            this.mob.getPersistentData().putLong(TAG_SUPPORT_HEAL_NEXT, this.mob.level().getGameTime() + supportHealCooldownTicks() + this.mob.getRandom().nextInt(20));
 
             this.healTarget = null;
         }
@@ -159,18 +146,9 @@ public final class SupportHealerGoal {
                 bestScore = getHealScore(owner) - 0.25D;
             }
 
-            List<Mob> allies = this.mob.level().getEntitiesOfClass(
-                    Mob.class,
-                    this.mob.getBoundingBox().inflate(supportHealRadius()),
-                    ally -> ally != this.mob
-                            && ally.isAlive()
-                            && RecruitOwnership.isSameSquad(this.mob, ally)
-                            && isValidSupportHealTarget(this.mob, ally)
-            );
-
+            List<Mob> allies = this.mob.level().getEntitiesOfClass(Mob.class, this.mob.getBoundingBox().inflate(supportHealRadius()), ally -> ally != this.mob && ally.isAlive() && RecruitOwnership.isSameSquad(this.mob, ally) && isValidSupportHealTarget(this.mob, ally));
             for (Mob ally : allies) {
                 double score = getHealScore(ally);
-
                 if (score < bestScore) {
                     bestScore = score;
                     bestTarget = ally;
@@ -184,11 +162,7 @@ public final class SupportHealerGoal {
             double maxHealth = Math.max(1.0D, entity.getMaxHealth());
             double healthRatio = entity.getHealth() / maxHealth;
             double distancePenalty = this.mob.distanceToSqr(entity) / supportHealRadiusSqr() * 0.10D;
-
             return healthRatio + distancePenalty;
         }
-    }
-
-    private SupportHealerGoal() {
     }
 }

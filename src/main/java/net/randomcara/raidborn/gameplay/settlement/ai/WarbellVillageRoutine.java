@@ -3,15 +3,12 @@ package net.randomcara.raidborn.gameplay.settlement.ai;
 import net.minecraft.world.entity.Mob;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstationData;
 
-public final class WarbellVillageRoutine {
+public class WarbellVillageRoutine {
     private static final long WAKE_UP_END = 2000L;
     private static final long WORK_MORNING_END = 6000L;
     private static final long GATHER_END = 9000L;
     private static final long HOME_START = 11500L;
     private static final long NIGHT_START = 13000L;
-
-    private WarbellVillageRoutine() {
-    }
 
     public enum Activity {
         WORK,
@@ -22,9 +19,7 @@ public final class WarbellVillageRoutine {
     }
 
     public static boolean isEmployed(Mob mob) {
-        return WarbellVillageWorkstationData.canUseWorkstation(mob)
-                && WarbellVillageWorkstationData.hasWorkstation(mob)
-                && WarbellVillageWorkstationData.isWorkstationValid(mob);
+        return WarbellVillageWorkstationData.canUseWorkstation(mob) && WarbellVillageWorkstationData.hasWorkstation(mob) && WarbellVillageWorkstationData.isWorkstationValid(mob);
     }
 
     public static long getDayTime(Mob mob) {

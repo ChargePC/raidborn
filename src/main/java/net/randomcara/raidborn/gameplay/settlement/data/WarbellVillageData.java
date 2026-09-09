@@ -9,26 +9,21 @@ import net.randomcara.raidborn.core.registry.ModBlocks;
 import net.randomcara.raidborn.core.util.MobSleep;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
 
-public final class WarbellVillageData {
+public class WarbellVillageData {
     public static final String TAG_VILLAGE_MEMBER = "raidborn_village_member";
     public static final String TAG_BELL_X = "raidborn_village_bell_x";
     public static final String TAG_BELL_Y = "raidborn_village_bell_y";
     public static final String TAG_BELL_Z = "raidborn_village_bell_z";
     public static final String TAG_VILLAGE_RADIUS = "raidborn_village_radius";
     public static final String TAG_VILLAGE_WANDER_COOLDOWN = "raidborn_village_wander_cooldown";
-
     public static final int MIN_VILLAGE_RADIUS = 16;
     public static final int DEFAULT_VILLAGE_RADIUS = 48;
     public static final int MAX_VILLAGE_RADIUS = 96;
     public static final int SEARCH_VERTICAL_RANGE = 6;
-
     public static final double ACTIVATION_SCAN_RADIUS = 96.0D;
     public static final double BREAK_CLEAR_RADIUS = 128.0D;
     public static final double OUTSIDE_VILLAGE_BUFFER = 6.0D;
     public static final double COMBAT_LEASH_BUFFER = 14.0D;
-
-    private WarbellVillageData() {
-    }
 
     public static int getDefaultVillageRadius() {
         return RaidbornServerConfig.getSettlementDefaultRadius();
@@ -57,19 +52,13 @@ public final class WarbellVillageData {
     }
 
     public static boolean hasVillageBell(Mob mob) {
-        return mob.getPersistentData().contains(TAG_BELL_X)
-                && mob.getPersistentData().contains(TAG_BELL_Y)
-                && mob.getPersistentData().contains(TAG_BELL_Z);
+        return mob.getPersistentData().contains(TAG_BELL_X) && mob.getPersistentData().contains(TAG_BELL_Y) && mob.getPersistentData().contains(TAG_BELL_Z);
     }
 
     public static BlockPos getVillageBellPos(Mob mob) {
         if (!hasVillageBell(mob)) return null;
 
-        return new BlockPos(
-                mob.getPersistentData().getInt(TAG_BELL_X),
-                mob.getPersistentData().getInt(TAG_BELL_Y),
-                mob.getPersistentData().getInt(TAG_BELL_Z)
-        );
+        return new BlockPos(mob.getPersistentData().getInt(TAG_BELL_X), mob.getPersistentData().getInt(TAG_BELL_Y), mob.getPersistentData().getInt(TAG_BELL_Z));
     }
 
     public static int getVillageRadius(Mob mob) {
@@ -143,7 +132,6 @@ public final class WarbellVillageData {
         double centerY = bellPos.getY();
         double centerZ = bellPos.getZ() + 0.5D;
         double allowed = getVillageRadius(mob) + Math.max(0.0D, extraBuffer);
-
         return mob.distanceToSqr(centerX, centerY, centerZ) > allowed * allowed;
     }
 

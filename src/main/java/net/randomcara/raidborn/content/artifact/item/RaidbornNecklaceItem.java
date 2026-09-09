@@ -18,7 +18,6 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import java.util.List;
 
 public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
-
     public static final int BONUS_RECRUIT_SLOTS = 5;
 
     public RaidbornNecklaceItem(Properties props) {
@@ -42,17 +41,11 @@ public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
     }
 
     public static int getEquippedBonusRecruitSlots(ServerPlayer player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(RaidbornNecklaceItem::countBonusRecruitSlots)
-                .orElse(0);
+        return CuriosApi.getCuriosInventory(player).resolve().map(RaidbornNecklaceItem::countBonusRecruitSlots).orElse(0);
     }
 
     public static boolean hasEquippedNecklace(ServerPlayer player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(RaidbornNecklaceItem::hasNecklace)
-                .orElse(false);
+        return CuriosApi.getCuriosInventory(player).resolve().map(RaidbornNecklaceItem::hasNecklace).orElse(false);
     }
 
     private static boolean hasNecklace(ICuriosItemHandler curiosInventory) {
@@ -62,10 +55,8 @@ public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
             }
 
             var stacks = stacksHandler.getStacks();
-
             for (int slot = 0; slot < stacks.getSlots(); slot++) {
                 ItemStack equippedStack = stacks.getStackInSlot(slot);
-
                 if (!equippedStack.isEmpty() && equippedStack.getItem() instanceof RaidbornNecklaceItem) {
                     return true;
                 }
@@ -84,10 +75,8 @@ public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
             }
 
             var stacks = stacksHandler.getStacks();
-
             for (int slot = 0; slot < stacks.getSlots(); slot++) {
                 ItemStack equippedStack = stacks.getStackInSlot(slot);
-
                 if (!equippedStack.isEmpty() && equippedStack.getItem() instanceof RaidbornNecklaceItem) {
                     bonus += BONUS_RECRUIT_SLOTS;
                 }
@@ -99,11 +88,7 @@ public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("+" + BONUS_RECRUIT_SLOTS + " Recruitment Slots", 0x55FF55),
-                TooltipHelper.line("Preserves your alliance effect after death", 0xAAAAAA)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("+" + BONUS_RECRUIT_SLOTS + " Recruitment Slots", 0x55FF55), TooltipHelper.line("Preserves your alliance effect after death", 0xAAAAAA));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

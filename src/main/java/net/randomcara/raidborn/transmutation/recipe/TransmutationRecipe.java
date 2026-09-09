@@ -213,7 +213,7 @@ public class TransmutationRecipe implements Recipe<Container> {
 
     public static class Serializer implements RecipeSerializer<TransmutationRecipe> {
         public static final Serializer INSTANCE = new Serializer();
-        public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "transmutation");
+        public static final ResourceLocation ID = Raidborn.id("transmutation");
 
         @Override
         public TransmutationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

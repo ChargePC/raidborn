@@ -51,17 +51,13 @@ public class IllagerWarhornItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         SquadOrder mode = getSelectedMode(stack);
-
-        tooltip.add(Component.literal("Current Mode: ")
-                .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(formatMode(mode)).withStyle(getModeColor(mode))));
+        tooltip.add(Component.literal("Current Mode: ").withStyle(ChatFormatting.GRAY).append(Component.literal(formatMode(mode)).withStyle(getModeColor(mode))));
 
         TooltipHelper.addShiftDescription(
                 tooltip,
                 Component.literal("Shift + Right Click: Change mode").withStyle(ChatFormatting.DARK_GRAY),
                 Component.literal("Right Click: Give order").withStyle(ChatFormatting.DARK_GRAY),
-                Component.literal("Hold: squad stays and defends the commanded position")
-                        .withStyle(ChatFormatting.DARK_GRAY)
+                Component.literal("Hold: squad stays and defends the commanded position").withStyle(ChatFormatting.DARK_GRAY)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);
@@ -80,8 +76,7 @@ public class IllagerWarhornItem extends Item {
         }
 
         if (!RecruitmentEvents.canCommandRecruits(serverPlayer)) {
-            serverPlayer.displayClientMessage(Component.literal("You cannot command your squad right now.")
-                    .withStyle(ChatFormatting.RED), true);
+            serverPlayer.displayClientMessage(Component.literal("You cannot command your squad right now.").withStyle(ChatFormatting.RED), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -92,15 +87,13 @@ public class IllagerWarhornItem extends Item {
             setSelectedMode(stack, next);
 
             player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-            serverPlayer.displayClientMessage(Component.literal("Warhorn mode: ").withStyle(ChatFormatting.YELLOW)
-                    .append(Component.literal(formatMode(next)).withStyle(ChatFormatting.WHITE)), true);
+            serverPlayer.displayClientMessage(Component.literal("Warhorn mode: ").withStyle(ChatFormatting.YELLOW).append(Component.literal(formatMode(next)).withStyle(ChatFormatting.WHITE)), true);
             return InteractionResultHolder.success(stack);
         }
 
         List<Mob> squad = SquadOrders.getNearbySquad(serverPlayer);
         if (squad.isEmpty()) {
-            serverPlayer.displayClientMessage(Component.literal("You have no recruited Illagers nearby.")
-                    .withStyle(ChatFormatting.GRAY), true);
+            serverPlayer.displayClientMessage(Component.literal("You have no recruited Illagers nearby.").withStyle(ChatFormatting.GRAY), true);
             return InteractionResultHolder.success(stack);
         }
 
@@ -116,15 +109,12 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.FOLLOW);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("Squad order: Follow")
-                        .withStyle(ChatFormatting.GREEN), true);
+                serverPlayer.displayClientMessage(Component.literal("Squad order: Follow").withStyle(ChatFormatting.GREEN), true);
             }
             case ATTACK -> {
                 LivingEntity lookedTarget = getLookTarget(serverPlayer);
-
                 if (lookedTarget == null) {
-                    serverPlayer.displayClientMessage(Component.literal("No valid target in sight.")
-                            .withStyle(ChatFormatting.GRAY), true);
+                    serverPlayer.displayClientMessage(Component.literal("No valid target in sight.").withStyle(ChatFormatting.GRAY), true);
                     return InteractionResultHolder.success(stack);
                 }
 
@@ -142,13 +132,11 @@ public class IllagerWarhornItem extends Item {
                 }
 
                 if (affected <= 0) {
-                    serverPlayer.displayClientMessage(Component.literal("That target is not valid for your squad.")
-                            .withStyle(ChatFormatting.GRAY), true);
+                    serverPlayer.displayClientMessage(Component.literal("That target is not valid for your squad.").withStyle(ChatFormatting.GRAY), true);
                 } else {
                     playOrderSound(level, serverPlayer, SquadOrder.ATTACK);
                     player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                    serverPlayer.displayClientMessage(Component.literal("Squad order: Attack target")
-                            .withStyle(ChatFormatting.DARK_RED), true);
+                    serverPlayer.displayClientMessage(Component.literal("Squad order: Attack target").withStyle(ChatFormatting.DARK_RED), true);
                 }
             }
             case HOLD -> {
@@ -160,8 +148,7 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.HOLD);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("Squad order: Hold position")
-                        .withStyle(ChatFormatting.GOLD), true);
+                serverPlayer.displayClientMessage(Component.literal("Squad order: Hold position").withStyle(ChatFormatting.GOLD), true);
             }
         }
 
@@ -170,30 +157,9 @@ public class IllagerWarhornItem extends Item {
 
     private void playOrderSound(Level level, ServerPlayer player, SquadOrder order) {
         switch (order) {
-            case ATTACK -> level.playSound(
-                    null,
-                    player.getX(), player.getY(), player.getZ(),
-                    ModSounds.ILLAGER_WARHORN_ATTACK.get(),
-                    SoundSource.PLAYERS,
-                    1.0F,
-                    1.0F
-            );
-            case FOLLOW -> level.playSound(
-                    null,
-                    player.getX(), player.getY(), player.getZ(),
-                    ModSounds.ILLAGER_WARHORN_FOLLOW.get(),
-                    SoundSource.PLAYERS,
-                    1.0F,
-                    1.0F
-            );
-            case HOLD -> level.playSound(
-                    null,
-                    player.getX(), player.getY(), player.getZ(),
-                    ModSounds.ILLAGER_WARHORN_FOLLOW.get(),
-                    SoundSource.PLAYERS,
-                    1.0F,
-                    1.0F
-            );
+            case ATTACK -> level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ILLAGER_WARHORN_ATTACK.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case FOLLOW -> level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ILLAGER_WARHORN_FOLLOW.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case HOLD -> level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ILLAGER_WARHORN_FOLLOW.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         }
     }
 
@@ -201,33 +167,17 @@ public class IllagerWarhornItem extends Item {
         Vec3 eyePos = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         Vec3 fullEnd = eyePos.add(look.scale(LOOK_RANGE));
-
-        HitResult blockHit = player.level().clip(new ClipContext(
-                eyePos,
-                fullEnd,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                player
-        ));
-
+        HitResult blockHit = player.level().clip(new ClipContext(eyePos, fullEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         Vec3 end = blockHit.getType() == HitResult.Type.MISS ? fullEnd : blockHit.getLocation();
         AABB searchBox = player.getBoundingBox().expandTowards(end.subtract(eyePos)).inflate(1.5D);
-
-        List<LivingEntity> candidates = player.level().getEntitiesOfClass(
-                LivingEntity.class,
-                searchBox,
-                entity -> isValidLookTarget(player, entity)
-        );
+        List<LivingEntity> candidates = player.level().getEntitiesOfClass(LivingEntity.class, searchBox, entity -> isValidLookTarget(player, entity));
 
         double bestDistance = Double.MAX_VALUE;
         LivingEntity best = null;
 
-        for (LivingEntity candidate : candidates.stream()
-                .sorted(Comparator.comparingDouble(player::distanceToSqr))
-                .toList()) {
+        for (LivingEntity candidate : candidates.stream().sorted(Comparator.comparingDouble(player::distanceToSqr)).toList()) {
             AABB box = candidate.getBoundingBox().inflate(0.35D);
             EntityHitResult intercept = box.clip(eyePos, end).map(vec -> new EntityHitResult(candidate, vec)).orElse(null);
-
             if (intercept == null) continue;
 
             double dist = eyePos.distanceToSqr(intercept.getLocation());

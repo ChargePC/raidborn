@@ -22,16 +22,12 @@ public class AttackSavedData extends SavedData {
     private final List<CooldownEntry> cooldowns = new ArrayList<>();
 
     public static AttackSavedData get(ServerLevel level) {
-        return level.getServer()
-                .overworld()
-                .getDataStorage()
-                .computeIfAbsent(AttackSavedData::load, AttackSavedData::new, DATA_NAME);
+        return level.getServer().overworld().getDataStorage().computeIfAbsent(AttackSavedData::load, AttackSavedData::new, DATA_NAME);
     }
 
     public static AttackSavedData load(CompoundTag tag) {
         AttackSavedData data = new AttackSavedData();
         ListTag list = tag.getList("Cooldowns", Tag.TAG_COMPOUND);
-
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entryTag = list.getCompound(i);
             ResourceLocation dimensionId = ResourceLocation.tryParse(entryTag.getString("Dimension"));
@@ -97,7 +93,6 @@ public class AttackSavedData extends SavedData {
     private void cleanupExpired(long gameTime) {
         boolean changed = false;
         Iterator<CooldownEntry> iterator = cooldowns.iterator();
-
         while (iterator.hasNext()) {
             CooldownEntry entry = iterator.next();
             if (entry.expiresAt() <= gameTime) {

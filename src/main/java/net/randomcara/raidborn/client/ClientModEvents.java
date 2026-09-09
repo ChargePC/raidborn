@@ -29,7 +29,6 @@ import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
-
     private static final float TOTEM_AREA_HALF_SIZE = 8.0F;
     private static final int TOTEM_AREA_DURATION_TICKS = 20 * 15;
 
@@ -44,7 +43,6 @@ public class ClientModEvents {
         });
     }
 
-    /** Every banner colour is a separate item, so the back slot needs the renderer on all of them. */
     private static void registerBannerCurioRenderer() {
         for (Item item : ForgeRegistries.ITEMS) {
             if (item instanceof BannerItem) {
@@ -53,15 +51,10 @@ public class ClientModEvents {
         }
     }
 
-    // per-item area color lives here because BentosLib knows nothing about items, it only holds the
-    // registry we fill on init.
     private static void registerTotemAreaVisuals() {
-        AreaVisualClient.register(
-                ModItems.TOTEM_OF_HEALING.get(), 0xFFE31700, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
-        AreaVisualClient.register(
-                ModItems.TOTEM_OF_PROTECTION.get(), 0xFF66CEE6, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
-        AreaVisualClient.register(
-                ModItems.TOTEM_OF_RESISTANCE.get(), 0xFFF47800, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
+        AreaVisualClient.register(ModItems.TOTEM_OF_HEALING.get(), 0xFFE31700, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
+        AreaVisualClient.register(ModItems.TOTEM_OF_PROTECTION.get(), 0xFF66CEE6, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
+        AreaVisualClient.register(ModItems.TOTEM_OF_RESISTANCE.get(), 0xFFF47800, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
     }
 
     @SubscribeEvent

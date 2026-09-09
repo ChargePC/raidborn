@@ -52,20 +52,14 @@ public class BannerBackpackEvents {
 
         boolean hasBanner = BannerSlot.isWearingBanner(player);
         boolean hadBanner = player.getPersistentData().getBoolean(TAG_HAD_BANNER);
-
         if (hadBanner && !hasBanner) {
             RecruitmentEvents.disbandSquad(player);
-            player.displayClientMessage(Component.literal("Banner removed. Your squad has disbanded.")
-                    .withStyle(ChatFormatting.YELLOW), true);
+            player.displayClientMessage(Component.literal("Banner removed. Your squad has disbanded.").withStyle(ChatFormatting.YELLOW), true);
         }
 
         player.getPersistentData().putBoolean(TAG_HAD_BANNER, hasBanner);
     }
 
-    /**
-     * Worlds from before the move still have the banner in the chest armour slot, where it no longer
-     * counts for anything. Nothing else can put a banner there, so finding one means it is an old one.
-     */
     private static void moveBannerOffTheChestSlot(ServerPlayer player) {
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
         if (!(chest.getItem() instanceof BannerItem)) return;

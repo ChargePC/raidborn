@@ -12,25 +12,19 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornClientConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
+import net.randomcara.raidborn.network.RecruitTooltipRequestPacket;
 
-public final class RecruitTooltipOverlay {
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/recruit_tooltip/stats.png");
-
+public class RecruitTooltipOverlay {
+    private static final ResourceLocation TEXTURE = Raidborn.id("textures/gui/recruit_tooltip/stats.png");
     private static final int TEXTURE_WIDTH = 47;
     private static final int TEXTURE_HEIGHT = 32;
-
     private static final int CROSSHAIR_GAP = 12;
     private static final int TOP_Y = 10;
-
     private static final int REQUEST_INTERVAL_TICKS = 5;
     private static final int DATA_TIMEOUT_TICKS = 10;
-
     private static final int TEXT_COLOR = 0xFFFFFFFF;
-
     private static final int HP_X = 27;
     private static final int HP_Y = 5;
-
     private static final int SLOTS_X = 27;
     private static final int SLOTS_Y = 19;
 
@@ -43,25 +37,9 @@ public final class RecruitTooltipOverlay {
     private static int slots;
     private static boolean validData;
 
-    private RecruitTooltipOverlay() {
-    }
-
     public static final IGuiOverlay OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();
-
-        if (mc.options.hideGui || mc.player == null || mc.player.isSpectator()) {
-            return;
-        }
-
-        if (RaidbornClientConfig.recruitTooltipPosition() == RaidbornClientConfig.RecruitTooltipPosition.HIDDEN) {
-            return;
-        }
-
-        if (!hasRecruitTooltipAccess(mc)) {
-            return;
-        }
-
-        if (!isShiftDown(mc)) {
+        if (mc.options.hideGui || mc.player == null || mc.player.isSpectator() || RaidbornClientConfig.recruitTooltipPosition() == RaidbornClientConfig.RecruitTooltipPosition.HIDDEN || !hasRecruitTooltipAccess(mc) || !isShiftDown(mc)) {
             return;
         }
 
@@ -76,12 +54,7 @@ public final class RecruitTooltipOverlay {
 
         int currentHp = Math.max(0, Mth.ceil(lookedMob.getHealth()));
 
-        HudPosition position = getHudPosition(
-                screenWidth,
-                screenHeight,
-                RaidbornClientConfig.recruitTooltipPosition()
-        );
-
+        HudPosition position = getHudPosition(screenWidth, screenHeight, RaidbornClientConfig.recruitTooltipPosition());
         render(guiGraphics, mc.font, position.x(), position.y(), currentHp);
     };
 
@@ -91,10 +64,7 @@ public final class RecruitTooltipOverlay {
             return;
         }
 
-        if (mc.screen != null
-                || RaidbornClientConfig.recruitTooltipPosition() == RaidbornClientConfig.RecruitTooltipPosition.HIDDEN
-                || !hasRecruitTooltipAccess(mc)
-                || !isShiftDown(mc)) {
+        if (mc.screen != null || RaidbornClientConfig.recruitTooltipPosition() == RaidbornClientConfig.RecruitTooltipPosition.HIDDEN || !hasRecruitTooltipAccess(mc) || !isShiftDown(mc)) {
             clear();
             return;
         }
@@ -122,7 +92,7 @@ public final class RecruitTooltipOverlay {
             return;
         }
 
-        Raidborn.CHANNEL.sendToServer(new Raidborn.RecruitTooltipRequestPacket(targetId));
+        Raidborn.CHANNEL.sendToServer(new RecruitTooltipRequestPacket(targetId));
         requestCooldown = REQUEST_INTERVAL_TICKS;
     }
 
@@ -153,7 +123,6 @@ public final class RecruitTooltipOverlay {
         String hpText = Integer.toString(currentHp);
         String slotsText = Integer.toString(slots);
 
-        // trailing true = vanilla drop shadow
         guiGraphics.drawString(font, hpText, x + HP_X, y + HP_Y, TEXT_COLOR, true);
         guiGraphics.drawString(font, slotsText, x + SLOTS_X, y + SLOTS_Y, TEXT_COLOR, true);
     }
@@ -172,34 +141,19 @@ public final class RecruitTooltipOverlay {
             return false;
         }
 
-        return mc.player.hasEffect(ModEffects.ILLAGER_LOYALTY.get())
-                || mc.player.hasEffect(ModEffects.ILLAGER_HONOR.get())
-                || mc.player.hasEffect(ModEffects.HERO_OF_THE_RAID.get());
+        return mc.player.hasEffect(ModEffects.ILLAGER_LOYALTY.get()) || mc.player.hasEffect(ModEffects.ILLAGER_HONOR.get()) || mc.player.hasEffect(ModEffects.HERO_OF_THE_RAID.get());
     }
 
-    private static HudPosition getHudPosition(
-            int screenWidth,
-            int screenHeight,
-            RaidbornClientConfig.RecruitTooltipPosition position
-    ) {
+    private static HudPosition getHudPosition(int screenWidth, int screenHeight, RaidbornClientConfig.RecruitTooltipPosition position) {
         int centerX = screenWidth / 2;
         int centerY = screenHeight / 2;
 
         return switch (position) {
-            case LEFT -> new HudPosition(
-                    centerX - CROSSHAIR_GAP - TEXTURE_WIDTH,
-                    centerY - (TEXTURE_HEIGHT / 2)
-            );
+            case LEFT -> new HudPosition(centerX - CROSSHAIR_GAP - TEXTURE_WIDTH, centerY - (TEXTURE_HEIGHT / 2));
 
-            case TOP -> new HudPosition(
-                    centerX - (TEXTURE_WIDTH / 2),
-                    TOP_Y
-            );
+            case TOP -> new HudPosition(centerX - (TEXTURE_WIDTH / 2), TOP_Y);
 
-            case RIGHT, HIDDEN -> new HudPosition(
-                    centerX + CROSSHAIR_GAP,
-                    centerY - (TEXTURE_HEIGHT / 2)
-            );
+            case RIGHT, HIDDEN -> new HudPosition(centerX + CROSSHAIR_GAP, centerY - (TEXTURE_HEIGHT / 2));
         };
     }
 

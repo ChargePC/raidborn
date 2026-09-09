@@ -1,19 +1,12 @@
 package net.randomcara.raidborn.gameplay.attack;
 
-/**
- * Where an Attack is in its lifecycle. It runs, then it ends exactly one way. Single field so
- * nonsense like "won and abandoned" can't be represented.
- */
 public enum AttackState {
     ACTIVE,
 
-    /** Every villager is down. */
     VICTORY,
 
-    /** Ran out of time, or the owner died, or the village unloaded. */
     FAILED,
 
-    /** The owner left the area for too long. Counts as a defeat, with its own boss bar text. */
     ABANDONED;
 
     public boolean isOver() {

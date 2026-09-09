@@ -15,11 +15,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class WarbellVillageBedInteractionEvents {
+public class WarbellVillageBedInteractionEvents {
     private static final double BED_SLEEPER_SEARCH_RADIUS = 3.0D;
-
-    private WarbellVillageBedInteractionEvents() {
-    }
 
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
@@ -39,7 +36,6 @@ public final class WarbellVillageBedInteractionEvents {
         Level level = event.getLevel();
         BlockPos clickedPos = event.getPos();
         BlockState clickedState = level.getBlockState(clickedPos);
-
         if (!(clickedState.getBlock() instanceof BedBlock)) return;
         if (!(level instanceof ServerLevel serverLevel)) return;
 
@@ -53,21 +49,11 @@ public final class WarbellVillageBedInteractionEvents {
     }
 
     private static boolean isWakeableSleepingVillageMob(Mob mob) {
-        return mob != null
-                && mob.isAlive()
-                && mob.isSleeping()
-                && WarbellVillageData.isVillageMode(mob)
-                && WarbellVillageBedData.hasBed(mob)
-                && WarbellVillageBedData.isBedValid(mob);
+        return mob != null && mob.isAlive() && mob.isSleeping() && WarbellVillageData.isVillageMode(mob) && WarbellVillageBedData.hasBed(mob) && WarbellVillageBedData.isBedValid(mob);
     }
 
     private static Mob findSleepingVillageMobOnBed(ServerLevel level, BlockPos clickedPos) {
         AABB searchBox = new AABB(clickedPos).inflate(BED_SLEEPER_SEARCH_RADIUS);
-
-        return level.getEntitiesOfClass(
-                Mob.class,
-                searchBox,
-                mob -> isWakeableSleepingVillageMob(mob) && WarbellVillageBedData.isSameBed(mob, clickedPos)
-        ).stream().findFirst().orElse(null);
+        return level.getEntitiesOfClass(Mob.class, searchBox, mob -> isWakeableSleepingVillageMob(mob) && WarbellVillageBedData.isSameBed(mob, clickedPos)).stream().findFirst().orElse(null);
     }
 }

@@ -23,7 +23,7 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstatio
 
 import java.util.List;
 
-public final class RecruitmentEvents {
+public class RecruitmentEvents {
     static final double DISBAND_RADIUS = 192.0D;
 
     static final double COMMAND_RADIUS = 32.0D;
@@ -38,13 +38,11 @@ public final class RecruitmentEvents {
 
     static final String TAG_HAD_HONOR = "raidborn_had_honor";
 
-    static final ResourceLocation ADV_RECRUIT_ILLAGER =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "you_work_for_me_now");
+    static final ResourceLocation ADV_RECRUIT_ILLAGER = Raidborn.id("you_work_for_me_now");
 
     static final String CRIT_RECRUIT_ILLAGER = "recruit_first_illager";
 
-    static final ResourceLocation BEAST_ENTITY_ID =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "beast");
+    static final ResourceLocation BEAST_ENTITY_ID = Raidborn.id("beast");
 
     static final float BEAST_SOUL_HEAL_AMOUNT = 25.0F;
 
@@ -56,12 +54,6 @@ public final class RecruitmentEvents {
         return RaidbornServerConfig.isRecruitmentEnabledFor(getEntityId(entity));
     }
 
-    /**
-     * Whether the hover tooltip should offer this mob as recruitable.
-     *
-     * <p>Same rules the actual recruitment uses, so the tooltip can't promise something the config
-     * or a missing integration would then refuse.
-     */
     public static boolean isRecruitableTooltipTarget(Entity entity) {
         return recruitmentEnabledFor(entity) && isRecruitable(entity);
     }
@@ -94,7 +86,6 @@ public final class RecruitmentEvents {
         if (!isSpecialRecruitmentEnabled(entity)) return false;
 
         ResourceLocation id = getEntityId(entity);
-
         if (RaidbornCompatEntities.conjLoaded() && id != null && id.equals(RaidbornCompatEntities.CONJ_CONJURER)) return false;
 
         if (RaidbornCompatEntities.sandrLoaded() && id != null) {
@@ -152,12 +143,7 @@ public final class RecruitmentEvents {
     }
 
     public static void disbandSquad(ServerPlayer player) {
-        List<Mob> mobs = player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(DISBAND_RADIUS),
-                mob -> RecruitOwnership.isYours(player, mob)
-        );
-
+        List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(DISBAND_RADIUS), mob -> RecruitOwnership.isYours(player, mob));
         for (Mob mob : mobs) {
             releaseRecruit(mob);
         }
@@ -171,23 +157,9 @@ public final class RecruitmentEvents {
         return ownerHasAllianceEffect(player);
     }
 
-    /**
-     * Enforces the one invariant of recruitment: {@code TAG_RECRUITED} and {@code TAG_OWNER} are
-     * either both present or both absent, and a recruit is never also a settlement member.
-     *
-     * <p>Every path in the mod writes the pair together so it can't drift by itself. What breaks it
-     * is persistent data outliving the code that wrote it: entity conversion drags the tag compound
-     * onto a different mob, {@code /data} can set one half, other mods copying entity NBT do the
-     * same. Half a pair gives you either an ownerless recruit nothing can command or an owned mob no
-     * goal follows, and there's no way to fix either in game.
-     *
-     * <p>Called where such a mob first turns up: entity join, the recruitment interaction and the
-     * target-change event. Not on a timer, on purpose.
-     */
     static void sanitizeRecruitState(Mob mob) {
         boolean recruited = mob.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED);
         boolean hasOwner = mob.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
-
         if (recruited && !hasOwner) {
             MobSleep.wake(mob);
 
@@ -225,8 +197,5 @@ public final class RecruitmentEvents {
         mob.getPersistentData().putBoolean("Patrolling", false);
         mob.getPersistentData().putBoolean("PatrolLeader", false);
         mob.setPersistenceRequired();
-    }
-
-    private RecruitmentEvents() {
     }
 }

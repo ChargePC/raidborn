@@ -10,8 +10,7 @@ import net.randomcara.raidborn.client.renderer.layer.GrumblagerArmorLayer;
 import net.randomcara.raidborn.content.entity.grumblager.Grumblager;
 
 public class GrumblagerRenderer extends MobRenderer<Grumblager, GrumblagerModel<Grumblager>> {
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/entity/grumblager.png");
+    private static final ResourceLocation TEXTURE = Raidborn.id("textures/entity/grumblager.png");
 
     public GrumblagerRenderer(EntityRendererProvider.Context context) {
         super(context, new GrumblagerModel<>(context.bakeLayer(GrumblagerModel.LAYER_LOCATION)), 0.5F);

@@ -12,27 +12,13 @@ import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstatio
 
 import java.util.EnumSet;
 
-/**
- * Daily routine for a settled illager: sleep at night, stand at the workstation during the day,
- * wander around the settlement otherwise.
- *
- * <p>Fighting isn't part of it. {@link WarbellVillageDefence} gets asked first every tick and the
- * routine only runs when there's no intruder.
- */
 public class WarbellVillageWanderGoal extends Goal {
     private static final int MIN_WANDER_COOLDOWN = 40;
     private static final int MAX_WANDER_COOLDOWN = 90;
     private static final int REPATH_INTERVAL = 15;
     private static final int STUCK_THRESHOLD = 45;
-
     private static final double WORK_REACH_SQR = 1.85D * 1.85D;
 
-    /*
-     * Wanted travel speed in blocks per tick, converted into a goal speed modifier by
-     * getVillageMoveSpeed. Stated this way because recruits are every illager in the game and their
-     * base MOVEMENT_SPEED differs; a shared modifier would make a vindicator jog and a witch crawl.
-     * The clamp keeps the conversion from turning into a sprint or a shuffle on the extremes.
-     */
     private static final double WANDER_SPEED = 0.20D;
     private static final double RETURN_SPEED = 0.24D;
     private static final double WORK_SPEED = 0.19D;
@@ -54,16 +40,12 @@ public class WarbellVillageWanderGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return !this.mob.level().isClientSide
-                && WarbellVillageData.isVillageMode(this.mob)
-                && WarbellVillageData.isBellValid(this.mob);
+        return !this.mob.level().isClientSide && WarbellVillageData.isVillageMode(this.mob) && WarbellVillageData.isBellValid(this.mob);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !this.mob.level().isClientSide
-                && WarbellVillageData.isVillageMode(this.mob)
-                && WarbellVillageData.isBellValid(this.mob);
+        return !this.mob.level().isClientSide && WarbellVillageData.isVillageMode(this.mob) && WarbellVillageData.isBellValid(this.mob);
     }
 
     @Override
@@ -120,10 +102,8 @@ public class WarbellVillageWanderGoal extends Goal {
         }
     }
 
-    /** HOME and GATHER have no behaviour of their own yet: both come out as wandering. */
     private void tickRoutine(BlockPos bellPos) {
         WarbellVillageRoutine.Activity activity = WarbellVillageRoutine.getCurrentActivity(this.mob);
-
         if (activity == WarbellVillageRoutine.Activity.SLEEP) {
             this.mob.getNavigation().stop();
             resetPathingState();
@@ -148,7 +128,6 @@ public class WarbellVillageWanderGoal extends Goal {
         return Mth.clamp(modifier, MIN_SPEED_MODIFIER, MAX_SPEED_MODIFIER);
     }
 
-    /** Beds and workstations are blocks: the player mines them, so the claim has to be re-checked. */
     private void refreshBedAndWorkstation() {
         if (WarbellVillageBedData.hasBed(this.mob) && !WarbellVillageBedData.isBedValid(this.mob)) {
             WarbellVillageBedData.clearBed(this.mob);
@@ -162,8 +141,7 @@ public class WarbellVillageWanderGoal extends Goal {
             return;
         }
 
-        if (WarbellVillageWorkstationData.hasWorkstation(this.mob)
-                && !WarbellVillageWorkstationData.isWorkstationValid(this.mob)) {
+        if (WarbellVillageWorkstationData.hasWorkstation(this.mob) && !WarbellVillageWorkstationData.isWorkstationValid(this.mob)) {
             WarbellVillageWorkstationData.clearWorkstation(this.mob);
         }
 
@@ -186,7 +164,6 @@ public class WarbellVillageWanderGoal extends Goal {
         double targetX = interactionPos.getX() + 0.5D;
         double targetY = interactionPos.getY();
         double targetZ = interactionPos.getZ() + 0.5D;
-
         if (this.mob.distanceToSqr(targetX, targetY, targetZ) > WORK_REACH_SQR) {
             smartMoveTo(interactionPos, getVillageMoveSpeed(WORK_SPEED));
             return true;
@@ -218,7 +195,6 @@ public class WarbellVillageWanderGoal extends Goal {
 
         int radius = WarbellVillageData.getVillageRadius(this.mob);
         double allowed = radius + WarbellVillageData.OUTSIDE_VILLAGE_BUFFER;
-
         if (this.mob.distanceToSqr(centerX, centerY, centerZ) > allowed * allowed) {
             smartMoveTo(bellPos, getVillageMoveSpeed(RETURN_SPEED));
             return;
@@ -244,7 +220,6 @@ public class WarbellVillageWanderGoal extends Goal {
 
             double targetX = centerX + offsetX;
             double targetZ = centerZ + offsetZ;
-
             if (distanceToCenterSqr(targetX, targetZ, centerX, centerZ) > (double) radius * radius) {
                 continue;
             }
@@ -260,7 +235,6 @@ public class WarbellVillageWanderGoal extends Goal {
         return false;
     }
 
-    /** Repaths on an interval, and again early when the distance to the goal stops shrinking. */
     private boolean smartMoveTo(BlockPos targetPos, double speed) {
         if (targetPos == null) return false;
 
@@ -281,12 +255,7 @@ public class WarbellVillageWanderGoal extends Goal {
 
         this.mob.getNavigation().stop();
 
-        boolean moved = this.mob.getNavigation().moveTo(
-                targetPos.getX() + 0.5D,
-                targetPos.getY(),
-                targetPos.getZ() + 0.5D,
-                speed
-        );
+        boolean moved = this.mob.getNavigation().moveTo(targetPos.getX() + 0.5D, targetPos.getY(), targetPos.getZ() + 0.5D, speed);
 
         this.repathCooldown = REPATH_INTERVAL;
 
@@ -298,13 +267,7 @@ public class WarbellVillageWanderGoal extends Goal {
     }
 
     private void lookAtBlock(BlockPos pos) {
-        this.mob.getLookControl().setLookAt(
-                pos.getX() + 0.5D,
-                pos.getY() + 0.5D,
-                pos.getZ() + 0.5D,
-                20.0F,
-                20.0F
-        );
+        this.mob.getLookControl().setLookAt(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 20.0F, 20.0F);
     }
 
     private void resetPathingState() {

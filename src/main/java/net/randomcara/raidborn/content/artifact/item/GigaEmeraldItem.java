@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GigaEmeraldItem extends Item implements SlotBoundCurioItem {
-
     public GigaEmeraldItem(Properties props) {
         super(props);
     }
@@ -24,11 +23,7 @@ public class GigaEmeraldItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Better reputation means better trade prices", 0x55FF55),
-                TooltipHelper.line("Works with Villagers and Illagers", 0x00AA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Better reputation means better trade prices", 0x55FF55), TooltipHelper.line("Works with Villagers and Illagers", 0x00AA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

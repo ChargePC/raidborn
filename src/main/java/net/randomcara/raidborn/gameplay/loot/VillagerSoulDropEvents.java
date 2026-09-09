@@ -10,11 +10,8 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.registry.ModItems;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public final class VillagerSoulDropEvents {
+public class VillagerSoulDropEvents {
     private static final float VILLAGER_SOUL_DROP_CHANCE = 0.40F;
-
-    private VillagerSoulDropEvents() {
-    }
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
@@ -22,12 +19,6 @@ public final class VillagerSoulDropEvents {
         if (!(event.getEntity() instanceof Villager villager)) return;
         if (villager.getRandom().nextFloat() >= VILLAGER_SOUL_DROP_CHANCE) return;
 
-        event.getDrops().add(new ItemEntity(
-                villager.level(),
-                villager.getX(),
-                villager.getY(),
-                villager.getZ(),
-                new ItemStack(ModItems.VILLAGER_SOUL.get())
-        ));
+        event.getDrops().add(new ItemEntity(villager.level(), villager.getX(), villager.getY(), villager.getZ(), new ItemStack(ModItems.VILLAGER_SOUL.get())));
     }
 }

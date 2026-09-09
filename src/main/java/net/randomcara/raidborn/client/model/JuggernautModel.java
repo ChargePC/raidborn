@@ -14,34 +14,21 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.randomcara.raidborn.content.entity.juggernaut.Juggernaut;
 
-/** Iron Juggernaut model exported from Blockbench (400x400). */
 public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = ModModelLayers.JUGGERNAUT;
-
-    /**
-     * Stride frequency. {@code limbSwing} already grows with distance walked, so the cadence speeds up
-     * on its own when he runs; this only sets the step length. The renderer uses the same constant to
-     * keep the body sway in phase with the legs.
-     */
     public static final float WALK_FREQUENCY = 0.45F;
-
     private static final float RUN_THRESHOLD = 0.45F;
     private static final float RUN_RANGE = 0.45F;
-
     private static final float LEG_SWING_WALK = 1.35F;
     private static final float LEG_SWING_RUN_BONUS = 0.55F;
     private static final float ARM_SWING_WALK = 1.00F;
     private static final float ARM_SWING_RUN_BONUS = 0.50F;
-
     private static final float WINDUP_FRACTION = 0.5F;
     private static final float SLAM_END_FRACTION = 0.7F;
-
     private static final float ATTACK_BLEND_IN = 0.15F;
     private static final float ATTACK_BLEND_OUT = 0.25F;
-
     private static final float WINDUP_ARM_ROTATION = -2.2F;
     private static final float SLAM_ARM_ROTATION = 0.7F;
-
     private static final float SINGLE_ARM_BODY_TWIST = 0.05F;
 
     private final ModelPart body;
@@ -51,7 +38,6 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
     private final ModelPart leftLeg;
     private final ModelPart rightLeg;
 
-    /** Stored in {@code prepareMobModel} so the swing does not step tick by tick. */
     private float partialTick;
 
     public JuggernautModel(ModelPart root) {
@@ -66,79 +52,35 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
-
         partdefinition.addOrReplaceChild(
                 "body",
-                CubeListBuilder.create()
-                        .texOffs(16, 77)
-                        .addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 39.0F, 30.0F, new CubeDeformation(0.0F))
-                        .texOffs(0, 152)
-                        .addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 8.0F, 22.0F, new CubeDeformation(0.0F))
-                        .texOffs(186, 97)
-                        .addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 12.0F, 22.0F, new CubeDeformation(0.025F))
-                        .texOffs(132, 0)
-                        .addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 44.0F, 30.0F, new CubeDeformation(0.025F)),
+                CubeListBuilder.create().texOffs(16, 77).addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 39.0F, 30.0F, new CubeDeformation(0.0F)).texOffs(0, 152).addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 8.0F, 22.0F, new CubeDeformation(0.0F)).texOffs(186, 97)
+                        .addBox(-16.0F, -23.0278F, -10.5833F, 32.0F, 12.0F, 22.0F, new CubeDeformation(0.025F)).texOffs(132, 0).addBox(-27.0F, -62.0278F, -14.5833F, 54.0F, 44.0F, 30.0F, new CubeDeformation(0.025F)),
                 PartPose.offset(0.0F, 24.0278F, 0.5833F)
         );
 
         partdefinition.addOrReplaceChild(
                 "right_arm",
-                CubeListBuilder.create()
-                        .texOffs(224, 172)
-                        .addBox(-17.8333F, -6.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.0F))
-                        .texOffs(238, 270)
-                        .addBox(-17.8333F, -6.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.025F))
-                        .texOffs(0, 193)
+                CubeListBuilder.create().texOffs(224, 172).addBox(-17.8333F, -6.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.0F)).texOffs(238, 270).addBox(-17.8333F, -6.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.025F)).texOffs(0, 193)
                         .addBox(-16.8333F, -0.6667F, -8.5F, 17.0F, 54.0F, 17.0F, new CubeDeformation(0.0F)),
                 PartPose.offset(-28.1667F, -32.3333F, 0.5F)
         );
 
         partdefinition.addOrReplaceChild(
                 "head",
-                CubeListBuilder.create()
-                        .texOffs(0, 38)
-                        .addBox(-8.0F, -7.5F, -9.95F, 16.0F, 13.0F, 10.0F, new CubeDeformation(0.0F))
-                        .texOffs(0, 22)
-                        .addBox(-2.0F, -1.5F, -12.95F, 4.0F, 9.0F, 3.0F, new CubeDeformation(0.0F))
-                        .texOffs(56, 49)
-                        .addBox(-8.0F, -7.5F, -9.95F, 16.0F, 17.0F, 10.0F, new CubeDeformation(0.025F)),
+                CubeListBuilder.create().texOffs(0, 38).addBox(-8.0F, -7.5F, -9.95F, 16.0F, 13.0F, 10.0F, new CubeDeformation(0.0F)).texOffs(0, 22).addBox(-2.0F, -1.5F, -12.95F, 4.0F, 9.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(56, 49).addBox(-8.0F, -7.5F, -9.95F, 16.0F, 17.0F, 10.0F, new CubeDeformation(0.025F)),
                 PartPose.offset(0.0F, -22.5F, -14.05F)
         );
 
-        // No 0.025 overlay here: the overgrowth only spreads over his right arm.
         partdefinition.addOrReplaceChild(
                 "left_arm",
-                CubeListBuilder.create()
-                        .texOffs(224, 172)
-                        .mirror()
-                        .addBox(-1.1667F, -7.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.0F))
-                        .mirror(false)
-                        .texOffs(0, 193)
-                        .mirror()
-                        .addBox(-0.1667F, -1.6667F, -8.5F, 17.0F, 54.0F, 17.0F, new CubeDeformation(0.0F))
-                        .mirror(false),
+                CubeListBuilder.create().texOffs(224, 172).mirror().addBox(-1.1667F, -7.6667F, -9.5F, 19.0F, 61.0F, 19.0F, new CubeDeformation(0.0F)).mirror(false).texOffs(0, 193).mirror().addBox(-0.1667F, -1.6667F, -8.5F, 17.0F, 54.0F, 17.0F, new CubeDeformation(0.0F)).mirror(false),
                 PartPose.offset(28.1667F, -31.3333F, 0.5F)
         );
 
-        partdefinition.addOrReplaceChild(
-                "left_leg",
-                CubeListBuilder.create()
-                        .texOffs(63, 17)
-                        .mirror()
-                        .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F))
-                        .mirror(false),
-                PartPose.offset(14.5F, 6.5F, 0.5F)
-        );
+        partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create() .texOffs(63, 17) .mirror() .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F)) .mirror(false), PartPose.offset(14.5F, 6.5F, 0.5F));
 
-        partdefinition.addOrReplaceChild(
-                "right_leg",
-                CubeListBuilder.create()
-                        .texOffs(63, 17)
-                        .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F))
-                        .texOffs(116, 164)
-                        .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.025F)),
-                PartPose.offset(-14.5F, 6.5F, 0.5F)
-        );
+        partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create() .texOffs(63, 17) .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.0F)) .texOffs(116, 164) .addBox(-5.5F, -1.5F, -5.5F, 11.0F, 19.0F, 11.0F, new CubeDeformation(0.025F)), PartPose.offset(-14.5F, 6.5F, 0.5F));
 
         return LayerDefinition.create(meshdefinition, 400, 400);
     }
@@ -175,7 +117,6 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
         }
 
         float breath = Mth.cos(ageInTicks * 0.055F);
-
         this.body.xRot += breath * 0.020F * weight;
         this.head.xRot += breath * 0.015F * weight;
 
@@ -219,9 +160,7 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
     }
 
     private void applyAttack(T entity) {
-        // Without partial ticks the swing would step in 20 visible increments per second.
         float attackTicks = entity.getAttackAnimationTicks() - this.partialTick;
-
         if (attackTicks <= 0.0F) {
             return;
         }
@@ -241,13 +180,9 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
             armRotation = Mth.lerp(smoothStep(t), SLAM_ARM_ROTATION, 0.0F);
         }
 
-        // The swing blends over the walk instead of replacing it, otherwise the arms jump on the first
-        // and last frame of the attack.
         float blend = smoothStep(attackBlendWeight(progress));
 
-        // The arm outside the swing stays on the walk animation and is not overwritten.
         Juggernaut.SwingArms arms = entity.getSwingArms();
-
         if (arms != Juggernaut.SwingArms.LEFT) {
             this.rightArm.xRot = Mth.lerp(blend, this.rightArm.xRot, armRotation);
             this.rightArm.zRot = Mth.lerp(blend, this.rightArm.zRot, 0.10F);
@@ -262,7 +197,6 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
 
         this.body.xRot = Mth.lerp(blend, this.body.xRot, armRotation * -0.08F);
 
-        // In the rig the arms are siblings of the body: twisting above this factor visibly detaches them.
         if (arms != Juggernaut.SwingArms.BOTH) {
             float side = arms == Juggernaut.SwingArms.LEFT ? 1.0F : -1.0F;
             this.body.yRot = Mth.lerp(blend, this.body.yRot, armRotation * SINGLE_ARM_BODY_TWIST * side);
@@ -281,7 +215,6 @@ public class JuggernautModel<T extends Juggernaut> extends EntityModel<T> {
         return 1.0F;
     }
 
-    /** S-curve: starts and ends at zero speed, so nothing snaps at the seams. */
     private static float smoothStep(float t) {
         return t * t * (3.0F - 2.0F * t);
     }

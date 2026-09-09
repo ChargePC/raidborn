@@ -20,11 +20,8 @@ import net.randomcara.raidborn.content.entity.beast.menu.BeastInventoryMenu;
 import net.randomcara.raidborn.core.registry.ModItems;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class BeastInteractionEvents {
+public class BeastInteractionEvents {
     private static final float SOUL_HEAL_AMOUNT = 25.0F;
-
-    private BeastInteractionEvents() {
-    }
 
     @SubscribeEvent
     public static void onInteractBeast(PlayerInteractEvent.EntityInteract event) {
@@ -34,16 +31,12 @@ public final class BeastInteractionEvents {
 
         Player player = event.getEntity();
 
-        // SHIFT + right click is left to the recruitment system; do not cancel the event here.
         if (player.isShiftKeyDown()) {
             return;
         }
 
         ItemStack stack = player.getItemInHand(event.getHand());
-
-        if (stack.is(ModItems.VILLAGER_SOUL.get())
-                && beast.getHealth() < beast.getMaxHealth()) {
-
+        if (stack.is(ModItems.VILLAGER_SOUL.get()) && beast.getHealth() < beast.getMaxHealth()) {
             if (!player.level().isClientSide) {
                 healBeast(beast);
 
@@ -56,15 +49,12 @@ public final class BeastInteractionEvents {
             return;
         }
 
-        if (stack.is(Items.LEAD)
-                || stack.getItem() instanceof NameTagItem) {
+        if (stack.is(Items.LEAD) || stack.getItem() instanceof NameTagItem) {
             return;
         }
 
         if (!player.level().isClientSide) {
-            if (!beast.isCreator(player)
-                    || beast.isInCombat()) {
-
+            if (!beast.isCreator(player) || beast.isInCombat()) {
                 cancelInteraction(event, player);
                 return;
             }
@@ -73,64 +63,32 @@ public final class BeastInteractionEvents {
                 MenuProvider provider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return Component.translatable(
-                                "entity.raidborn.beast"
-                        );
+                        return Component.translatable("entity.raidborn.beast");
                     }
 
                     @Override
-                    public AbstractContainerMenu createMenu(
-                            int containerId,
-                            Inventory inventory,
-                            Player menuPlayer
-                    ) {
-                        return new BeastInventoryMenu(
-                                containerId,
-                                inventory,
-                                beast
-                        );
+                    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player menuPlayer) {
+                        return new BeastInventoryMenu(containerId, inventory, beast);
                     }
                 };
 
-                NetworkHooks.openScreen(
-                        serverPlayer,
-                        provider,
-                        buffer -> buffer.writeVarInt(beast.getId())
-                );
+                NetworkHooks.openScreen(serverPlayer, provider, buffer -> buffer.writeVarInt(beast.getId()));
             }
         }
 
         cancelInteraction(event, player);
     }
 
-    private static void cancelInteraction(
-            PlayerInteractEvent.EntityInteract event,
-            Player player
-    ) {
+    private static void cancelInteraction(PlayerInteractEvent.EntityInteract event, Player player) {
         event.setCanceled(true);
 
-        event.setCancellationResult(
-                InteractionResult.sidedSuccess(
-                        player.level().isClientSide
-                )
-        );
+        event.setCancellationResult(InteractionResult.sidedSuccess(player.level().isClientSide));
     }
 
     private static void healBeast(Beast beast) {
-        float missingHealth =
-                beast.getMaxHealth() - beast.getHealth();
+        float missingHealth = beast.getMaxHealth() - beast.getHealth();
+        beast.heal(Math.min(SOUL_HEAL_AMOUNT, missingHealth));
 
-        beast.heal(
-                Math.min(
-                        SOUL_HEAL_AMOUNT,
-                        missingHealth
-                )
-        );
-
-        beast.playSound(
-                SoundEvents.IRON_GOLEM_REPAIR,
-                1.0F,
-                0.8F
-        );
+        beast.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, 0.8F);
     }
 }

@@ -35,11 +35,9 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
-
     private static final String TAG_LAST_PROC_TICK = "raidborn_evoker_idol_last_proc_tick";
     private static final String TAG_SUMMONED_BY_IDOL = "raidborn_evoker_idol_summoned";
     private static final String TAG_TARGET_UUID = "raidborn_evoker_idol_target";
-
     private static final double PROC_CHANCE = 0.15D;
     private static final int VEX_COUNT = 3;
     private static final int VEX_LIFETIME_TICKS = 15 * 20;
@@ -56,11 +54,7 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("15% chance to summon 3 Vex when hit", 0xDDDDDD),
-                TooltipHelper.line("The Vex go after whoever hit you", 0xBBBBFF)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("15% chance to summon 3 Vex when hit", 0xDDDDDD), TooltipHelper.line("The Vex go after whoever hit you", 0xBBBBFF));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -73,7 +67,6 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
         DamageSource source = event.getSource();
         Entity sourceEntity = source.getEntity();
-
         if (!(sourceEntity instanceof LivingEntity attacker)) return;
         if (!attacker.isAlive()) return;
         if (attacker == player) return;
@@ -90,16 +83,7 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
         summonVexes(player.serverLevel(), player, attacker);
 
-        player.level().playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.EVOKER_CAST_SPELL,
-                SoundSource.PLAYERS,
-                1.0F,
-                1.0F
-        );
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EVOKER_CAST_SPELL, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 
     @SubscribeEvent
@@ -114,7 +98,6 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
         UUID targetUuid = data.getUUID(TAG_TARGET_UUID);
         Entity entity = serverLevel.getEntity(targetUuid);
-
         if (!(entity instanceof LivingEntity target)) return;
         if (!target.isAlive()) return;
 
@@ -126,10 +109,7 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
     }
 
     private static boolean hasEvokerIdolEquipped(ServerPlayer player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.EVOKER_IDOL.get())).isPresent())
-                .orElse(false);
+        return CuriosApi.getCuriosInventory(player).resolve().map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.EVOKER_IDOL.get())).isPresent()).orElse(false);
     }
 
     private static void summonVexes(ServerLevel level, ServerPlayer owner, LivingEntity target) {
@@ -141,11 +121,9 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
             double angle = ((Math.PI * 2.0D) / VEX_COUNT) * i + (random.nextDouble() * 0.35D);
             double distance = 1.5D + random.nextDouble() * 1.2D;
-
             double spawnX = owner.getX() + Math.cos(angle) * distance;
             double spawnY = owner.getY() + 1.0D + random.nextDouble() * 0.75D;
             double spawnZ = owner.getZ() + Math.sin(angle) * distance;
-
             vex.moveTo(spawnX, spawnY, spawnZ, random.nextFloat() * 360.0F, 0.0F);
             vex.setBoundOrigin(owner.blockPosition());
             vex.setLimitedLife(VEX_LIFETIME_TICKS);
@@ -160,11 +138,7 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
             data.putBoolean(TAG_SUMMONED_BY_IDOL, true);
             data.putUUID(TAG_TARGET_UUID, target.getUUID());
 
-            vex.setDeltaMovement(new Vec3(
-                    (random.nextDouble() - 0.5D) * 0.2D,
-                    0.05D,
-                    (random.nextDouble() - 0.5D) * 0.2D
-            ));
+            vex.setDeltaMovement(new Vec3((random.nextDouble() - 0.5D) * 0.2D, 0.05D, (random.nextDouble() - 0.5D) * 0.2D));
 
             level.addFreshEntity(vex);
         }

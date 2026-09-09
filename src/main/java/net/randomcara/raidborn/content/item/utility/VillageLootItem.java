@@ -35,18 +35,10 @@ import java.util.Optional;
 
 public class VillageLootItem extends Item {
     private static final String TAG_TIER = "RaidbornVillageLootTier";
-
-    private static final ResourceLocation LOYALTY_LOOT_TABLE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "gameplay/village_loot/loyalty");
-
-    private static final ResourceLocation HONOR_LOOT_TABLE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "gameplay/village_loot/honor");
-
-    private static final ResourceLocation HERO_LOOT_TABLE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "gameplay/village_loot/hero");
-
-    private static final ResourceLocation BUNDLE_DROP_CONTENTS_SOUND =
-            ResourceLocation.fromNamespaceAndPath("minecraft", "item.bundle.drop_contents");
+    private static final ResourceLocation LOYALTY_LOOT_TABLE = Raidborn.id("gameplay/village_loot/loyalty");
+    private static final ResourceLocation HONOR_LOOT_TABLE = Raidborn.id("gameplay/village_loot/honor");
+    private static final ResourceLocation HERO_LOOT_TABLE = Raidborn.id("gameplay/village_loot/hero");
+    private static final ResourceLocation BUNDLE_DROP_CONTENTS_SOUND = ResourceLocation.fromNamespaceAndPath("minecraft", "item.bundle.drop_contents");
 
     public VillageLootItem(Properties properties) {
         super(properties);
@@ -64,13 +56,11 @@ public class VillageLootItem extends Item {
 
     public static AttackRaidbornHooks.AttackTier getTier(ItemStack stack) {
         CompoundTag tag = stack.getTag();
-
         if (tag == null || !tag.contains(TAG_TIER)) {
             return AttackRaidbornHooks.AttackTier.LOYALTY;
         }
 
         String tierId = tag.getString(TAG_TIER);
-
         if ("hero".equalsIgnoreCase(tierId) || "hero_of_the_raid".equalsIgnoreCase(tierId)) {
             return AttackRaidbornHooks.AttackTier.HERO;
         }
@@ -100,7 +90,6 @@ public class VillageLootItem extends Item {
         }
 
         AttackRaidbornHooks.AttackTier tier = getTier(stack);
-
         boolean gaveLoot = generateAndGiveLoot(serverLevel, serverPlayer, tier);
         if (!gaveLoot) {
             giveFallbackLoot(serverPlayer, tier);
@@ -121,11 +110,7 @@ public class VillageLootItem extends Item {
     private static boolean generateAndGiveLoot(ServerLevel level, ServerPlayer player, AttackRaidbornHooks.AttackTier tier) {
         LootTable lootTable = level.getServer().getLootData().getLootTable(getLootTableId(tier));
 
-        LootParams lootParams = new LootParams.Builder(level)
-                .withParameter(LootContextParams.ORIGIN, player.position())
-                .withLuck(player.getLuck())
-                .create(LootContextParamSets.CHEST);
-
+        LootParams lootParams = new LootParams.Builder(level).withParameter(LootContextParams.ORIGIN, player.position()).withLuck(player.getLuck()).create(LootContextParamSets.CHEST);
         List<ItemStack> generatedLoot = lootTable.getRandomItems(lootParams);
 
         boolean gaveAnyLoot = false;
@@ -165,10 +150,8 @@ public class VillageLootItem extends Item {
 
         ItemStack remaining = stack.copy();
         boolean inserted = player.getInventory().add(remaining);
-
         if (!inserted || !remaining.isEmpty()) {
             ItemEntity dropped = player.drop(remaining, false);
-
             if (dropped != null) {
                 dropped.setNoPickUpDelay();
                 dropped.setTarget(player.getUUID());
@@ -186,34 +169,20 @@ public class VillageLootItem extends Item {
 
     private static void playBundleDropContentsSound(ServerLevel level, ServerPlayer player) {
         Optional<SoundEvent> optionalSound = BuiltInRegistries.SOUND_EVENT.getOptional(BUNDLE_DROP_CONTENTS_SOUND);
-
         if (optionalSound.isEmpty()) {
             return;
         }
 
-        level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                optionalSound.get(),
-                SoundSource.PLAYERS,
-                1.0F,
-                0.9F + level.random.nextFloat() * 0.2F
-        );
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), optionalSound.get(), SoundSource.PLAYERS, 1.0F, 0.9F + level.random.nextFloat() * 0.2F);
     }
 
     @Override
     public Component getName(ItemStack stack) {
         AttackRaidbornHooks.AttackTier tier = getTier(stack);
-
         return switch (tier) {
-            case HERO -> Component.translatable("item.raidborn.village_loot")
-                    .append(Component.literal(" - Hero"));
-            case HONOR -> Component.translatable("item.raidborn.village_loot")
-                    .append(Component.literal(" - Honor"));
-            case LOYALTY -> Component.translatable("item.raidborn.village_loot")
-                    .append(Component.literal(" - Loyalty"));
+            case HERO -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Hero"));
+            case HONOR -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Honor"));
+            case LOYALTY -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Loyalty"));
         };
     }
 
@@ -224,11 +193,9 @@ public class VillageLootItem extends Item {
                                 TooltipFlag flag) {
         AttackRaidbornHooks.AttackTier tier = getTier(stack);
 
-        tooltip.add(Component.translatable("tooltip.raidborn.village_loot.open")
-                .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.raidborn.village_loot.open").withStyle(ChatFormatting.GRAY));
 
-        tooltip.add(Component.translatable("tooltip.raidborn.village_loot.tier." + tier.name().toLowerCase(Locale.ROOT))
-                .withStyle(getTierColor(tier)));
+        tooltip.add(Component.translatable("tooltip.raidborn.village_loot.tier." + tier.name().toLowerCase(Locale.ROOT)).withStyle(getTierColor(tier)));
     }
 
     private static ChatFormatting getTierColor(AttackRaidbornHooks.AttackTier tier) {

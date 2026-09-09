@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
-/** Single place to ask whether an optional integration is active. */
-public final class RaidbornCompat {
+public class RaidbornCompat {
     public static final String ILLAGER_INVASION = "illagerinvasion";
     public static final String SAVAGE_AND_RAVAGE = "savage_and_ravage";
     public static final String TAKES_A_PILLAGE = "takesapillage";
@@ -19,7 +18,6 @@ public final class RaidbornCompat {
     public static final String ENCHANT_WITH_MOB = "enchantwithmob";
     public static final String RAVAGE_AND_CABBAGE = "ravageandcabbage";
     public static final String ARTIFACTS = "artifacts";
-
     private static final Map<String, BooleanSupplier> SWITCHES = new HashMap<>();
 
     static {
@@ -35,27 +33,20 @@ public final class RaidbornCompat {
         SWITCHES.put(ARTIFACTS, RaidbornServerConfig::isCompatArtifactsEnabled);
     }
 
-    private RaidbornCompat() {
-    }
-
     public static boolean isEnabled(String modid) {
         return ModList.get().isLoaded(modid) && isEnabledInConfig(modid);
     }
 
-    /** Presence only, ignoring the config switch. */
     public static boolean isLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
 
     private static boolean isEnabledInConfig(String modid) {
         BooleanSupplier configSwitch = SWITCHES.get(modid);
-
         if (configSwitch == null) {
             return true;
         }
 
-        // Fails open on purpose. This also runs on the client, including before entering a world, where
-        // the server config may not be loaded yet.
         if (!RaidbornServerConfig.SPEC.isLoaded()) {
             return true;
         }

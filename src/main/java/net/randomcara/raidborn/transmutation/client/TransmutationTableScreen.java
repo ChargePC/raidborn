@@ -9,28 +9,20 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.transmutation.menu.TransmutationTableMenu;
 
 public class TransmutationTableScreen extends AbstractContainerScreen<TransmutationTableMenu> {
-    private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/transmutation_table.png");
-    private static final ResourceLocation BREW_PROGRESS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/transmutation_table/brew_progress.png");
-    private static final ResourceLocation BUBBLES_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/transmutation_table/bubbles.png");
-    private static final ResourceLocation FUEL_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/transmutation_table/fuel_length.png");
-
+    private static final ResourceLocation GUI_TEXTURE = Raidborn.id("textures/gui/transmutation_table.png");
+    private static final ResourceLocation BREW_PROGRESS_TEXTURE = Raidborn.id("textures/gui/transmutation_table/brew_progress.png");
+    private static final ResourceLocation BUBBLES_TEXTURE = Raidborn.id("textures/gui/transmutation_table/bubbles.png");
+    private static final ResourceLocation FUEL_TEXTURE = Raidborn.id("textures/gui/transmutation_table/fuel_length.png");
     private static final int TEXTURE_WIDTH = 256;
     private static final int TEXTURE_HEIGHT = 256;
-
     private static final int FUEL_X = 60;
     private static final int FUEL_Y = 44;
     private static final int FUEL_WIDTH = 18;
     private static final int FUEL_HEIGHT = 4;
-
     private static final int BUBBLES_X = 63;
     private static final int BUBBLES_Y = 14;
     private static final int BUBBLES_WIDTH = 12;
     private static final int BUBBLES_HEIGHT = 29;
-
     private static final int BREW_PROGRESS_X = 97;
     private static final int BREW_PROGRESS_Y = 16;
     private static final int BREW_PROGRESS_WIDTH = 9;
@@ -48,7 +40,6 @@ public class TransmutationTableScreen extends AbstractContainerScreen<Transmutat
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int titleX = (this.imageWidth - this.font.width(this.title)) / 2;
-
         guiGraphics.drawString(this.font, this.title, titleX, this.titleLabelY, 4210752, false);
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
@@ -57,7 +48,6 @@ public class TransmutationTableScreen extends AbstractContainerScreen<Transmutat
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int x = this.leftPos;
         int y = this.topPos;
-
         guiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         drawFuel(guiGraphics, x, y);
         drawBubbles(guiGraphics, x, y);
@@ -82,17 +72,7 @@ public class TransmutationTableScreen extends AbstractContainerScreen<Transmutat
             return;
         }
 
-        guiGraphics.blit(
-                BUBBLES_TEXTURE,
-                x + BUBBLES_X,
-                y + BUBBLES_Y + (BUBBLES_HEIGHT - bubbleHeight),
-                0,
-                BUBBLES_HEIGHT - bubbleHeight,
-                BUBBLES_WIDTH,
-                bubbleHeight,
-                BUBBLES_WIDTH,
-                BUBBLES_HEIGHT
-        );
+        guiGraphics.blit(BUBBLES_TEXTURE, x + BUBBLES_X, y + BUBBLES_Y + (BUBBLES_HEIGHT - bubbleHeight), 0, BUBBLES_HEIGHT - bubbleHeight, BUBBLES_WIDTH, bubbleHeight, BUBBLES_WIDTH, BUBBLES_HEIGHT);
     }
 
     private void drawProgress(GuiGraphics guiGraphics, int x, int y) {

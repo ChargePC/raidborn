@@ -54,18 +54,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class Grumblager extends AbstractIllager implements CrossbowAttackMob, RangedAttackMob {
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Grumblager.class, EntityDataSerializers.BOOLEAN);
-
     private static final double BOW_SPEED = 0.9D;
     private static final double CROSSBOW_SPEED = 1.0D;
     private static final double MELEE_SPEED = 1.0D;
-
     private static final int BOW_ATTACK_INTERVAL = 24;
-
     private static final float BOW_RANGE = 15.0F;
     private static final float CROSSBOW_RANGE = 12.0F;
-
     private static final float VOICE_PITCH_MULTIPLIER = 1.25F;
-
     private static final float SPAWN_ARMOR_CHANCE = 0.65F;
     private static final float NATURAL_SPAWN_ARMOR_CHANCE = 0.65F;
     private static final float SPAWNED_ARMOR_DROP_CHANCE = 0.085F;
@@ -85,11 +80,7 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 14.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.27D)
-                .add(Attributes.ATTACK_DAMAGE, 3.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 14.0D).add(Attributes.MOVEMENT_SPEED, 0.27D).add(Attributes.ATTACK_DAMAGE, 3.0D).add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
     @Override
@@ -158,7 +149,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack heldStack = player.getItemInHand(hand);
         EquipmentSlot armorSlot = getArmorSlotFromStack(heldStack);
-
         if (armorSlot == null || !RaidbornServerConfig.isGrumblagerArmorEquippingEnabled() || !isRecruited()) {
             return super.mobInteract(player, hand);
         }
@@ -186,18 +176,15 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
     }
 
     private boolean isRecruited() {
-        return this.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED)
-                && this.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
+        return this.getPersistentData().getBoolean(FollowOwnerGoal.TAG_RECRUITED) && this.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER);
     }
 
     private boolean isOwnedBy(ServerPlayer player) {
-        return this.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER)
-                && this.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER).equals(player.getUUID());
+        return this.getPersistentData().hasUUID(FollowOwnerGoal.TAG_OWNER) && this.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER).equals(player.getUUID());
     }
 
     private void equipArmorFromPlayer(ServerPlayer player, InteractionHand hand, ItemStack heldStack, EquipmentSlot armorSlot) {
         ItemStack oldArmor = this.getItemBySlot(armorSlot);
-
         if (!oldArmor.isEmpty()) {
             this.spawnAtLocation(oldArmor.copy());
         }
@@ -226,7 +213,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
         this.goalSelector.removeGoal(this.crossbowGoal);
 
         Item item = this.getMainHandItem().getItem();
-
         if (item instanceof BowItem) {
             this.goalSelector.addGoal(2, this.bowGoal);
         } else if (item instanceof CrossbowItem) {
@@ -260,7 +246,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
         double dz = target.getZ() - this.getZ();
         double horizontal = Math.sqrt(dx * dx + dz * dz);
         double dy = target.getY(0.3333333333333333D) - projectile.getY() + horizontal * 0.2D;
-
         projectile.shoot(dx, dy, dz, 1.6F, getArrowInaccuracy());
         this.level().addFreshEntity(projectile);
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, getShootPitch());
@@ -274,7 +259,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
         double dy = target.getY(0.3333333333333333D) - arrow.getY();
         double dz = target.getZ() - this.getZ();
         double horizontal = Math.sqrt(dx * dx + dz * dz);
-
         arrow.shoot(dx, dy + horizontal * 0.2D, dz, 1.6F, getArrowInaccuracy());
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, getShootPitch());
         this.level().addFreshEntity(arrow);
@@ -296,7 +280,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
 
     private static Item rollWeapon(RandomSource random) {
         float roll = random.nextFloat();
-
         if (roll < 0.34F) {
             return Items.IRON_SWORD;
         }
@@ -317,7 +300,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
         }
 
         Item armor = getArmorForSlot(slot, random.nextBoolean());
-
         if (armor != null) {
             this.setItemSlot(slot, new ItemStack(armor));
             this.setDropChance(slot, SPAWNED_ARMOR_DROP_CHANCE);
@@ -336,11 +318,7 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
     }
 
     private boolean shouldSpawnWithArmor(MobSpawnType spawnType) {
-        if (spawnType == MobSpawnType.EVENT) {
-            return true;
-        }
-
-        if (spawnType == MobSpawnType.SPAWN_EGG) {
+        if (spawnType == MobSpawnType.EVENT || spawnType == MobSpawnType.SPAWN_EGG) {
             return true;
         }
 
@@ -388,7 +366,6 @@ public class Grumblager extends AbstractIllager implements CrossbowAttackMob, Ra
         return this.isAggressive() ? IllagerArmPose.ATTACKING : IllagerArmPose.CROSSED;
     }
 
-    /** Raises hurt and death pitch: it borrows the Pillager voice but has 14 health against 24. */
     @Override
     public float getVoicePitch() {
         return super.getVoicePitch() * VOICE_PITCH_MULTIPLIER;

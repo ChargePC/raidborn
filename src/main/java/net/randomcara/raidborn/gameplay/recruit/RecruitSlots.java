@@ -15,8 +15,7 @@ import net.randomcara.raidborn.core.registry.ModEffects;
 
 import java.util.List;
 
-public final class RecruitSlots {
-    /** Slot counting radius from the [squad] config. A recruit farther than this frees its slot. */
+public class RecruitSlots {
     static double slotScanRadius() {
         return RaidbornServerConfig.getSquadSlotScanRadius();
     }
@@ -41,11 +40,7 @@ public final class RecruitSlots {
     }
 
     static int countRecruitSlots(ServerPlayer player, double radius) {
-        List<Mob> mobs = player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(radius),
-                mob -> RecruitOwnership.isYours(player, mob)
-        );
+        List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius), mob -> RecruitOwnership.isYours(player, mob));
 
         int slots = 0;
         for (Mob mob : mobs) {
@@ -79,25 +74,16 @@ public final class RecruitSlots {
 
         int maxSlots = getMaxRecruitSlots(player);
         int usedSlots = countRecruitSlots(player, slotScanRadius());
-
         if (usedSlots <= maxSlots) {
             return;
         }
 
-        List<Mob> recruits = player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(slotScanRadius()),
-                mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive()
-        );
-
+        List<Mob> recruits = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(slotScanRadius()), mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive());
         if (recruits.isEmpty()) {
             return;
         }
 
-        recruits.sort((a, b) -> Double.compare(
-                b.distanceToSqr(player),
-                a.distanceToSqr(player)
-        ));
+        recruits.sort((a, b) -> Double.compare(b.distanceToSqr(player), a.distanceToSqr(player)));
 
         int releasedCount = 0;
 
@@ -114,17 +100,7 @@ public final class RecruitSlots {
 
         if (releasedCount > 0) {
             int finalUsed = countRecruitSlots(player, slotScanRadius());
-
-            player.displayClientMessage(
-                    Component.literal("Recruit limit exceeded. " + releasedCount
-                            + " Illager" + (releasedCount == 1 ? "" : "s")
-                            + " dismissed. (" + finalUsed + "/" + maxSlots + " slots)")
-                            .withStyle(ChatFormatting.RED),
-                    true
-            );
+            player.displayClientMessage(Component.literal("Recruit limit exceeded. " + releasedCount + " Illager" + (releasedCount == 1 ? "" : "s") + " dismissed. (" + finalUsed + "/" + maxSlots + " slots)") .withStyle(ChatFormatting.RED), true);
         }
-    }
-
-    private RecruitSlots() {
     }
 }

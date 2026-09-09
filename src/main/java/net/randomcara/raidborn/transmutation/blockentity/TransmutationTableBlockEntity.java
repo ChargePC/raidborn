@@ -37,7 +37,6 @@ public class TransmutationTableBlockEntity extends BlockEntity implements MenuPr
     public static final int FUEL_SLOT = 0;
     public static final int SOUL_SLOT = 1;
     public static final int INPUT_SLOT = 2;
-
     private static final int MAX_FUEL = 1;
 
     private static int getMaxProgress() {
@@ -236,8 +235,6 @@ public class TransmutationTableBlockEntity extends BlockEntity implements MenuPr
     }
 
     public static boolean isSoul(ItemStack stack) {
-        return stack.is(ModItems.VILLAGER_SOUL.get())
-                || stack.is(ModItems.SOUL_OF_MANY_VILLAGERS.get())
-                || stack.is(ModItems.VILLAGE_SOUL.get());
+        return stack.is(ModItems.VILLAGER_SOUL.get()) || stack.is(ModItems.SOUL_OF_MANY_VILLAGERS.get()) || stack.is(ModItems.VILLAGE_SOUL.get());
     }
 }

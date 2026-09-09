@@ -16,7 +16,7 @@ import net.randomcara.raidborn.core.util.MobSleep;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class WarbellVillageBedData {
+public class WarbellVillageBedData {
     public static final String TAG_BED_X = "raidborn_village_bed_x";
     public static final String TAG_BED_Y = "raidborn_village_bed_y";
     public static final String TAG_BED_Z = "raidborn_village_bed_z";
@@ -27,22 +27,15 @@ public final class WarbellVillageBedData {
     public static final String TAG_BED_SEARCH_COOLDOWN = "raidborn_bed_search_cooldown";
     public static final String TAG_BED_SLOT = "raidborn_bed_slot";
     public static final String TAG_SLEEP_BLOCKED_UNTIL_TIME = "raidborn_sleep_blocked_until_time";
-
     public static final int MANUAL_WAKE_AWAKE_TICKS = 100;
-
     private static final int DEFAULT_WAKE_COOLDOWN = MANUAL_WAKE_AWAKE_TICKS;
     private static final int DEFAULT_WAKE_PROTECTION = 15;
     private static final int LOCAL_SEARCH_RADIUS = 24;
-
     private static final int BED_SLOT_FOOT = 0;
     private static final int BED_SLOT_HEAD = 1;
-
     private static final double SLEEPING_Y_OFFSET = 0.6875D;
     private static final double SLEEP_LOCK_XZ_TOLERANCE = 0.035D;
     private static final double SLEEP_LOCK_Y_TOLERANCE = 0.35D;
-
-    private WarbellVillageBedData() {
-    }
 
     public static void setBed(Mob mob, BlockPos pos) {
         BlockPos normalized = normalizeBedPos(mob, pos);
@@ -57,19 +50,13 @@ public final class WarbellVillageBedData {
     }
 
     public static boolean hasBed(Mob mob) {
-        return mob.getPersistentData().contains(TAG_BED_X)
-                && mob.getPersistentData().contains(TAG_BED_Y)
-                && mob.getPersistentData().contains(TAG_BED_Z);
+        return mob.getPersistentData().contains(TAG_BED_X) && mob.getPersistentData().contains(TAG_BED_Y) && mob.getPersistentData().contains(TAG_BED_Z);
     }
 
     public static BlockPos getBedPos(Mob mob) {
         if (!hasBed(mob)) return null;
 
-        return new BlockPos(
-                mob.getPersistentData().getInt(TAG_BED_X),
-                mob.getPersistentData().getInt(TAG_BED_Y),
-                mob.getPersistentData().getInt(TAG_BED_Z)
-        );
+        return new BlockPos(mob.getPersistentData().getInt(TAG_BED_X), mob.getPersistentData().getInt(TAG_BED_Y), mob.getPersistentData().getInt(TAG_BED_Z));
     }
 
     public static void clearBed(Mob mob) {
@@ -95,22 +82,14 @@ public final class WarbellVillageBedData {
         if (footPos == null) return false;
 
         BlockState footState = mob.level().getBlockState(footPos);
-        if (!(footState.getBlock() instanceof BedBlock)
-                || !footState.hasProperty(BedBlock.PART)
-                || !footState.hasProperty(BedBlock.FACING)
-                || footState.getValue(BedBlock.PART) != BedPart.FOOT) {
+        if (!(footState.getBlock() instanceof BedBlock) || !footState.hasProperty(BedBlock.PART) || !footState.hasProperty(BedBlock.FACING) || footState.getValue(BedBlock.PART) != BedPart.FOOT) {
             return false;
         }
 
         Direction facing = footState.getValue(BedBlock.FACING);
         BlockPos headPos = footPos.relative(facing);
         BlockState headState = mob.level().getBlockState(headPos);
-
-        return headState.getBlock() instanceof BedBlock
-                && headState.hasProperty(BedBlock.PART)
-                && headState.hasProperty(BedBlock.FACING)
-                && headState.getValue(BedBlock.PART) == BedPart.HEAD
-                && headState.getValue(BedBlock.FACING) == facing;
+        return headState.getBlock() instanceof BedBlock && headState.hasProperty(BedBlock.PART) && headState.hasProperty(BedBlock.FACING) && headState.getValue(BedBlock.PART) == BedPart.HEAD && headState.getValue(BedBlock.FACING) == facing;
     }
 
     public static BlockPos normalizeBedPos(Mob mob, BlockPos pos) {
@@ -141,22 +120,14 @@ public final class WarbellVillageBedData {
         if (footPos == null) return null;
 
         BlockState footState = mob.level().getBlockState(footPos);
-        if (!(footState.getBlock() instanceof BedBlock)
-                || !footState.hasProperty(BedBlock.PART)
-                || !footState.hasProperty(BedBlock.FACING)
-                || footState.getValue(BedBlock.PART) != BedPart.FOOT) {
+        if (!(footState.getBlock() instanceof BedBlock) || !footState.hasProperty(BedBlock.PART) || !footState.hasProperty(BedBlock.FACING) || footState.getValue(BedBlock.PART) != BedPart.FOOT) {
             return null;
         }
 
         Direction facing = footState.getValue(BedBlock.FACING);
         BlockPos headPos = footPos.relative(facing);
         BlockState headState = mob.level().getBlockState(headPos);
-
-        if (!(headState.getBlock() instanceof BedBlock)
-                || !headState.hasProperty(BedBlock.PART)
-                || !headState.hasProperty(BedBlock.FACING)
-                || headState.getValue(BedBlock.PART) != BedPart.HEAD
-                || headState.getValue(BedBlock.FACING) != facing) {
+        if (!(headState.getBlock() instanceof BedBlock) || !headState.hasProperty(BedBlock.PART) || !headState.hasProperty(BedBlock.FACING) || headState.getValue(BedBlock.PART) != BedPart.HEAD || headState.getValue(BedBlock.FACING) != facing) {
             return null;
         }
 
@@ -178,21 +149,9 @@ public final class WarbellVillageBedData {
         BlockPos normalized = normalizeBedPos(mob, bedPos);
         if (normalized == null) normalized = bedPos;
 
-        serverLevel.sendParticles(
-                ParticleTypes.HAPPY_VILLAGER,
-                mob.getX(), mob.getY() + 1.0D, mob.getZ(),
-                6,
-                0.35D, 0.4D, 0.35D,
-                0.0D
-        );
+        serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, mob.getX(), mob.getY() + 1.0D, mob.getZ(), 6, 0.35D, 0.4D, 0.35D, 0.0D);
 
-        serverLevel.sendParticles(
-                ParticleTypes.HAPPY_VILLAGER,
-                normalized.getX() + 0.5D, normalized.getY() + 0.7D, normalized.getZ() + 0.5D,
-                6,
-                0.25D, 0.15D, 0.25D,
-                0.0D
-        );
+        serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, normalized.getX() + 0.5D, normalized.getY() + 0.7D, normalized.getZ() + 0.5D, 6, 0.25D, 0.15D, 0.25D, 0.0D);
     }
 
     public static int getWakeCooldown(Mob mob) {
@@ -280,7 +239,6 @@ public final class WarbellVillageBedData {
 
         int safeTicks = Math.max(0, ticks);
         long until = mob.level().getGameTime() + safeTicks;
-
         mob.getPersistentData().putLong(TAG_SLEEP_BLOCKED_UNTIL_TIME, until);
         setWakeCooldown(mob, safeTicks);
         setSleepRetryCooldown(mob, safeTicks);
@@ -329,7 +287,6 @@ public final class WarbellVillageBedData {
 
         int finalWakeCooldown = Math.max(MANUAL_WAKE_AWAKE_TICKS, wakeCooldownTicks);
         BlockPos bedPos = getBedPos(mob);
-
         if (bedPos == null) {
             MobSleep.wake(mob);
             finishWakeUp(mob, wakeProtectionTicks, finalWakeCooldown);
@@ -388,9 +345,7 @@ public final class WarbellVillageBedData {
         double targetY = sleepPos.getY() + SLEEPING_Y_OFFSET;
         double targetZ = sleepPos.getZ() + 0.5D;
 
-        boolean pushedOut = Math.abs(mob.getX() - targetX) > SLEEP_LOCK_XZ_TOLERANCE
-                || Math.abs(mob.getZ() - targetZ) > SLEEP_LOCK_XZ_TOLERANCE
-                || Math.abs(mob.getY() - targetY) > SLEEP_LOCK_Y_TOLERANCE;
+        boolean pushedOut = Math.abs(mob.getX() - targetX) > SLEEP_LOCK_XZ_TOLERANCE || Math.abs(mob.getZ() - targetZ) > SLEEP_LOCK_XZ_TOLERANCE || Math.abs(mob.getY() - targetY) > SLEEP_LOCK_Y_TOLERANCE;
 
         if (pushedOut) {
             mob.teleportTo(targetX, targetY, targetZ);
@@ -416,16 +371,7 @@ public final class WarbellVillageBedData {
         BlockPos normalized = normalizeBedPos(mob, bedPos);
         if (normalized == null || !(mob.level() instanceof ServerLevel serverLevel)) return List.of();
 
-        return serverLevel.getEntitiesOfClass(
-                Mob.class,
-                new AABB(normalized).inflate(64.0D),
-                other -> other != mob
-                        && other.isAlive()
-                        && WarbellVillageData.isVillageMode(other)
-                        && hasBed(other)
-                        && isBedValid(other)
-                        && normalized.equals(getBedPos(other))
-        );
+        return serverLevel.getEntitiesOfClass(Mob.class, new AABB(normalized).inflate(64.0D), other -> other != mob && other.isAlive() && WarbellVillageData.isVillageMode(other) && hasBed(other) && isBedValid(other) && normalized.equals(getBedPos(other)));
     }
 
     public static void refreshBedSlot(Mob mob, BlockPos bedPos) {
@@ -483,7 +429,6 @@ public final class WarbellVillageBedData {
     private static List<BlockPos> buildBedInteractionCandidates(Mob mob, BlockPos footPos, BlockPos headPos, Direction facing) {
         List<BlockPos> candidates = new ArrayList<>();
         boolean useFootSlot = isDoubleBedSleeper(mob) && getBedSlot(mob) == BED_SLOT_FOOT;
-
         if (useFootSlot) {
             addCandidate(candidates, footPos.relative(facing.getClockWise()));
             addCandidate(candidates, footPos.relative(facing.getCounterClockWise()));
@@ -531,7 +476,6 @@ public final class WarbellVillageBedData {
         int radius = WarbellVillageData.getVillageRadius(mob);
         int localRange = Math.min(radius, LOCAL_SEARCH_RADIUS);
         BlockPos mobPos = mob.blockPosition();
-
         BlockPos localMin = mobPos.offset(-localRange, -4, -localRange);
         BlockPos localMax = mobPos.offset(localRange, 4, localRange);
         BlockPos localResult = findBestFreeBedInBox(mob, bellPos, radius, localMin, localMax);
@@ -558,9 +502,7 @@ public final class WarbellVillageBedData {
             BlockPos interactionPos = findBestBedInteractionPos(mob, normalized);
             if (interactionPos == null) continue;
 
-            double score = mob.blockPosition().distSqr(interactionPos)
-                    + mob.blockPosition().distSqr(normalized) * 0.10D
-                    + bellPos.distSqr(normalized) * 0.01D;
+            double score = mob.blockPosition().distSqr(interactionPos) + mob.blockPosition().distSqr(normalized) * 0.10D + bellPos.distSqr(normalized) * 0.01D;
 
             if (score < bestScore) {
                 bestScore = score;
@@ -657,13 +599,8 @@ public final class WarbellVillageBedData {
 
     private static boolean canStandAt(Mob mob, BlockPos pos) {
         BlockPos below = pos.below();
-        AABB box = mob.getDimensions(Pose.STANDING).makeBoundingBox(
-                pos.getX() + 0.5D,
-                pos.getY(),
-                pos.getZ() + 0.5D
-        );
+        AABB box = mob.getDimensions(Pose.STANDING).makeBoundingBox(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 
-        return mob.level().getBlockState(below).entityCanStandOn(mob.level(), below, mob)
-                && mob.level().noCollision(mob, box);
+        return mob.level().getBlockState(below).entityCanStandOn(mob.level(), below, mob) && mob.level().noCollision(mob, box);
     }
 }

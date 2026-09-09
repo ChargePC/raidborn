@@ -57,68 +57,39 @@ import java.util.Set;
 import java.util.UUID;
 
 public class IronGollet extends IronGolem {
-    private static final EntityDataAccessor<Boolean> CARRYING_VILLAGER =
-            SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Boolean> VILLAGE_LINKED =
-            SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Integer> ATTACK_ANIMATION_TICKS =
-            SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.INT);
-
+    private static final EntityDataAccessor<Boolean> CARRYING_VILLAGER = SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> VILLAGE_LINKED = SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ATTACK_ANIMATION_TICKS = SynchedEntityData.defineId(IronGollet.class, EntityDataSerializers.INT);
     private static final String TAG_CARRYING = "raidborn_iron_gollet_carrying";
     private static final String TAG_VILLAGE_LINKED = "raidborn_iron_gollet_village_linked";
     private static final String TAG_OWNER = "raidborn_iron_gollet_owner";
-
     private static final int OWNER_REGENERATION_DURATION_TICKS = 30;
     private static final int OWNER_REGENERATION_REFRESH_TICKS = 10;
-
     private static final double HEAL_SEARCH_XZ = 32.0D;
     private static final double HEAL_SEARCH_Y = 16.0D;
-
     private static final int HEALING_PRIORITY_REFRESH_TICKS = 10;
-
     private static final float FULL_HEALTH_EPSILON = 0.05F;
-
     private static final double ATTACK_LAUNCH_STRENGTH = 0.25D;
-
     private static final float VOICE_PITCH_MULTIPLIER = 1.30F;
     private static final float SOUND_VOLUME = 0.80F;
     private static final float STEP_SOUND_VOLUME = 0.50F;
     private static final float STEP_SOUND_PITCH = 1.30F;
-
     private static final float CARRY_SOUND_VOLUME = 0.70F;
     private static final float CARRY_CLAMP_PITCH = 1.40F;
     private static final float CARRY_RELEASE_PITCH = 1.20F;
-
     private static final float HEAL_DONE_VOLUME = 0.60F;
     private static final float HEAL_DONE_PITCH = 1.35F;
-
-    /**
-     * Added on top of the {@code Mob} melee reach, which derives from entity width. At 0.6 wide the
-     * Gollet reached ~1.43 blocks against an Iron Golem's ~2.9, short enough to whiff at point blank.
-     */
     private static final double ATTACK_RANGE_BONUS_SQR = 1.6D;
-
     private static final int MAX_CARRYING_TICKS = 140;
     private static final int FORCED_RELEASE_IGNORE_TICKS = 100;
+    private static final UUID CARRYING_SPEED_MODIFIER_UUID = UUID.fromString("59a282a8-6ec0-42f0-a631-8b9b4f986fb2");
 
-    private static final UUID CARRYING_SPEED_MODIFIER_UUID =
-            UUID.fromString("59a282a8-6ec0-42f0-a631-8b9b4f986fb2");
-
-    private static final AttributeModifier CARRYING_SPEED_MODIFIER =
-            new AttributeModifier(
-                    CARRYING_SPEED_MODIFIER_UUID,
-                    "Iron Gollet carrying villager speed penalty",
-                    -0.12D,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
-            );
+    private static final AttributeModifier CARRYING_SPEED_MODIFIER = new AttributeModifier(CARRYING_SPEED_MODIFIER_UUID, "Iron Gollet carrying villager speed penalty", -0.12D, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     private UUID ignoredVillagerUuid;
     private int ignoredVillagerTicks;
     private int carryingVillagerTicks;
 
-    /** Villager this Gollet is heading for. Read by neighbours so two do not chase the same one. */
     @Nullable
     private UUID healingTargetUuid;
 
@@ -133,13 +104,7 @@ public class IronGollet extends IronGolem {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(
-            ServerLevelAccessor level,
-            DifficultyInstance difficulty,
-            MobSpawnType spawnType,
-            @Nullable SpawnGroupData spawnData,
-            @Nullable CompoundTag dataTag
-    ) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnData, dataTag);
 
         if (spawnType == MobSpawnType.SPAWN_EGG && !this.isVillageLinked()) {
@@ -159,13 +124,7 @@ public class IronGollet extends IronGolem {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 25.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25D)
-                .add(Attributes.ATTACK_DAMAGE, 7.5D)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 7.5D).add(Attributes.ATTACK_KNOCKBACK, 1.0D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
     @Override
@@ -192,34 +151,13 @@ public class IronGollet extends IronGolem {
         this.targetSelector.addGoal(1, new VillageAwareHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new SupportAwareDefendVillageGoal(this));
 
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
-                this,
-                Mob.class,
-                5,
-                false,
-                false,
-                entity -> !this.hasHealingPriority()
-                        && entity instanceof Enemy
-                        && !(entity instanceof Creeper)
-        ));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false, entity -> !this.hasHealingPriority() && entity instanceof Enemy && !(entity instanceof Creeper)));
 
-        // Closes the persistent anger the IronGolem base already carries: without these goals the
-        // anger was ticked and saved to NBT but never became a target and never expired.
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
-                this,
-                Player.class,
-                10,
-                true,
-                false,
-                entity -> !this.hasHealingPriority()
-                        && this.isAngryAt(entity)
-                        && this.canAttackThreat(entity)
-        ));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, entity -> !this.hasHealingPriority() && this.isAngryAt(entity) && this.canAttackThreat(entity)));
 
         this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
-    /** Vanilla village defence, minus the case where the Gollet is busy carrying a hurt villager. */
     private static class SupportAwareDefendVillageGoal extends DefendVillageTargetGoal {
         private final IronGollet gollet;
 
@@ -230,7 +168,6 @@ public class IronGollet extends IronGolem {
 
         @Override
         public boolean canUse() {
-            // cheap check first, super scans a 10 block radius
             return !this.gollet.hasHealingPriority() && super.canUse();
         }
     }
@@ -264,15 +201,10 @@ public class IronGollet extends IronGolem {
 
     private void tickCarriedPassengerLogic() {
         Player carriedOwner = this.getCarriedOwner();
-
         if (carriedOwner != null) {
             this.carryingVillagerTicks = 0;
 
-            if (!carriedOwner.isAlive()
-                    || !this.isOwnedBy(carriedOwner)
-                    || !this.isPlayerCreated()
-                    || this.isVillageLinked()
-                    || carriedOwner.isShiftKeyDown()) {
+            if (!carriedOwner.isAlive() || !this.isOwnedBy(carriedOwner) || !this.isPlayerCreated() || this.isVillageLinked() || carriedOwner.isShiftKeyDown()) {
                 carriedOwner.stopRiding();
                 this.setCarryingVillager(false);
                 this.ownerRegenerationRefreshTicks = 0;
@@ -296,14 +228,7 @@ public class IronGollet extends IronGolem {
 
         MobEffectInstance current = owner.getEffect(MobEffects.REGENERATION);
         if (current == null || current.getAmplifier() < 1 || current.getDuration() <= 15) {
-            owner.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION,
-                    OWNER_REGENERATION_DURATION_TICKS,
-                    1,
-                    false,
-                    true,
-                    true
-            ));
+            owner.addEffect(new MobEffectInstance(MobEffects.REGENERATION, OWNER_REGENERATION_DURATION_TICKS, 1, false, true, true));
         }
 
         this.ownerRegenerationRefreshTicks = OWNER_REGENERATION_REFRESH_TICKS;
@@ -311,7 +236,6 @@ public class IronGollet extends IronGolem {
 
     private void tickCarriedVillager() {
         Villager carried = this.getCarriedVillager();
-
         if (carried == null) {
             this.carryingVillagerTicks = 0;
 
@@ -350,20 +274,12 @@ public class IronGollet extends IronGolem {
         this.entityData.set(ATTACK_ANIMATION_TICKS, 10);
         this.level().broadcastEntityEvent(this, (byte) 4);
 
-        // Same curve as the Iron Golem but read from the attribute instead of repeating its numbers.
         float attackDamage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float damage = (int) attackDamage > 0
-                ? attackDamage / 2.0F + this.getRandom().nextInt((int) attackDamage)
-                : attackDamage;
+        float damage = (int) attackDamage > 0 ? attackDamage / 2.0F + this.getRandom().nextInt((int) attackDamage) : attackDamage;
 
         boolean hurt = target.hurt(this.damageSources().mobAttack(this), damage);
-
         if (hurt) {
-            // Upward hit like the golem's, shorter. The horizontal push already comes from the default
-            // hurt() knockback; adding another one doubled it.
-            double resistance = target instanceof LivingEntity livingTarget
-                    ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)
-                    : 0.0D;
+            double resistance = target instanceof LivingEntity livingTarget ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0D;
 
             double launch = ATTACK_LAUNCH_STRENGTH * Math.max(0.0D, 1.0D - resistance);
             target.setDeltaMovement(target.getDeltaMovement().add(0.0D, launch, 0.0D));
@@ -371,7 +287,6 @@ public class IronGollet extends IronGolem {
             this.doEnchantDamageEffects(this, target);
         }
 
-        // The golem plays the sound whether it connects or not: a blocked hit still rings metal.
         this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, this.getVoicePitch());
 
         return hurt;
@@ -393,13 +308,7 @@ public class IronGollet extends IronGolem {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        // Iron ingot repair comes before mounting. Without this the player-created Gollet was the only
-        // golem in the game that could not be repaired: this override captured every right click.
-        if (player.getItemInHand(hand).is(Items.IRON_INGOT) && this.getHealth() < this.getMaxHealth()) {
-            return super.mobInteract(player, hand);
-        }
-
-        if (!this.isPlayerCreated() || this.isVillageLinked()) {
+        if ((player.getItemInHand(hand).is(Items.IRON_INGOT) && this.getHealth() < this.getMaxHealth()) || !this.isPlayerCreated() || this.isVillageLinked()) {
             return super.mobInteract(player, hand);
         }
 
@@ -407,7 +316,6 @@ public class IronGollet extends IronGolem {
             return InteractionResult.SUCCESS;
         }
 
-        // An older Gollet may have no owner saved; the first player to interact claims it.
         if (this.ownerUuid == null) {
             this.setOwner(player);
         }
@@ -444,10 +352,7 @@ public class IronGollet extends IronGolem {
             return true;
         }
 
-        return passenger instanceof Player player
-                && this.isPlayerCreated()
-                && !this.isVillageLinked()
-                && this.isOwnedBy(player);
+        return passenger instanceof Player player && this.isPlayerCreated() && !this.isVillageLinked() && this.isOwnedBy(player);
     }
 
     @Override
@@ -460,11 +365,6 @@ public class IronGollet extends IronGolem {
         moveFunction.accept(passenger, this.getX(), y, this.getZ());
     }
 
-    /**
-     * Only drops the passenger when the Gollet is actually gone. {@code remove} also fires for
-     * {@code UNLOADED_TO_CHUNK} and {@code CHANGED_DIMENSION}, and dismounting on those was
-     * dropping the carried villager every chunk unload.
-     */
     @Override
     public void remove(RemovalReason reason) {
         if (!reason.shouldSave()) {
@@ -512,7 +412,6 @@ public class IronGollet extends IronGolem {
         return SoundEvents.IRON_GOLEM_DEATH;
     }
 
-    /** Raises hurt and death pitch at once; multiplying preserves the vanilla random variation. */
     @Override
     public float getVoicePitch() {
         return super.getVoicePitch() * VOICE_PITCH_MULTIPLIER;
@@ -578,10 +477,6 @@ public class IronGollet extends IronGolem {
         return this.entityData.get(ATTACK_ANIMATION_TICKS);
     }
 
-    /**
-     * Cached: the answer costs two entity scans and is read by the target goal predicates, which run
-     * once per evaluated candidate.
-     */
     public boolean hasHealingPriority() {
         return this.healingPriority;
     }
@@ -604,7 +499,6 @@ public class IronGollet extends IronGolem {
             return false;
         }
 
-        // creepers would level the village along with whoever they were sent after
         if (threat instanceof Creeper || VillageSide.isDefender(threat)) {
             return false;
         }
@@ -617,8 +511,6 @@ public class IronGollet extends IronGolem {
             return true;
         }
 
-        // A passive animal only becomes a target while it is on someone from the village. Without this
-        // a village-linked Gollet hunted cows, sheep and the player's pets.
         return VillageSide.isAttackingVillage(threat);
     }
 
@@ -644,13 +536,6 @@ public class IronGollet extends IronGolem {
         return null;
     }
 
-    /**
-     * Nearest hurt villager no other Gollet is already going for.
-     *
-     * <p>No global registry, each Gollet just publishes its target in {@link #healingTargetUuid} and
-     * the others read it off them. Two can still pick the same villager on the same tick; the
-     * farther one gives up next tick.
-     */
     @Nullable
     public Villager findHurtVillager() {
         if (this.getCarriedOwner() != null) {
@@ -666,17 +551,7 @@ public class IronGollet extends IronGolem {
             }
         }
 
-        return this.level().getEntitiesOfClass(
-                        Villager.class,
-                        box,
-                        villager -> villager.isAlive()
-                                && !villager.isPassenger()
-                                && !this.isVillagerFullyHealed(villager)
-                                && !this.isIgnoredVillager(villager)
-                                && !takenByOtherGollets.contains(villager.getUUID())
-                )
-                .stream()
-                .min(Comparator.comparingDouble(this::distanceToSqr))
+        return this.level().getEntitiesOfClass(Villager.class, box, villager -> villager.isAlive() && !villager.isPassenger() && !this.isVillagerFullyHealed(villager) && !this.isIgnoredVillager(villager) && !takenByOtherGollets.contains(villager.getUUID())).stream().min(Comparator.comparingDouble(this::distanceToSqr))
                 .orElse(null);
     }
 
@@ -684,12 +559,9 @@ public class IronGollet extends IronGolem {
         return !villager.isAlive() || villager.getHealth() >= villager.getMaxHealth() - FULL_HEALTH_EPSILON;
     }
 
-    /** Why a carried villager is being put down. */
     enum ReleaseReason {
-        /** Back to full health: top them up and ring the chime. */
         HEALED,
 
-        /** Died, or took too long. The Gollet skips them for a while so it does not loop on one. */
         INTERRUPTED
     }
 
@@ -718,7 +590,6 @@ public class IronGollet extends IronGolem {
         this.getNavigation().stop();
     }
 
-    /** Published so neighbouring Gollets skip this villager. Cleared when the goal stops. */
     void setHealingTarget(@Nullable Villager villager) {
         this.healingTargetUuid = villager == null ? null : villager.getUUID();
     }
@@ -729,9 +600,7 @@ public class IronGollet extends IronGolem {
     }
 
     boolean isIgnoredVillager(Villager villager) {
-        return this.ignoredVillagerUuid != null
-                && this.ignoredVillagerTicks > 0
-                && this.ignoredVillagerUuid.equals(villager.getUUID());
+        return this.ignoredVillagerUuid != null && this.ignoredVillagerTicks > 0 && this.ignoredVillagerUuid.equals(villager.getUUID());
     }
 
     private void tickIgnoredVillager() {
@@ -786,5 +655,4 @@ public class IronGollet extends IronGolem {
             super.start();
         }
     }
-
 }

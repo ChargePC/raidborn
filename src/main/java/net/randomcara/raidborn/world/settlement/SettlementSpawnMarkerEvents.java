@@ -36,25 +36,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public final class SettlementSpawnMarkerEvents {
+public class SettlementSpawnMarkerEvents {
     private static final Logger LOGGER = LogUtils.getLogger();
-
     private static final boolean REQUIRE_MARKER_TAG = false;
     private static final String SPAWN_MARKER_TAG = "raidborn_spawn_marker";
     private static final int SPAWN_DELAY_TICKS = 2;
     private static final int MAX_ATTEMPTS = 5;
-
     private static final String SETTLEMENT_HOME_MARKER_TAG = "RaidbornSettlementHome";
     private static final String SETTLEMENT_HOME_X_TAG = "RaidbornSettlementHomeX";
     private static final String SETTLEMENT_HOME_Y_TAG = "RaidbornSettlementHomeY";
     private static final String SETTLEMENT_HOME_Z_TAG = "RaidbornSettlementHomeZ";
-
     private static final int SETTLEMENT_RESTRICT_RADIUS = 18;
     private static final int SETTLEMENT_SOFT_RETURN_DISTANCE = 24;
     private static final int SETTLEMENT_HARD_RETURN_DISTANCE = 44;
     private static final int SETTLEMENT_RETURN_SCAN_INTERVAL_TICKS = 20;
     private static final double SETTLEMENT_RETURN_SPEED = 1.0D;
-
     private static final Queue<PendingSettlementSpawn> PENDING_SPAWNS = new ConcurrentLinkedQueue<>();
     private static final Set<String> QUEUED_MARKERS = ConcurrentHashMap.newKeySet();
 
@@ -64,16 +60,9 @@ public final class SettlementSpawnMarkerEvents {
 
     private static int returnScanCooldown;
 
-    private SettlementSpawnMarkerEvents() {
-    }
-
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel level)) {
-            return;
-        }
-
-        if (!(event.getEntity() instanceof ArmorStand armorStand)) {
+        if (!(event.getLevel() instanceof ServerLevel level) || !(event.getEntity() instanceof ArmorStand armorStand)) {
             return;
         }
 
@@ -111,10 +100,8 @@ public final class SettlementSpawnMarkerEvents {
 
     private static void processPendingSpawns(MinecraftServer server) {
         int amountToProcess = PENDING_SPAWNS.size();
-
         for (int i = 0; i < amountToProcess; i++) {
             PendingSettlementSpawn pending = PENDING_SPAWNS.poll();
-
             if (pending == null) {
                 return;
             }
@@ -132,7 +119,6 @@ public final class SettlementSpawnMarkerEvents {
 
     private static void processPendingSpawn(MinecraftServer server, PendingSettlementSpawn pending) {
         ServerLevel level = server.getLevel(pending.dimension());
-
         if (level == null) {
             LOGGER.warn("Could not process settlement marker at {}. Dimension {} is not loaded.",
                     pending.blockPos(), pending.dimension().location());
@@ -142,17 +128,7 @@ public final class SettlementSpawnMarkerEvents {
 
         Set<UUID> nearbyMobUuidsBeforeSpawn = collectNearbyMobUuids(level, pending.blockPos());
 
-        boolean spawned = CompatibleIllagerTypes.spawnRandomIllager(
-                level,
-                pending.category(),
-                pending.x(),
-                pending.y(),
-                pending.z(),
-                pending.yRot(),
-                pending.xRot(),
-                pending.yHeadRot()
-        );
-
+        boolean spawned = CompatibleIllagerTypes.spawnRandomIllager(level, pending.category(), pending.x(), pending.y(), pending.z(), pending.yRot(), pending.xRot(), pending.yHeadRot());
         if (spawned) {
             Mob spawnedMob = findNewSpawnedMob(level, pending.blockPos(), nearbyMobUuidsBeforeSpawn);
             if (spawnedMob != null) {
@@ -178,7 +154,6 @@ public final class SettlementSpawnMarkerEvents {
     private static Set<UUID> collectNearbyMobUuids(ServerLevel level, BlockPos origin) {
         Set<UUID> result = new HashSet<>();
         AABB box = new AABB(origin).inflate(6.0D, 4.0D, 6.0D);
-
         for (Mob mob : level.getEntitiesOfClass(Mob.class, box, Mob::isAlive)) {
             result.add(mob.getUUID());
         }
@@ -243,20 +218,11 @@ public final class SettlementSpawnMarkerEvents {
             for (int chunkX = centerChunkX - 6; chunkX <= centerChunkX + 6; chunkX++) {
                 for (int chunkZ = centerChunkZ - 6; chunkZ <= centerChunkZ + 6; chunkZ++) {
                     LevelChunk chunk = level.getChunkSource().getChunkNow(chunkX, chunkZ);
-
                     if (chunk == null) {
                         continue;
                     }
 
-                    AABB chunkBox = new AABB(
-                            chunkX << 4,
-                            level.getMinBuildHeight(),
-                            chunkZ << 4,
-                            (chunkX << 4) + 16,
-                            level.getMaxBuildHeight(),
-                            (chunkZ << 4) + 16
-                    );
-
+                    AABB chunkBox = new AABB(chunkX << 4, level.getMinBuildHeight(), chunkZ << 4, (chunkX << 4) + 16, level.getMaxBuildHeight(), (chunkZ << 4) + 16);
                     for (Mob mob : level.getEntitiesOfClass(Mob.class, chunkBox, SettlementSpawnMarkerEvents::isSettlementIllager)) {
                         if (processed.add(mob.getUUID())) {
                             tickSettlementIllagerHome(level, mob);
@@ -268,22 +234,11 @@ public final class SettlementSpawnMarkerEvents {
     }
 
     private static boolean isSettlementIllager(Mob mob) {
-        return mob.isAlive()
-                && mob.getPersistentData().getBoolean(SETTLEMENT_HOME_MARKER_TAG)
-                && !RecruitOwnership.isRecruited(mob);
+        return mob.isAlive() && mob.getPersistentData().getBoolean(SETTLEMENT_HOME_MARKER_TAG) && !RecruitOwnership.isRecruited(mob);
     }
 
-    /**
-     * Cuts an illager loose from the settlement it spawned in, permanently.
-     *
-     * <p>Called on recruitment. The home tags are dropped rather than just ignored, so a recruit
-     * that is later dismissed stays free instead of remembering the structure and walking back to
-     * it. Leaving the tags on meant a recruited illager kept getting dragged home and had its
-     * target nulled by the return scan whenever it strayed too far.
-     */
     public static void clearSettlementHome(Mob mob) {
         CompoundTag data = mob.getPersistentData();
-
         if (!data.getBoolean(SETTLEMENT_HOME_MARKER_TAG)) {
             return;
         }
@@ -298,7 +253,6 @@ public final class SettlementSpawnMarkerEvents {
 
     private static void tickSettlementIllagerHome(ServerLevel level, Mob mob) {
         BlockPos home = getSettlementHome(mob);
-
         if (home == null) {
             return;
         }
@@ -311,7 +265,6 @@ public final class SettlementSpawnMarkerEvents {
 
         if (mob.getTarget() != null && mob.getTarget().isAlive()) {
             double targetDistanceToHomeSqr = mob.getTarget().distanceToSqr(Vec3.atCenterOf(home));
-
             if (targetDistanceToHomeSqr > softDistanceSqr || distanceToHomeSqr > softDistanceSqr) {
                 mob.setTarget(null);
                 mob.setAggressive(false);
@@ -323,50 +276,31 @@ public final class SettlementSpawnMarkerEvents {
         }
 
         BlockPos returnPos = findReturnPosition(level, home);
-
         if (returnPos == null) {
             returnPos = home;
         }
 
         PathNavigation navigation = mob.getNavigation();
-
         if (distanceToHomeSqr > hardDistanceSqr || navigation.isDone()) {
             navigation.stop();
-            navigation.moveTo(
-                    returnPos.getX() + 0.5D,
-                    returnPos.getY(),
-                    returnPos.getZ() + 0.5D,
-                    SETTLEMENT_RETURN_SPEED
-            );
+            navigation.moveTo(returnPos.getX() + 0.5D, returnPos.getY(), returnPos.getZ() + 0.5D, SETTLEMENT_RETURN_SPEED);
 
-            mob.getMoveControl().setWantedPosition(
-                    returnPos.getX() + 0.5D,
-                    returnPos.getY(),
-                    returnPos.getZ() + 0.5D,
-                    SETTLEMENT_RETURN_SPEED
-            );
+            mob.getMoveControl().setWantedPosition(returnPos.getX() + 0.5D, returnPos.getY(), returnPos.getZ() + 0.5D, SETTLEMENT_RETURN_SPEED);
         }
     }
 
     @Nullable
     private static BlockPos getSettlementHome(Mob mob) {
         CompoundTag data = mob.getPersistentData();
-
         if (!data.getBoolean(SETTLEMENT_HOME_MARKER_TAG)) {
             return null;
         }
 
-        if (!data.contains(SETTLEMENT_HOME_X_TAG)
-                || !data.contains(SETTLEMENT_HOME_Y_TAG)
-                || !data.contains(SETTLEMENT_HOME_Z_TAG)) {
+        if (!data.contains(SETTLEMENT_HOME_X_TAG) || !data.contains(SETTLEMENT_HOME_Y_TAG) || !data.contains(SETTLEMENT_HOME_Z_TAG)) {
             return null;
         }
 
-        return new BlockPos(
-                data.getInt(SETTLEMENT_HOME_X_TAG),
-                data.getInt(SETTLEMENT_HOME_Y_TAG),
-                data.getInt(SETTLEMENT_HOME_Z_TAG)
-        );
+        return new BlockPos(data.getInt(SETTLEMENT_HOME_X_TAG), data.getInt(SETTLEMENT_HOME_Y_TAG), data.getInt(SETTLEMENT_HOME_Z_TAG));
     }
 
     @Nullable
@@ -380,7 +314,6 @@ public final class SettlementSpawnMarkerEvents {
 
         for (BlockPos mutablePos : BlockPos.betweenClosed(home.offset(-5, -3, -5), home.offset(5, 3, 5))) {
             BlockPos pos = mutablePos.immutable();
-
             if (!isGoodStandPosition(level, pos)) {
                 continue;
             }
@@ -401,12 +334,7 @@ public final class SettlementSpawnMarkerEvents {
         BlockState feet = level.getBlockState(pos);
         BlockState head = level.getBlockState(pos.above());
 
-        return level.getWorldBorder().isWithinBounds(pos)
-                && below.isFaceSturdy(level, belowPos, Direction.UP)
-                && feet.getCollisionShape(level, pos).isEmpty()
-                && head.getCollisionShape(level, pos.above()).isEmpty()
-                && feet.getFluidState().isEmpty()
-                && head.getFluidState().isEmpty();
+        return level.getWorldBorder().isWithinBounds(pos) && below.isFaceSturdy(level, belowPos, Direction.UP) && feet.getCollisionShape(level, pos).isEmpty() && head.getCollisionShape(level, pos.above()).isEmpty() && feet.getFluidState().isEmpty() && head.getFluidState().isEmpty();
     }
 
     @Nullable
@@ -416,7 +344,6 @@ public final class SettlementSpawnMarkerEvents {
         }
 
         ItemStack helmet = armorStand.getItemBySlot(EquipmentSlot.HEAD);
-
         if (helmet.is(Items.LEATHER_HELMET)) {
             return IllagerStrengthCategory.COMMON;
         }
@@ -432,7 +359,7 @@ public final class SettlementSpawnMarkerEvents {
         return null;
     }
 
-    private static final class PendingSettlementSpawn {
+    private static class PendingSettlementSpawn {
         private final ResourceKey<Level> dimension;
         private final IllagerStrengthCategory category;
         private final double x;
@@ -459,25 +386,11 @@ public final class SettlementSpawnMarkerEvents {
             this.xRot = xRot;
             this.yHeadRot = yHeadRot;
             this.blockPos = blockPos;
-            this.uniqueKey = dimension.location()
-                    + "|" + category
-                    + "|" + Double.doubleToLongBits(x)
-                    + "|" + Double.doubleToLongBits(y)
-                    + "|" + Double.doubleToLongBits(z);
+            this.uniqueKey = dimension.location() + "|" + category + "|" + Double.doubleToLongBits(x) + "|" + Double.doubleToLongBits(y) + "|" + Double.doubleToLongBits(z);
         }
 
         private static PendingSettlementSpawn from(ServerLevel level, ArmorStand armorStand, IllagerStrengthCategory category) {
-            return new PendingSettlementSpawn(
-                    level.dimension(),
-                    category,
-                    armorStand.getX(),
-                    armorStand.getY(),
-                    armorStand.getZ(),
-                    armorStand.getYRot(),
-                    armorStand.getXRot(),
-                    armorStand.getYHeadRot(),
-                    armorStand.blockPosition()
-            );
+            return new PendingSettlementSpawn(level.dimension(), category, armorStand.getX(), armorStand.getY(), armorStand.getZ(), armorStand.getYRot(), armorStand.getXRot(), armorStand.getYHeadRot(), armorStand.blockPosition());
         }
 
         private void tick() {

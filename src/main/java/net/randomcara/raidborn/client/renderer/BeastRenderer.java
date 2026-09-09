@@ -9,8 +9,7 @@ import net.randomcara.raidborn.client.model.BeastModel;
 import net.randomcara.raidborn.content.entity.beast.Beast;
 
 public class BeastRenderer extends MobRenderer<Beast, BeastModel<Beast>> {
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/entity/beast.png");
+    private static final ResourceLocation TEXTURE = Raidborn.id("textures/entity/beast.png");
 
     public BeastRenderer(EntityRendererProvider.Context context) {
         super(context, new BeastModel<>(context.bakeLayer(BeastModel.LAYER_LOCATION)), 0.9F);

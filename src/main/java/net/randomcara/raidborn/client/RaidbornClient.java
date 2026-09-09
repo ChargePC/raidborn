@@ -10,7 +10,6 @@ import net.randomcara.raidborn.Raidborn;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RaidbornClient {
-
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         PlayerRenderer defaultRenderer = event.getSkin("default");

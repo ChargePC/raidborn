@@ -36,25 +36,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Puts the village defence on the field when an Attack starts and clears it when the Attack ends.
- *
- * <p>Works out how many defenders the tier still owes after counting the ones already standing
- * around, finds somewhere for each of them to fit, then spawns and tracks them. Nothing else calls
- * into this. Who they end up fighting is {@link DefenderTargeting}'s problem.
- */
-public final class AttackDefenderSpawner {
-
-    /** A tight village may have no free 3x3 around the first villager drawn, so several are tried. */
+public class AttackDefenderSpawner {
     private static final int HERO_JUGGERNAUT_ORIGIN_ATTEMPTS = 6;
-
-    /** A gentle slope passes, a village roof does not. Same limits as the Juggernaut spawner. */
     private static final int SPAWN_MAX_RISE_ABOVE_ORIGIN = 2;
     private static final int SPAWN_MAX_HEIGHT_DIFFERENCE = 8;
     private static final int SPAWN_HEADROOM_BLOCKS = 3;
-
-    private AttackDefenderSpawner() {
-    }
 
     public static void prepareDefenders(AttackInstance attack, ServerLevel level, AttackDetectionResult result) {
         for (IronGolem defender : result.existingDefenders()) {
@@ -74,7 +60,6 @@ public final class AttackDefenderSpawner {
         }
 
         int villagerCount = result.villagers().size();
-
         Map<EntityType<?>, Integer> wanted = plannedForTier(attack.getAttackTier(), villagerCount);
         discount(wanted, enrollDefendersAlreadyInVillage(attack, level, result));
 
@@ -84,16 +69,12 @@ public final class AttackDefenderSpawner {
     public static void removeSpawnedDefenders(AttackInstance attack, ServerLevel level) {
         for (UUID defenderUuid : attack.getSpawnedDefenderUuids()) {
             Entity entity = level.getEntity(defenderUuid);
-
             if (entity != null && AttackRaidbornHooks.isSpawnedAttackDefender(entity)) {
                 entity.discard();
             }
         }
     }
 
-    // --- how many ---
-
-    /** The tier picks the ratio per villager, the config caps each type. */
     private static Map<EntityType<?>, Integer> plannedForTier(AttackRaidbornHooks.AttackTier tier, int villagers) {
         Map<EntityType<?>, Integer> wanted = new LinkedHashMap<>();
 
@@ -140,7 +121,6 @@ public final class AttackDefenderSpawner {
 
     private static void addWanted(Map<EntityType<?>, Integer> wanted, EntityType<?> type, int count, int typeCap) {
         int capped = Math.min(count, typeCap);
-
         if (type == null || capped <= 0) {
             return;
         }
@@ -153,13 +133,6 @@ public final class AttackDefenderSpawner {
                 wanted.computeIfPresent(type, (ignored, count) -> count > present ? count - present : null));
     }
 
-    /**
-     * The ceiling on a whole wave, on top of the per-type limits each tier already applies.
-     *
-     * <p>Default config has plenty of headroom (no tier asks for more than seven), so this only
-     * matters once someone bumps the per-tier maximums or enables the extra defender slots. Zero
-     * turns the per-villager wave off completely.
-     */
     private static int capForVillageSize(int villagers) {
         if (villagers <= 5) {
             return RaidbornServerConfig.ATTACK_MAX_EXTRA_DEFENDERS_SMALL.get();
@@ -172,23 +145,15 @@ public final class AttackDefenderSpawner {
         return RaidbornServerConfig.ATTACK_MAX_EXTRA_DEFENDERS_LARGE.get();
     }
 
-    /** Entity types come from the config as strings, so an unknown or misspelled id is expected. */
     private static Optional<EntityType<?>> entityTypeOf(String id) {
         if (id == null || id.isBlank()) {
             return Optional.empty();
         }
 
         ResourceLocation location = ResourceLocation.tryParse(id.trim());
-
-        return location == null
-                ? Optional.empty()
-                : Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getValue(location));
+        return location == null ? Optional.empty() : Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getValue(location));
     }
 
-    /**
-     * Registers the golems the village already had as defenders of this Attack and reports how many
-     * of each type they are, so the wave does not land on top of them.
-     */
     private static Map<EntityType<?>, Integer> enrollDefendersAlreadyInVillage(AttackInstance attack,
                                                                               ServerLevel level,
                                                                               AttackDetectionResult result) {
@@ -226,12 +191,6 @@ public final class AttackDefenderSpawner {
         AttackRaidbornHooks.markExistingAttackDefender(defender, attack.getAttackId());
     }
 
-    // --- spawning ---
-
-    /**
-     * Types are filled in the order they were planned, so the golems and gollets a tier promises are
-     * served first and the configured extra slots share out whatever budget is left.
-     */
     private static void spawnWave(AttackInstance attack,
                                   ServerLevel level,
                                   AttackDetectionResult result,
@@ -264,18 +223,9 @@ public final class AttackDefenderSpawner {
         List<Villager> villagers = result.villagers();
         int maxAttempts = Math.max(villagers.size() * 8, wanted * 10 + 24);
         int spawned = 0;
-
         for (int attempt = 0; attempt < maxAttempts && spawned < wanted; attempt++) {
             BlockPos anchor = villagers.get(attempt % villagers.size()).blockPosition();
-
-            Optional<BlockPos> pos = findSpawnPos(
-                    level,
-                    defenderType,
-                    anchor,
-                    result.poiPositions(),
-                    attack.getCenter()
-            );
-
+            Optional<BlockPos> pos = findSpawnPos(level, defenderType, anchor, result.poiPositions(), attack.getCenter());
             if (pos.isPresent() && spawnDefender(level, defenderType, pos.get(), attack)) {
                 spawned++;
             }
@@ -290,10 +240,7 @@ public final class AttackDefenderSpawner {
         }
 
         if (hasJuggernautInVillage(attack, level)) {
-            Raidborn.LOGGER.debug(
-                    "Juggernaut: Hero Attack at {} already has one in the area, keeping it",
-                    attack.getCenter().toShortString()
-            );
+            Raidborn.LOGGER.debug("Juggernaut: Hero Attack at {} already has one in the area, keeping it", attack.getCenter().toShortString());
             return;
         }
 
@@ -302,26 +249,17 @@ public final class AttackDefenderSpawner {
         int firstIndex = level.random.nextInt(villagers.size());
 
         Juggernaut juggernaut = null;
-
         for (int i = 0; i < origins && juggernaut == null; i++) {
             BlockPos origin = villagers.get((firstIndex + i) % villagers.size()).blockPosition();
             juggernaut = JuggernautVillageEvents.spawnJuggernaut(level, origin, JuggernautOrigin.EVENT, MobSpawnType.EVENT);
         }
 
         if (juggernaut == null) {
-            juggernaut = JuggernautVillageEvents.spawnJuggernaut(
-                    level,
-                    attack.getCenter(),
-                    JuggernautOrigin.EVENT,
-                    MobSpawnType.EVENT
-            );
+            juggernaut = JuggernautVillageEvents.spawnJuggernaut(level, attack.getCenter(), JuggernautOrigin.EVENT, MobSpawnType.EVENT);
         }
 
         if (juggernaut == null) {
-            Raidborn.LOGGER.debug(
-                    "Juggernaut: Hero Attack at {} has no free space for the defender",
-                    attack.getCenter().toShortString()
-            );
+            Raidborn.LOGGER.debug("Juggernaut: Hero Attack at {} has no free space for the defender", attack.getCenter().toShortString());
             return;
         }
 
@@ -330,29 +268,23 @@ public final class AttackDefenderSpawner {
     }
 
     private static void spawnHeroSuperDefender(AttackInstance attack, ServerLevel level, AttackDetectionResult result) {
-        if (attack.getAttackTier() != AttackRaidbornHooks.AttackTier.HERO
-                || !RaidbornServerConfig.ATTACK_HERO_SUPER_DEFENDER_ENABLED.get()) {
+        if (attack.getAttackTier() != AttackRaidbornHooks.AttackTier.HERO || !RaidbornServerConfig.ATTACK_HERO_SUPER_DEFENDER_ENABLED.get()) {
             return;
         }
 
-        Optional<EntityType<?>> superDefender =
-                entityTypeOf(RaidbornServerConfig.ATTACK_HERO_SUPER_DEFENDER_ENTITY_ID.get());
-
+        Optional<EntityType<?>> superDefender = entityTypeOf(RaidbornServerConfig.ATTACK_HERO_SUPER_DEFENDER_ENTITY_ID.get());
         if (superDefender.isEmpty()) {
             return;
         }
 
         EntityType<?> entityType = superDefender.get();
-
         if (hasSuperDefenderInVillage(attack, level, entityType)) {
             return;
         }
 
         List<Villager> villagers = result.villagers();
         BlockPos origin = villagers.get(level.random.nextInt(villagers.size())).blockPosition();
-
-        findSpawnPos(level, entityType, origin, result.poiPositions(), attack.getCenter())
-                .ifPresent(pos -> spawnDefender(level, entityType, pos, attack));
+        findSpawnPos(level, entityType, origin, result.poiPositions(), attack.getCenter()).ifPresent(pos -> spawnDefender(level, entityType, pos, attack));
     }
 
     private static boolean spawnDefender(ServerLevel level, EntityType<?> entityType, BlockPos pos, AttackInstance attack) {
@@ -360,13 +292,7 @@ public final class AttackDefenderSpawner {
             return false;
         }
 
-        mob.moveTo(
-                pos.getX() + 0.5D,
-                pos.getY(),
-                pos.getZ() + 0.5D,
-                level.random.nextFloat() * 360.0F,
-                0.0F
-        );
+        mob.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, level.random.nextFloat() * 360.0F, 0.0F);
 
         if (mob instanceof IronGolem golem) {
             golem.setPlayerCreated(false);
@@ -376,14 +302,7 @@ public final class AttackDefenderSpawner {
             gollet.setVillageLinked(true);
         }
 
-        ForgeEventFactory.onFinalizeSpawn(
-                mob,
-                level,
-                level.getCurrentDifficultyAt(pos),
-                MobSpawnType.EVENT,
-                null,
-                null
-        );
+        ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null, null);
 
         if (RaidbornServerConfig.ATTACK_EXTRA_DEFENDERS_PERSISTENT.get()) {
             mob.setPersistenceRequired();
@@ -400,44 +319,18 @@ public final class AttackDefenderSpawner {
         return true;
     }
 
-    // --- dupe guards ---
-
-    /**
-     * A village fields one Juggernaut at a time.
-     *
-     * <p>Natural and raid spawns each get their own slot in the village record. An Attack doesn't
-     * have one and can't borrow theirs, since it might start right next to a Juggernaut either of
-     * them placed, or one a previous Attack abandoned because the chunk was unloaded when cleanup
-     * ran. So check the ground, not the bookkeeping.
-     *
-     * <p>Anything already standing there got registered as a defender of this Attack by the detector
-     * scan, which collects {@link IronGolem} and so picks up the Juggernaut too.
-     */
     private static boolean hasJuggernautInVillage(AttackInstance attack, ServerLevel level) {
         return !level.getEntitiesOfClass(Juggernaut.class, villageScanBox(attack), Juggernaut::isAlive).isEmpty();
     }
 
-    /** Same rule as the Juggernaut, for whatever entity the config names as the Hero super defender. */
     private static boolean hasSuperDefenderInVillage(AttackInstance attack, ServerLevel level, EntityType<?> type) {
-        return !level.getEntities(
-                (Entity) null,
-                villageScanBox(attack),
-                entity -> entity.isAlive() && entity.getType() == type
-        ).isEmpty();
+        return !level.getEntities((Entity) null, villageScanBox(attack), entity -> entity.isAlive() && entity.getType() == type).isEmpty();
     }
 
-    /** The village floor, never smaller than 16 blocks so a tiny hamlet still gets a sane area. */
     private static AABB villageScanBox(AttackInstance attack) {
         return new AABB(attack.getCenter()).inflate(Math.max(16.0D, attack.getRadius()));
     }
 
-    // --- placement ---
-
-    /**
-     * Ring around the villager first, then around the nearest POI, then a wider ring around the
-     * event centre. Each fallback is looser than the last, so a cramped village still gets its
-     * defenders somewhere sensible instead of none at all.
-     */
     private static Optional<BlockPos> findSpawnPos(ServerLevel level,
                                                    EntityType<?> entityType,
                                                    BlockPos villagerPos,
@@ -448,9 +341,7 @@ public final class AttackDefenderSpawner {
             return nearVillager;
         }
 
-        Optional<BlockPos> closestPoi = pois.stream()
-                .min(Comparator.comparingDouble(pos -> pos.distSqr(villagerPos)));
-
+        Optional<BlockPos> closestPoi = pois.stream().min(Comparator.comparingDouble(pos -> pos.distSqr(villagerPos)));
         if (closestPoi.isPresent()) {
             Optional<BlockPos> nearPoi = searchRing(level, entityType, closestPoi.get(), 3, 10, 40);
             if (nearPoi.isPresent()) {
@@ -474,9 +365,7 @@ public final class AttackDefenderSpawner {
             double distance = Mth.nextInt(random, minDistance, maxDistance);
             int x = origin.getX() + Mth.floor(Math.cos(angle) * distance);
             int z = origin.getZ() + Mth.floor(Math.sin(angle) * distance);
-
             BlockPos ground = groundNear(level, entityType, x, z, origin.getY());
-
             if (ground != null) {
                 return Optional.of(ground);
             }
@@ -485,29 +374,17 @@ public final class AttackDefenderSpawner {
         return Optional.empty();
     }
 
-    /**
-     * Searches for ground starting from the origin height, not from the top of the terrain.
-     *
-     * <p>{@code getHeightmapPos} gives you the house roof whenever x/z lands on a building, and a
-     * flat roof passes any "solid floor, open sky" test. That's how defenders kept spawning on
-     * rooftops. The anchor villager is standing on actual ground, so use its height instead.
-     */
     @Nullable
     private static BlockPos groundNear(ServerLevel level, EntityType<?> entityType, int x, int z, int originY) {
-        int highestY = Math.min(
-                level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, originY, z)).getY(),
-                originY + SPAWN_MAX_RISE_ABOVE_ORIGIN
-        );
+        int highestY = Math.min(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, originY, z)).getY(), originY + SPAWN_MAX_RISE_ABOVE_ORIGIN);
 
         for (int offset = 0; offset <= SPAWN_MAX_HEIGHT_DIFFERENCE; offset++) {
             BlockPos below = new BlockPos(x, originY - offset, z);
-
             if (isFreeToStandOn(level, entityType, below)) {
                 return below;
             }
 
             BlockPos above = new BlockPos(x, originY + offset, z);
-
             if (offset > 0 && above.getY() <= highestY && isFreeToStandOn(level, entityType, above)) {
                 return above;
             }
@@ -517,24 +394,17 @@ public final class AttackDefenderSpawner {
     }
 
     private static boolean isFreeToStandOn(ServerLevel level, EntityType<?> entityType, BlockPos pos) {
-        if (!level.getWorldBorder().isWithinBounds(pos)) {
-            return false;
-        }
-
-        if (!standsOnSolidGround(level, pos) || !hasHeadroom(level, pos)) {
+        if (!level.getWorldBorder().isWithinBounds(pos) || !standsOnSolidGround(level, pos) || !hasHeadroom(level, pos)) {
             return false;
         }
 
         AABB collisionBox = spawnCollisionBox(pos, entityType);
-
-        return level.noCollision(collisionBox)
-                && level.getEntities((Entity) null, collisionBox, Entity::isAlive).isEmpty();
+        return level.noCollision(collisionBox) && level.getEntities((Entity) null, collisionBox, Entity::isAlive).isEmpty();
     }
 
     private static boolean standsOnSolidGround(ServerLevel level, BlockPos pos) {
         BlockPos belowPos = pos.below();
         BlockState below = level.getBlockState(belowPos);
-
         if (below.isAir() || below.is(BlockTags.LEAVES) || below.is(Blocks.LAVA) || below.is(Blocks.WATER)) {
             return false;
         }
@@ -545,7 +415,6 @@ public final class AttackDefenderSpawner {
     private static boolean hasHeadroom(ServerLevel level, BlockPos pos) {
         for (int y = 0; y <= SPAWN_HEADROOM_BLOCKS; y++) {
             BlockState state = level.getBlockState(pos.above(y));
-
             if (!state.isAir() || !state.getFluidState().isEmpty()) {
                 return false;
             }
@@ -554,19 +423,10 @@ public final class AttackDefenderSpawner {
         return true;
     }
 
-    /** Widened to at least a golem's footprint so two defenders never land on top of each other. */
     private static AABB spawnCollisionBox(BlockPos pos, EntityType<?> entityType) {
         double halfWidth = Math.max(0.9D, entityType.getWidth()) / 2.0D;
         double height = Math.max(2.0D, entityType.getHeight());
         Vec3 center = Vec3.atBottomCenterOf(pos);
-
-        return new AABB(
-                center.x - halfWidth,
-                center.y,
-                center.z - halfWidth,
-                center.x + halfWidth,
-                center.y + height,
-                center.z + halfWidth
-        );
+        return new AABB(center.x - halfWidth, center.y, center.z - halfWidth, center.x + halfWidth, center.y + height, center.z + halfWidth);
     }
 }

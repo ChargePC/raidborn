@@ -33,7 +33,6 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
-
     private static final int POISON_DURATION = 100;
     private static final int POISON_AMPLIFIER = 2;
 
@@ -48,11 +47,7 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Your weapon hits and projectiles poison enemies", 0xFF76DB4C),
-                TooltipHelper.line("Your recruited Illagers can poison too", 0xFF4F8C29)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Your weapon hits and projectiles poison enemies", 0xFF76DB4C), TooltipHelper.line("Your recruited Illagers can poison too", 0xFF4F8C29));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
@@ -101,11 +96,7 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
         }
 
         Entity causingEntity = source.getEntity();
-        if (causingEntity != null && causingEntity != poisonSourceEntity) {
-            return false;
-        }
-
-        if (!(poisonSourceEntity instanceof LivingEntity attacker)) {
+        if ((causingEntity != null && causingEntity != poisonSourceEntity) || !(poisonSourceEntity instanceof LivingEntity attacker)) {
             return false;
         }
 
@@ -126,25 +117,11 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
         }
 
         Item item = stack.getItem();
-
-        if (item instanceof SwordItem) {
+        if (item instanceof SwordItem || item instanceof TieredItem || item instanceof TridentItem) {
             return true;
         }
 
-        if (item instanceof TieredItem) {
-            return true;
-        }
-
-        if (item instanceof TridentItem) {
-            return true;
-        }
-
-        return stack.canPerformAction(ToolActions.SWORD_DIG)
-                || stack.canPerformAction(ToolActions.SWORD_SWEEP)
-                || stack.canPerformAction(ToolActions.PICKAXE_DIG)
-                || stack.canPerformAction(ToolActions.AXE_DIG)
-                || stack.canPerformAction(ToolActions.SHOVEL_DIG)
-                || stack.canPerformAction(ToolActions.HOE_DIG);
+        return stack.canPerformAction(ToolActions.SWORD_DIG) || stack.canPerformAction(ToolActions.SWORD_SWEEP) || stack.canPerformAction(ToolActions.PICKAXE_DIG) || stack.canPerformAction(ToolActions.AXE_DIG) || stack.canPerformAction(ToolActions.SHOVEL_DIG) || stack.canPerformAction(ToolActions.HOE_DIG);
     }
 
     private static boolean canPoisonTarget(ServerPlayer ownerPlayer, Entity poisonSourceEntity, LivingEntity target) {
@@ -155,8 +132,7 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
             return false;
         }
 
-        if (poisonSourceEntity instanceof Mob sourceMob && target instanceof Mob targetMob
-                && RecruitOwnership.isSameSquad(sourceMob, targetMob)) {
+        if (poisonSourceEntity instanceof Mob sourceMob && target instanceof Mob targetMob && RecruitOwnership.isSameSquad(sourceMob, targetMob)) {
             return false;
         }
 
@@ -182,9 +158,6 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
     }
 
     private static boolean hasPoisonArrowheadEquipped(ServerPlayer player) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.POISON_ARROWHEAD.get())).isPresent())
-                .orElse(false);
+        return CuriosApi.getCuriosInventory(player).resolve().map(handler -> handler.findFirstCurio(stack -> stack.is(ModItems.POISON_ARROWHEAD.get())).isPresent()).orElse(false);
     }
 }

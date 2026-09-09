@@ -1,6 +1,5 @@
 package net.randomcara.raidborn.content.entity.juggernaut;
 
-/** How a Juggernaut entered the world. Only NATURAL and RAID drop loot. */
 public enum JuggernautOrigin {
     SPAWNED,
     NATURAL,

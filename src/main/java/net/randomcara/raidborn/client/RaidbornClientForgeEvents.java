@@ -11,11 +11,7 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.client.hud.RecruitTooltipOverlay;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public final class RaidbornClientForgeEvents {
-
-    private RaidbornClientForgeEvents() {
-    }
-
+public class RaidbornClientForgeEvents {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) {

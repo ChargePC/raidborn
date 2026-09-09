@@ -94,11 +94,7 @@ public class WarbellVillageSleepGoal extends Goal {
 
         if (!this.mob.isSleeping()) return;
 
-        boolean shouldWake = this.mob.getTarget() != null
-                || !WarbellVillageData.isVillageMode(this.mob)
-                || !WarbellVillageBedData.hasBed(this.mob)
-                || !WarbellVillageBedData.isBedValid(this.mob)
-                || !WarbellVillageRoutine.shouldSleepNow(this.mob);
+        boolean shouldWake = this.mob.getTarget() != null || !WarbellVillageData.isVillageMode(this.mob) || !WarbellVillageBedData.hasBed(this.mob) || !WarbellVillageBedData.isBedValid(this.mob) || !WarbellVillageRoutine.shouldSleepNow(this.mob);
 
         if (shouldWake) {
             WarbellVillageBedData.wakeUpAndStand(this.mob, 100);
@@ -145,7 +141,6 @@ public class WarbellVillageSleepGoal extends Goal {
         double sleepX = sleepPos.getX() + 0.5D;
         double sleepY = sleepPos.getY() + 0.45D;
         double sleepZ = sleepPos.getZ() + 0.5D;
-
         this.mob.getLookControl().setLookAt(sleepX, sleepY, sleepZ, 25.0F, 25.0F);
 
         double distanceSqr = this.mob.distanceToSqr(entryX, entryY, entryZ);
@@ -165,8 +160,6 @@ public class WarbellVillageSleepGoal extends Goal {
             WarbellVillageBedData.markSleepStart(this.mob);
             WarbellVillageBedData.lockSleepingMobToBed(this.mob);
         } catch (RuntimeException e) {
-            // startSleeping writes BedBlock.OCCUPIED; a modded bed without that property throws.
-            // Back off and let the villager try a different bed instead of retrying every tick.
             Raidborn.LOGGER.debug("{} could not sleep at {}", this.mob.getType(), sleepPos, e);
             WarbellVillageBedData.setSleepRetryCooldown(this.mob, SLEEP_RETRY_COOLDOWN_TICKS);
         }
@@ -174,7 +167,6 @@ public class WarbellVillageSleepGoal extends Goal {
 
     private void moveCloserToBedEntry(BlockPos entryPos, double x, double y, double z, double distanceSqr) {
         boolean shouldRepath = this.repathCooldown-- <= 0 || !this.mob.getNavigation().isInProgress();
-
         if (shouldRepath) {
             boolean moving = this.mob.getNavigation().moveTo(x, y, z, MOVE_SPEED);
             this.repathCooldown = REPATH_INTERVAL;
@@ -208,9 +200,7 @@ public class WarbellVillageSleepGoal extends Goal {
 
     private boolean isOnSleepEntry(BlockPos entryPos) {
         BlockPos mobPos = this.mob.blockPosition();
-        return mobPos.getX() == entryPos.getX()
-                && mobPos.getZ() == entryPos.getZ()
-                && Math.abs(mobPos.getY() - entryPos.getY()) <= 1;
+        return mobPos.getX() == entryPos.getX() && mobPos.getZ() == entryPos.getZ() && Math.abs(mobPos.getY() - entryPos.getY()) <= 1;
     }
 
     private void resetMovement() {

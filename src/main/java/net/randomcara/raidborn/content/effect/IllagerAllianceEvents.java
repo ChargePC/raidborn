@@ -34,26 +34,13 @@ import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import net.randomcara.raidborn.gameplay.recruit.RecruitTargeting;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Rules shared by every {@link IllagerAlliance}.
- *
- * <p>All three protect the player the same way, so the handlers run once on whichever pact is
- * active rather than once per pact. Per-pact differences get read off the enum, no branching here.
- */
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
-public final class IllagerAllianceEvents {
-    private static final ResourceLocation ADV_FRIENDLY_FIRE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "friendly_fire");
+public class IllagerAllianceEvents {
+    private static final ResourceLocation ADV_FRIENDLY_FIRE = Raidborn.id("friendly_fire");
     private static final String CRIT_FRIENDLY_FIRE = "lose_oath";
-
-    /** How far around the player illagers get their target cleared. */
     private static final double PROTECTION_RADIUS = 32.0D;
-
     private static final int ALLIANCE_TARGET_PRIORITY = 2;
     private static final int ALLIANCE_TARGET_CHANCE = 10;
-
-    private IllagerAllianceEvents() {
-    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -75,7 +62,6 @@ public final class IllagerAllianceEvents {
         }
     }
 
-    /** Suspends or blocks Bad Omen, and hands a suspended pact back once it wears off. */
     private static void applyBadOmenRules(Player player) {
         for (IllagerAlliance alliance : IllagerAlliance.all()) {
             boolean hasBadOmen = player.hasEffect(MobEffects.BAD_OMEN);
@@ -111,9 +97,7 @@ public final class IllagerAllianceEvents {
 
         MobEffect added = event.getEffectInstance().getEffect();
         IllagerAlliance gained = IllagerAlliance.forEffect(added);
-
         if (gained != null) {
-            // The pacts are exclusive, and none of them coexists with the village's own reward.
             for (IllagerAlliance other : IllagerAlliance.all()) {
                 if (other != gained) other.revoke(player);
             }
@@ -150,7 +134,6 @@ public final class IllagerAllianceEvents {
         IllagerAlliance alliance = IllagerAlliance.of(player);
         if (alliance == null || alliance.betrayal() != trigger) return;
 
-        // Recruits count here on purpose: turning on your own squad is still turning on the pact.
         if (!VillageSide.isIllagerSide(victim)) return;
 
         alliance.revoke(player);
@@ -176,17 +159,10 @@ public final class IllagerAllianceEvents {
         if (!isUnrecruitedIllager(mob)) return;
         if (!isProtected(event.getNewTarget())) return;
 
-        // Refuse the change outright wherever that is safe. Letting it through and undoing it on the
-        // next player tick meant the goal re-acquired every single tick, and each pass got one step
-        // of pathing and one attack wind-up in before the cleanup ran. That reads in game as an
-        // illager slowly walking you down with its arms up, which is what it was doing.
         if (!RecruitTargeting.isRevengeTargetChange(mob, event.getNewTarget())) {
             event.setCanceled(true);
         }
 
-        // Revenge path only: HurtByTargetGoal may still be inside start()/alertOthers() and nulling
-        // the target under it strands the goal. See RecruitTargeting#clearTargetKeepRevenge. The
-        // player tick above does the cleanup a moment later.
         stopChasing(mob);
     }
 
@@ -201,7 +177,6 @@ public final class IllagerAllianceEvents {
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
-
         if (entity instanceof IronGolem golem) {
             huntAlliedPlayers(golem);
         }
@@ -209,7 +184,6 @@ public final class IllagerAllianceEvents {
         if (!(entity instanceof Mob mob)) return;
         if (RecruitOwnership.isRecruited(mob)) return;
 
-        // Casters normally keep their distance from players; an ally should not be fled from.
         if (RaidbornCompatEntities.fleesFromPlayers(mob)) {
             AvoidGoals.removeAvoidPlayerGoals(mob);
         }
@@ -219,22 +193,13 @@ public final class IllagerAllianceEvents {
             vex.setLastHurtByMob(null);
         }
 
-        if (RaidbornCompatEntities.guardVillagersLoaded()
-                && RaidbornCompatEntities.GV_GUARD.equals(RaidbornCompatEntities.entityId(mob))) {
+        if (RaidbornCompatEntities.guardVillagersLoaded() && RaidbornCompatEntities.GV_GUARD.equals(RaidbornCompatEntities.entityId(mob))) {
             huntAlliedPlayers(mob);
         }
     }
 
-    /** Makes village defenders treat an allied player as a raider. */
     private static void huntAlliedPlayers(Mob defender) {
-        defender.targetSelector.addGoal(ALLIANCE_TARGET_PRIORITY, new NearestAttackableTargetGoal<>(
-                defender,
-                Player.class,
-                ALLIANCE_TARGET_CHANCE,
-                true,
-                false,
-                target -> target instanceof Player player && ModEffects.hasAllianceEffect(player)
-        ));
+        defender.targetSelector.addGoal(ALLIANCE_TARGET_PRIORITY, new NearestAttackableTargetGoal<>(defender, Player.class, ALLIANCE_TARGET_CHANCE, true, false, target -> target instanceof Player player && ModEffects.hasAllianceEffect(player)));
     }
 
     private static void releaseProtectedTarget(Mob mob) {
@@ -267,8 +232,6 @@ public final class IllagerAllianceEvents {
     }
 
     private static boolean isUnrecruitedIllager(Entity entity) {
-        return entity instanceof Mob mob
-                && VillageSide.isIllagerSide(mob)
-                && !RecruitOwnership.isRecruited(mob);
+        return entity instanceof Mob mob && VillageSide.isIllagerSide(mob) && !RecruitOwnership.isRecruited(mob);
     }
 }

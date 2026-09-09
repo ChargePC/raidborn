@@ -28,21 +28,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     public static final int COOLDOWN_TICKS = 45 * 20;
     public static final int BUFF_TICKS = 15 * 20;
     public static final double RADIUS = 48.0D;
 
-    private static final Set<String> VALID_ILLAGER_IDS = Set.of(
-            "minecraft:vindicator",
-            "takeapillager:skirmisher",
-            "illagerinvasion:marauder",
-            "illagerinvasion:basher",
-            "illagerinvasion:inquisitor",
-            "savage_and_ravage:executioner",
-            "guardillagers:guard_illager",
-            "hunters_return:hunter"
-    );
+    private static final Set<String> VALID_ILLAGER_IDS = Set.of("minecraft:vindicator", "takeapillager:skirmisher", "illagerinvasion:marauder", "illagerinvasion:basher", "illagerinvasion:inquisitor", "savage_and_ravage:executioner", "guardillagers:guard_illager", "hunters_return:hunter");
 
     public VoodooVillagerDollItem(Properties props) {
         super(props.stacksTo(1));
@@ -51,13 +41,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
     @Override
     public boolean activate(ServerPlayer player, ItemStack stack) {
         UUID ownerId = player.getUUID();
-
-        List<Mob> targets = player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(RADIUS),
-                mob -> isValidTarget(mob, ownerId)
-        );
-
+        List<Mob> targets = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RADIUS), mob -> isValidTarget(mob, ownerId));
         if (targets.isEmpty()) {
             player.displayClientMessage(Component.literal("No recruited Illagers nearby."), true);
             return false;
@@ -71,22 +55,11 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
             mob.addEffect(new MobEffectInstance(strength));
         }
 
-        player.level().playSound(
-                null,
-                player.blockPosition(),
-                SoundEvents.PLAYER_ATTACK_SWEEP,
-                SoundSource.PLAYERS,
-                0.9F,
-                0.85F
-        );
+        player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 0.9F, 0.85F);
 
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
 
-        player.displayClientMessage(
-                Component.literal("Voodoo empowered " + targets.size()
-                        + " recruited Illager" + (targets.size() == 1 ? "!" : "s!")),
-                true
-        );
+        player.displayClientMessage(Component.literal("Voodoo empowered " + targets.size() + " recruited Illager" + (targets.size() == 1 ? "!" : "s!")), true);
 
         return true;
     }
@@ -103,7 +76,6 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
 
         ResourceLocation id = mob.getType().builtInRegistryHolder().key().location();
         String idString = id.toString();
-
         if (!VALID_ILLAGER_IDS.contains(idString)) return false;
 
         if (idString.equals("hunters_return:hunter")) {
@@ -117,13 +89,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Buffs your recruited Illagers", 0xAAAAAA),
-                TooltipHelper.line("Works on most melee Illagers", 0xAAAAAA),
-                TooltipHelper.line("15s of Speed and Strength", 0x55FF55),
-                TooltipHelper.line("Cooldown: 45s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Buffs your recruited Illagers", 0xAAAAAA), TooltipHelper.line("Works on most melee Illagers", 0xAAAAAA), TooltipHelper.line("15s of Speed and Strength", 0x55FF55), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

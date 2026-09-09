@@ -33,11 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerModel<Grumblager>> {
-
-    /** Offsets for the vanilla/default armor model only. Positive Y moves down. */
     private static final float HELMET_Y_OFFSET = 1.25F;
     private static final float BOOTS_Y_OFFSET = -6.25F;
-
     private static final Field MODEL_PART_CHILDREN_FIELD = findModelPartChildrenField();
 
     private final HumanoidModel<Grumblager> innerModel;
@@ -64,8 +61,6 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
         this.renderArmorPiece(poseStack, buffer, entity, EquipmentSlot.HEAD, packedLight);
         this.renderArmorPiece(poseStack, buffer, entity, EquipmentSlot.CHEST, packedLight);
         this.renderArmorPiece(poseStack, buffer, entity, EquipmentSlot.FEET, packedLight);
-
-        // LEGS is not rendered: the Grumblager can still equip leggings, they just do not show.
     }
 
     private void renderArmorPiece(PoseStack poseStack,
@@ -74,30 +69,17 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
                                   EquipmentSlot slot,
                                   int packedLight) {
         ItemStack stack = entity.getItemBySlot(slot);
-
-        if (!(stack.getItem() instanceof ArmorItem armorItem)) {
-            return;
-        }
-
-        if (armorItem.getEquipmentSlot() != slot) {
+        if (!(stack.getItem() instanceof ArmorItem armorItem) || armorItem.getEquipmentSlot() != slot) {
             return;
         }
 
         HumanoidModel<Grumblager> defaultModel = this.usesInnerModel(slot) ? this.innerModel : this.outerModel;
-
         this.copyPartPoses(defaultModel);
         this.applyDefaultModelOffsets(defaultModel, slot);
         this.setDefaultModelVisibility(defaultModel, slot);
 
-        // Keeps custom models and textures from other mods: pivots and offsets are left untouched.
-        Model armorModel = ForgeHooksClient.getArmorModel(
-                entity,
-                stack,
-                slot,
-                defaultModel
-        );
+        Model armorModel = ForgeHooksClient.getArmorModel(entity, stack, slot, defaultModel);
 
-        // Chestplate only: hides the central torso part without moving anything.
         if (slot == EquipmentSlot.CHEST) {
             hideChestBodyParts(armorModel);
         }
@@ -109,42 +91,11 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
             float red = (float) (color >> 16 & 255) / 255.0F;
             float green = (float) (color >> 8 & 255) / 255.0F;
             float blue = (float) (color & 255) / 255.0F;
+            this.renderModel(poseStack, buffer, packedLight, stack, armorModel, this.getArmorTexture(entity, stack, armorItem, slot, null), red, green, blue);
 
-            this.renderModel(
-                    poseStack,
-                    buffer,
-                    packedLight,
-                    stack,
-                    armorModel,
-                    this.getArmorTexture(entity, stack, armorItem, slot, null),
-                    red,
-                    green,
-                    blue
-            );
-
-            this.renderModel(
-                    poseStack,
-                    buffer,
-                    packedLight,
-                    stack,
-                    armorModel,
-                    this.getArmorTexture(entity, stack, armorItem, slot, "overlay"),
-                    1.0F,
-                    1.0F,
-                    1.0F
-            );
+            this.renderModel(poseStack, buffer, packedLight, stack, armorModel, this.getArmorTexture(entity, stack, armorItem, slot, "overlay"), 1.0F, 1.0F, 1.0F);
         } else {
-            this.renderModel(
-                    poseStack,
-                    buffer,
-                    packedLight,
-                    stack,
-                    armorModel,
-                    this.getArmorTexture(entity, stack, armorItem, slot, null),
-                    1.0F,
-                    1.0F,
-                    1.0F
-            );
+            this.renderModel(poseStack, buffer, packedLight, stack, armorModel, this.getArmorTexture(entity, stack, armorItem, slot, null), 1.0F, 1.0F, 1.0F);
         }
 
         poseStack.popPose();
@@ -159,28 +110,12 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
                              float red,
                              float green,
                              float blue) {
-        VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(
-                buffer,
-                RenderType.armorCutoutNoCull(texture),
-                false,
-                stack.hasFoil()
-        );
-
-        armorModel.renderToBuffer(
-                poseStack,
-                vertexConsumer,
-                packedLight,
-                OverlayTexture.NO_OVERLAY,
-                red,
-                green,
-                blue,
-                1.0F
-        );
+        VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(texture), false, stack.hasFoil());
+        armorModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
     }
 
     private void copyPartPoses(HumanoidModel<Grumblager> armorModel) {
         GrumblagerModel<Grumblager> parentModel = this.getParentModel();
-
         armorModel.head.copyFrom(parentModel.getHeadPart());
         armorModel.hat.copyFrom(parentModel.getHeadPart());
 
@@ -216,12 +151,7 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
 
     private static void applyRotatedLocalOffset(ModelPart part, float xOffset, float yOffset, float zOffset) {
         Vector3f offset = new Vector3f(xOffset, yOffset, zOffset);
-
-        offset.rotate(new Quaternionf().rotationZYX(
-                part.zRot,
-                part.yRot,
-                part.xRot
-        ));
+        offset.rotate(new Quaternionf().rotationZYX(part.zRot, part.yRot, part.xRot));
 
         part.x += offset.x();
         part.y += offset.y();
@@ -238,7 +168,6 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
             }
 
             case CHEST -> {
-                // Vanilla model shows the chestplate arms only; the body would show below the belt.
                 armorModel.body.visible = false;
                 armorModel.rightArm.visible = true;
                 armorModel.leftArm.visible = true;
@@ -258,7 +187,6 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
         if (model instanceof HumanoidModel<?> humanoidModel) {
             humanoidModel.body.visible = false;
 
-            // Not setAllVisible(false), which would break pauldrons, extra parts, helmets and boots.
             humanoidModel.rightArm.visible = true;
             humanoidModel.leftArm.visible = true;
         }
@@ -269,10 +197,8 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
 
     private static void hideChestPartsFromModelFields(Model model, Set<ModelPart> visited) {
         Class<?> clazz = model.getClass();
-
         while (clazz != null && clazz != Object.class) {
             Field[] fields = clazz.getDeclaredFields();
-
             for (Field field : fields) {
                 if (!ModelPart.class.isAssignableFrom(field.getType())) {
                     continue;
@@ -281,12 +207,10 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
                 try {
                     field.setAccessible(true);
                     Object fieldValue = field.get(model);
-
                     if (fieldValue instanceof ModelPart part) {
                         hideLikelyChestPartTree(field.getName(), part, visited);
                     }
                 } catch (ReflectiveOperationException | RuntimeException e) {
-                    // A model we cannot read just keeps its chest plate visible.
                     Raidborn.LOGGER.debug("Could not read model part {}.{}", clazz.getName(), field.getName(), e);
                 }
             }
@@ -316,31 +240,12 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
         }
 
         String lower = name.toLowerCase(Locale.ROOT);
-
-        if (lower.contains("arm")
-                || lower.contains("shoulder")
-                || lower.contains("pauldron")
-                || lower.contains("sleeve")
-                || lower.contains("left")
-                || lower.contains("right")
-                || lower.contains("leg")
-                || lower.contains("boot")
-                || lower.contains("foot")
-                || lower.contains("head")
-                || lower.contains("helmet")
+        if (lower.contains("arm") || lower.contains("shoulder") || lower.contains("pauldron") || lower.contains("sleeve") || lower.contains("left") || lower.contains("right") || lower.contains("leg") || lower.contains("boot") || lower.contains("foot") || lower.contains("head") || lower.contains("helmet")
                 || lower.contains("horn")) {
             return false;
         }
 
-        return lower.equals("body")
-                || lower.equals("torso")
-                || lower.equals("chest")
-                || lower.equals("jacket")
-                || lower.contains("body")
-                || lower.contains("torso")
-                || lower.contains("breastplate")
-                || lower.contains("abdomen")
-                || lower.contains("waist");
+        return lower.equals("body") || lower.equals("torso") || lower.equals("chest") || lower.equals("jacket") || lower.contains("body") || lower.contains("torso") || lower.contains("breastplate") || lower.contains("abdomen") || lower.contains("waist");
     }
 
     @SuppressWarnings("unchecked")
@@ -398,22 +303,9 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
 
         int layer = this.usesInnerModel(slot) ? 2 : 1;
 
-        String defaultTexture = namespace
-                + ":textures/models/armor/"
-                + path
-                + "_layer_"
-                + layer
-                + (type == null ? "" : "_" + type)
-                + ".png";
+        String defaultTexture = namespace + ":textures/models/armor/" + path + "_layer_" + layer + (type == null ? "" : "_" + type) + ".png";
 
-        String texture = ForgeHooksClient.getArmorTexture(
-                entity,
-                stack,
-                defaultTexture,
-                slot,
-                type
-        );
-
+        String texture = ForgeHooksClient.getArmorTexture(entity, stack, defaultTexture, slot, type);
         ResourceLocation parsed = ResourceLocation.tryParse(texture);
         if (parsed != null) {
             return parsed;
@@ -424,9 +316,6 @@ public class GrumblagerArmorLayer extends RenderLayer<Grumblager, GrumblagerMode
             return fallback;
         }
 
-        return ResourceLocation.fromNamespaceAndPath(
-                "minecraft",
-                "textures/models/armor/leather_layer_1.png"
-        );
+        return ResourceLocation.fromNamespaceAndPath("minecraft", "textures/models/armor/leather_layer_1.png");
     }
 }

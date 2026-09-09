@@ -50,53 +50,28 @@ import net.randomcara.raidborn.content.entity.VillageSide;
 import net.randomcara.raidborn.core.registry.ModTags;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Heavy defensive Iron Golem variant. Extends {@link IronGolem} so villagers and the Hero Attack
- * scan (which looks for {@code IronGolem.class}) already treat it as a defender.
- */
 public class Juggernaut extends IronGolem {
     public static final double DETECTION_RANGE = 16.0D;
     public static final double MAX_CHASE_RANGE = 32.0D;
-
     private static final double ATTACK_RANGE = 3.0D;
     private static final double ATTACK_ARC_DEGREES = 100.0D;
     private static final double ATTACK_MAX_VERTICAL_DIFFERENCE = 2.5D;
-
     private static final int ATTACK_WINDUP_TICKS = 10;
     private static final int ATTACK_ANIMATION_TICKS = 20;
-
-    /** Damage scales off {@link Attributes#ATTACK_DAMAGE} so attribute modifiers still apply. */
     private static final float ATTACK_DAMAGE_MIN_FACTOR = 0.6F;
     private static final float ATTACK_DAMAGE_MAX_FACTOR = 1.4F;
-
     private static final int SLAM_COOLDOWN_TICKS = 60;
-
     private static final double MAIN_TARGET_LAUNCH = 0.45D;
     private static final double MAIN_TARGET_HORIZONTAL_KNOCKBACK = 0.15D;
-
     private static final int SHIELD_DISABLE_TICKS = 100;
     private static final int SHIELD_EXTRA_DURABILITY_DAMAGE = 6;
-
     private static final float REPAIR_INGOT_AMOUNT = 25.0F;
     private static final float REPAIR_BLOCK_AMOUNT = 100.0F;
-
     private static final float FALL_IMPACT_MIN_DISTANCE = 4.0F;
-
-    /**
-     * One entity event per swing, with the arm encoded in the id.
-     *
-     * <p>A {@code SynchedEntityData} counter would be resent every tick of the animation to every
-     * tracking client. This mirrors vanilla {@code IronGolem.attackAnimationTick}: one packet per
-     * swing, each side counting down on its own.
-     *
-     * <p>Trade-off: a client that starts tracking mid-swing misses the rest of the animation.
-     */
     private static final byte EVENT_SWING_RIGHT = 4;
     private static final byte EVENT_SWING_LEFT = 5;
     private static final byte EVENT_SWING_BOTH = 6;
-
     public static final int HOME_RESTRICTION_RADIUS = 48;
-
     private static final String TAG_ORIGIN = "RaidbornJuggernautOrigin";
     private static final String TAG_HOME_BELL = "RaidbornJuggernautHomeBell";
     private static final String TAG_SLAM_COOLDOWN = "RaidbornJuggernautSlamCooldown";
@@ -118,7 +93,6 @@ public class Juggernaut extends IronGolem {
     @Nullable
     private Vec3 explosionMovementToRestore;
 
-    /** Counted down on both sides, started by the swing entity event. */
     private int attackAnimationTicks;
     private SwingArms swingArms = SwingArms.RIGHT;
 
@@ -129,8 +103,6 @@ public class Juggernaut extends IronGolem {
     public Juggernaut(EntityType<? extends Juggernaut> type, Level level) {
         super(type, level);
         this.setMaxUpStep(1.0F);
-        // He walks along the bottom at normal speed, so water is not worth avoiding.
-        // See isAffectedByFluids().
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
         this.setPathfindingMalus(BlockPathTypes.DOOR_WOOD_CLOSED, -1.0F);
@@ -138,14 +110,7 @@ public class Juggernaut extends IronGolem {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 200.0D)
-                .add(Attributes.ARMOR, 12.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
-                .add(Attributes.ATTACK_DAMAGE, 20.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.20D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.ARMOR, 12.0D).add(Attributes.ARMOR_TOUGHNESS, 4.0D).add(Attributes.ATTACK_DAMAGE, 20.0D).add(Attributes.ATTACK_KNOCKBACK, 0.0D).add(Attributes.MOVEMENT_SPEED, 0.20D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, MAX_CHASE_RANGE);
     }
 
@@ -167,14 +132,7 @@ public class Juggernaut extends IronGolem {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new JuggernautHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(
-                this,
-                LivingEntity.class,
-                10,
-                false,
-                false,
-                this::isValidTarget
-        ) {
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, false, this::isValidTarget) {
             @Override
             protected double getFollowDistance() {
                 return DETECTION_RANGE;
@@ -183,13 +141,7 @@ public class Juggernaut extends IronGolem {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(
-            ServerLevelAccessor level,
-            DifficultyInstance difficulty,
-            MobSpawnType spawnType,
-            @Nullable SpawnGroupData spawnData,
-            @Nullable CompoundTag dataTag
-    ) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnData, dataTag);
 
         if (spawnType == MobSpawnType.SPAWN_EGG || spawnType == MobSpawnType.MOB_SUMMONED) {
@@ -262,11 +214,7 @@ public class Juggernaut extends IronGolem {
 
     @Override
     public boolean doHurtTarget(Entity target) {
-        if (!(target instanceof LivingEntity living) || !this.isValidTarget(living)) {
-            return false;
-        }
-
-        if (this.swingWindupTicks > 0) {
+        if (!(target instanceof LivingEntity living) || !this.isValidTarget(living) || this.swingWindupTicks > 0) {
             return false;
         }
 
@@ -278,11 +226,6 @@ public class Juggernaut extends IronGolem {
         this.pendingSwingTarget = target;
         this.swingWindupTicks = ATTACK_WINDUP_TICKS;
 
-        /*
-         * The area slam is decided when the swing opens, not on impact: the animation must know from
-         * the first frame whether one arm or both go up, which makes the two-arm wind-up a readable
-         * tell for the player. The cooldown is reserved here as well.
-         */
         this.currentSwingIsSlam = this.slamCooldownTicks <= 0;
 
         if (this.currentSwingIsSlam) {
@@ -291,9 +234,7 @@ public class Juggernaut extends IronGolem {
             this.nextSwingUsesLeftArm = !this.nextSwingUsesLeftArm;
         }
 
-        this.swingArms = this.currentSwingIsSlam
-                ? SwingArms.BOTH
-                : (this.nextSwingUsesLeftArm ? SwingArms.LEFT : SwingArms.RIGHT);
+        this.swingArms = this.currentSwingIsSlam ? SwingArms.BOTH : (this.nextSwingUsesLeftArm ? SwingArms.LEFT : SwingArms.RIGHT);
 
         this.attackAnimationTicks = ATTACK_ANIMATION_TICKS;
         this.level().broadcastEntityEvent(this, swingEventId(this.swingArms));
@@ -316,12 +257,9 @@ public class Juggernaut extends IronGolem {
         DamageSource source = this.damageSources().mobAttack(this);
 
         float base = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float damage = base * (ATTACK_DAMAGE_MIN_FACTOR
-                + this.getRandom().nextFloat() * (ATTACK_DAMAGE_MAX_FACTOR - ATTACK_DAMAGE_MIN_FACTOR));
+        float damage = base * (ATTACK_DAMAGE_MIN_FACTOR + this.getRandom().nextFloat() * (ATTACK_DAMAGE_MAX_FACTOR - ATTACK_DAMAGE_MIN_FACTOR));
 
-        boolean blockedWithShield = target instanceof Player player
-                && player.isBlocking()
-                && player.isDamageSourceBlocked(source);
+        boolean blockedWithShield = target instanceof Player player && player.isBlocking() && player.isDamageSourceBlocked(source);
 
         boolean hurt = target.hurt(source, damage);
 
@@ -338,7 +276,6 @@ public class Juggernaut extends IronGolem {
             double horizontalLength = away.horizontalDistance();
             double pushX = horizontalLength < 1.0E-4D ? 0.0D : (away.x / horizontalLength) * MAIN_TARGET_HORIZONTAL_KNOCKBACK;
             double pushZ = horizontalLength < 1.0E-4D ? 0.0D : (away.z / horizontalLength) * MAIN_TARGET_HORIZONTAL_KNOCKBACK;
-
             target.push(pushX, MAIN_TARGET_LAUNCH, pushZ);
             target.hurtMarked = true;
 
@@ -355,16 +292,11 @@ public class Juggernaut extends IronGolem {
 
     private void breakShield(Player player) {
         ItemStack useItem = player.getUseItem();
-
         if (!useItem.is(Items.SHIELD)) {
             return;
         }
 
-        useItem.hurtAndBreak(
-                SHIELD_EXTRA_DURABILITY_DAMAGE,
-                player,
-                broken -> broken.broadcastBreakEvent(player.getUsedItemHand())
-        );
+        useItem.hurtAndBreak(SHIELD_EXTRA_DURABILITY_DAMAGE, player, broken -> broken.broadcastBreakEvent(player.getUsedItemHand()));
 
         player.getCooldowns().addCooldown(Items.SHIELD, SHIELD_DISABLE_TICKS);
         player.stopUsingItem();
@@ -380,12 +312,7 @@ public class Juggernaut extends IronGolem {
         double dz = target.getZ() - this.getZ();
         double horizontal = Math.sqrt(dx * dx + dz * dz);
         double reach = ATTACK_RANGE + (this.getBbWidth() + target.getBbWidth()) * 0.5D;
-
-        if (horizontal > reach) {
-            return false;
-        }
-
-        if (!this.hasLineOfSight(target)) {
+        if (horizontal > reach || !this.hasLineOfSight(target)) {
             return false;
         }
 
@@ -394,14 +321,12 @@ public class Juggernaut extends IronGolem {
 
     private boolean isWithinAttackArc(LivingEntity target) {
         Vec3 toTarget = new Vec3(target.getX() - this.getX(), 0.0D, target.getZ() - this.getZ());
-
         if (toTarget.lengthSqr() < 1.0E-4D) {
             return true;
         }
 
         Vec3 look = this.getViewVector(1.0F);
         Vec3 flatLook = new Vec3(look.x, 0.0D, look.z);
-
         if (flatLook.lengthSqr() < 1.0E-4D) {
             return true;
         }
@@ -447,15 +372,10 @@ public class Juggernaut extends IronGolem {
     }
 
     public boolean isValidTarget(@Nullable LivingEntity candidate) {
-        if (candidate == null || candidate == this || !candidate.isAlive()) {
+        if (candidate == null || candidate == this || !candidate.isAlive() || VillageSide.isDefender(candidate)) {
             return false;
         }
 
-        if (VillageSide.isDefender(candidate)) {
-            return false;
-        }
-
-        // no creepers, they take the village down with the attacker
         if (candidate instanceof Creeper) {
             return false;
         }
@@ -484,8 +404,6 @@ public class Juggernaut extends IronGolem {
             return false;
         }
 
-        // During a Hero Attack the event owner is hostile to the defended objective regardless of
-        // village reputation.
         if (JuggernautVillageEvents.isAttackEventEnemy(this, player)) {
             return true;
         }
@@ -494,43 +412,21 @@ public class Juggernaut extends IronGolem {
             return false;
         }
 
-        // Hero of the Village only shields players who never hit the Juggernaut itself.
         return this.aggression.wasHitBy(player.getUUID()) || !player.hasEffect(MobEffects.HERO_OF_THE_VILLAGE);
     }
 
     public void rememberAggression(LivingEntity aggressor, int durationTicks, boolean hitTheJuggernaut) {
-        if (aggressor == this || !aggressor.isAlive()) {
+        if (aggressor == this || !aggressor.isAlive() || (aggressor instanceof Player player && (player.isCreative() || player.isSpectator()))) {
             return;
         }
 
-        if (aggressor instanceof Player player && (player.isCreative() || player.isSpectator())) {
-            return;
-        }
-
-        this.aggression.remember(
-                aggressor.getUUID(),
-                this.level().getGameTime() + durationTicks,
-                hitTheJuggernaut,
-                JuggernautVillageEvents.isDefensiveEventActive(this)
-        );
+        this.aggression.remember(aggressor.getUUID(), this.level().getGameTime() + durationTicks, hitTheJuggernaut, JuggernautVillageEvents.isDefensiveEventActive(this));
     }
 
     public void rememberVillageAggression(LivingEntity aggressor, boolean villagerWasKilled) {
-        this.rememberAggression(
-                aggressor,
-                villagerWasKilled ? JuggernautAggression.VILLAGER_KILLED_TICKS : JuggernautAggression.DEFAULT_TICKS,
-                false
-        );
+        this.rememberAggression(aggressor, villagerWasKilled ? JuggernautAggression.VILLAGER_KILLED_TICKS : JuggernautAggression.DEFAULT_TICKS, false);
     }
 
-    /**
-     * Undoes explosion knockback.
-     *
-     * <p>{@code Explosion.explode} adds velocity straight to deltaMovement right after calling
-     * {@code hurt}, bypassing {@code KNOCKBACK_RESISTANCE}, and Forge exposes no hook there. Saving
-     * the velocity before the damage and restoring it at the end of the tick is what keeps the 100%
-     * knockback resistance valid against creepers and TNT as well.
-     */
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (this.isImmuneToDamageType(source)) {
@@ -563,27 +459,19 @@ public class Juggernaut extends IronGolem {
         }
     }
 
-    /** Fall is absent on purpose: {@link #causeFallDamage} already returns false. */
     private boolean isImmuneToDamageType(DamageSource source) {
-        return source.is(DamageTypes.DROWN)
-                || source.is(DamageTypes.STARVE)
-                || source.is(DamageTypes.FREEZE)
-                || source.is(DamageTypes.SWEET_BERRY_BUSH);
+        return source.is(DamageTypes.DROWN) || source.is(DamageTypes.STARVE) || source.is(DamageTypes.FREEZE) || source.is(DamageTypes.SWEET_BERRY_BUSH);
     }
 
     @Override
     public boolean canBeAffected(MobEffectInstance effect) {
-        if (effect.getEffect() == MobEffects.POISON
-                || effect.getEffect() == MobEffects.HUNGER
-                || effect.getEffect() == MobEffects.REGENERATION
-                || effect.getEffect() == MobEffects.HEAL) {
+        if (effect.getEffect() == MobEffects.POISON || effect.getEffect() == MobEffects.HUNGER || effect.getEffect() == MobEffects.REGENERATION || effect.getEffect() == MobEffects.HEAL) {
             return false;
         }
 
         return super.canBeAffected(effect);
     }
 
-    /** Potions and regeneration do not heal it; only iron repair goes through {@link #repair(float)}. */
     @Override
     public void heal(float amount) {
     }
@@ -602,16 +490,6 @@ public class Juggernaut extends IronGolem {
         return true;
     }
 
-    /**
-     * Opts out of vanilla fluid physics.
-     *
-     * <p>The water slowdown comes from no attribute: the aquatic branch of {@code LivingEntity.travel}
-     * replaces walk acceleration with a fixed 0.02 and applies {@code getWaterSlowDown()} drag. This
-     * keeps him on the land branch, walking across the bottom at normal speed.
-     *
-     * <p>Accepted side effect: the same applies to lava, where he sinks instead of floating. The lava
-     * pathfinding malus stays negative, so he never walks in willingly.
-     */
     @Override
     protected boolean isAffectedByFluids() {
         return false;
@@ -627,7 +505,6 @@ public class Juggernaut extends IronGolem {
         return false;
     }
 
-    /** Solid hitbox: players and mobs cannot walk through the Juggernaut. */
     @Override
     public boolean canBeCollidedWith() {
         return true;
@@ -680,11 +557,7 @@ public class Juggernaut extends IronGolem {
             return InteractionResult.PASS;
         }
 
-        if (this.isPlayerConsideredEnemy(player)) {
-            return InteractionResult.PASS;
-        }
-
-        if (this.getHealth() >= this.getMaxHealth()) {
+        if (this.isPlayerConsideredEnemy(player) || this.getHealth() >= this.getMaxHealth()) {
             return InteractionResult.PASS;
         }
 
@@ -699,30 +572,10 @@ public class Juggernaut extends IronGolem {
         }
 
         boolean usedBlock = healAmount == REPAIR_BLOCK_AMOUNT;
-
-        this.level().playSound(
-                null,
-                this.getX(),
-                this.getY(),
-                this.getZ(),
-                usedBlock ? SoundEvents.IRON_GOLEM_REPAIR : SoundEvents.IRON_GOLEM_STEP,
-                SoundSource.NEUTRAL,
-                1.0F,
-                usedBlock ? 0.8F : 1.1F
-        );
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), usedBlock ? SoundEvents.IRON_GOLEM_REPAIR : SoundEvents.IRON_GOLEM_STEP, SoundSource.NEUTRAL, 1.0F, usedBlock ? 0.8F : 1.1F);
 
         if (this.level() instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(
-                    usedBlock ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.CRIT,
-                    this.getX(),
-                    this.getY(this.getBbHeight() * 0.6D),
-                    this.getZ(),
-                    usedBlock ? 40 : 14,
-                    1.0D,
-                    0.8D,
-                    1.0D,
-                    usedBlock ? 0.05D : 0.2D
-            );
+            serverLevel.sendParticles(usedBlock ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.CRIT, this.getX(), this.getY(this.getBbHeight() * 0.6D), this.getZ(), usedBlock ? 40 : 14, 1.0D, 0.8D, 1.0D, usedBlock ? 0.05D : 0.2D);
         }
 
         return InteractionResult.CONSUME;
@@ -776,8 +629,6 @@ public class Juggernaut extends IronGolem {
         this.currentSwingIsSlam = false;
         this.slamCooldownTicks = tag.getInt(TAG_SLAM_COOLDOWN);
 
-        // Vanilla does not save the Mob territory restriction, so the village link was lost on every
-        // reload. The bell is persisted above, so it is enough to reapply it.
         if (this.homeBellPos != null) {
             this.restrictTo(this.homeBellPos, HOME_RESTRICTION_RADIUS);
         }
@@ -812,5 +663,4 @@ public class Juggernaut extends IronGolem {
     public float getVoicePitch() {
         return 0.65F;
     }
-
 }

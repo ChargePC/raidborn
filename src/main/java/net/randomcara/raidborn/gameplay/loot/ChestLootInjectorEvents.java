@@ -17,8 +17,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public final class ChestLootInjectorEvents {
-
+public class ChestLootInjectorEvents {
     private static final Set<ResourceLocation> TARGET_TABLES = Set.of(
             BuiltInLootTables.PILLAGER_OUTPOST,
             BuiltInLootTables.JUNGLE_TEMPLE,
@@ -55,22 +54,7 @@ public final class ChestLootInjectorEvents {
             ModItems.SACRED_SUN
     );
 
-    private static final ChestLootInjector INJECTOR = new ChestLootInjector(
-            TARGET_TABLES,
-            ARTIFACTS,
-            // The pool name shows up in the table built at runtime; keeping it stable avoids colliding
-            // with packs that already reference it.
-            "raidborn_artifact_injection",
-            "Raidborn artifact",
-            Raidborn.LOGGER,
-            RaidbornServerConfig::isArtifactChestLootEnabled,
-            true,
-            RaidbornServerConfig::getArtifactLootChance,
-            0.33D
-    );
-
-    private ChestLootInjectorEvents() {
-    }
+    private static final ChestLootInjector INJECTOR = ChestLootInjector.Builder.create(TARGET_TABLES, ARTIFACTS, "raidborn_artifact_injection").enabledWhen(RaidbornServerConfig::isArtifactChestLootEnabled, true).chance(RaidbornServerConfig::getArtifactLootChance, 0.33D).build();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLootTableLoad(LootTableLoadEvent event) {

@@ -10,8 +10,7 @@ import net.randomcara.raidborn.client.renderer.layer.IronGolletFlowerLayer;
 import net.randomcara.raidborn.content.entity.iron_gollet.IronGollet;
 
 public class IronGolletRenderer extends MobRenderer<IronGollet, IronGolletModel<IronGollet>> {
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/entity/iron_gollet.png");
+    private static final ResourceLocation TEXTURE = Raidborn.id("textures/entity/iron_gollet.png");
 
     public IronGolletRenderer(EntityRendererProvider.Context context) {
         super(context, new IronGolletModel<>(context.bakeLayer(ModModelLayers.IRON_GOLLET)), 0.45F);

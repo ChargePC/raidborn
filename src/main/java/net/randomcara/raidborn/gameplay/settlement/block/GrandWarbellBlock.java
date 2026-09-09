@@ -16,12 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.randomcara.raidborn.gameplay.recruit.SettlementBridge;
 
 public class GrandWarbellBlock extends Block {
-    private static final VoxelShape SHAPE = Shapes.or(
-            Block.box(6, 14, 6, 10, 16, 10),
-            Block.box(3, 5, 3, 13, 15, 13),
-            Block.box(2, 1, 2, 14, 6, 14),
-            Block.box(6, 0, 6, 10, 3, 10)
-    );
+    private static final VoxelShape SHAPE = Shapes.or(Block.box(6, 14, 6, 10, 16, 10), Block.box(3, 5, 3, 13, 15, 13), Block.box(2, 1, 2, 14, 6, 14), Block.box(6, 0, 6, 10, 3, 10));
 
     public GrandWarbellBlock(Properties properties) {
         super(properties);

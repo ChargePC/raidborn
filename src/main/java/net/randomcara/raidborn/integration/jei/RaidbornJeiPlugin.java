@@ -16,7 +16,7 @@ import java.util.List;
 
 @JeiPlugin
 public class RaidbornJeiPlugin implements IModPlugin {
-    private static final ResourceLocation PLUGIN_UID = ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "jei_plugin");
+    private static final ResourceLocation PLUGIN_UID = Raidborn.id("jei_plugin");
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -35,17 +35,12 @@ public class RaidbornJeiPlugin implements IModPlugin {
             return;
         }
 
-        List<TransmutationRecipe> recipes = minecraft.level.getRecipeManager()
-                .getAllRecipesFor(TransmutationRecipe.Type.INSTANCE);
-
+        List<TransmutationRecipe> recipes = minecraft.level.getRecipeManager().getAllRecipesFor(TransmutationRecipe.Type.INSTANCE);
         registration.addRecipes(TransmutationRecipeCategory.TRANSMUTATION_TYPE, recipes);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(
-                new ItemStack(ModBlocks.TRANSMUTATION_TABLE.get()),
-                TransmutationRecipeCategory.TRANSMUTATION_TYPE
-        );
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.TRANSMUTATION_TABLE.get()), TransmutationRecipeCategory.TRANSMUTATION_TYPE);
     }
 }

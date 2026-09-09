@@ -8,11 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public final class RaidbornGuiOverlays {
-
-    private RaidbornGuiOverlays() {
-    }
-
+public class RaidbornGuiOverlays {
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "artifact_slot", ArtifactHudOverlay.OVERLAY);

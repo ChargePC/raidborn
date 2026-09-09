@@ -16,7 +16,6 @@ import net.randomcara.raidborn.content.artifact.item.OminousDaggerItem;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
 
-/** Villager Soul drop, at double chance for kills with the Ominous Dagger. */
 public class VillagerSoulLootModifier extends ChanceDropLootModifier {
     public static final Codec<VillagerSoulLootModifier> CODEC = RecordCodecBuilder.create(instance ->
             codecStart(instance).apply(instance, VillagerSoulLootModifier::new)

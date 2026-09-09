@@ -22,31 +22,22 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import java.util.List;
 
 public class TransmutationRecipeCategory implements IRecipeCategory<TransmutationRecipe> {
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "transmutation");
-
-    public static final RecipeType<TransmutationRecipe> TRANSMUTATION_TYPE =
-            RecipeType.create(Raidborn.MOD_ID, "transmutation", TransmutationRecipe.class);
-
-    private static final ResourceLocation BACKGROUND_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/jei/transmutation_table.png");
-    private static final ResourceLocation BUBBLES_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Raidborn.MOD_ID, "textures/gui/transmutation_table/bubbles.png");
-
+    public static final ResourceLocation UID = Raidborn.id("transmutation");
+    public static final RecipeType<TransmutationRecipe> TRANSMUTATION_TYPE = RecipeType.create(Raidborn.MOD_ID, "transmutation", TransmutationRecipe.class);
+    private static final ResourceLocation BACKGROUND_TEXTURE = Raidborn.id("textures/gui/jei/transmutation_table.png");
+    private static final ResourceLocation BUBBLES_TEXTURE = Raidborn.id("textures/gui/transmutation_table/bubbles.png");
     private static final int BACKGROUND_WIDTH = 100;
     private static final int BACKGROUND_HEIGHT = 64;
-
     private static final int SOUL_SLOT_X = 29;
     private static final int SOUL_SLOT_Y = 4;
     private static final int INPUT_SLOT_X = 29;
     private static final int INPUT_SLOT_Y = 45;
     private static final int OUTPUT_SLOT_X = 70;
     private static final int OUTPUT_SLOT_Y = 25;
-
     private static final int BUBBLES_X = 13;
     private static final int BUBBLES_Y = 1;
     private static final int BUBBLES_WIDTH = 12;
     private static final int BUBBLES_HEIGHT = 29;
-
     private static final int[] BUBBLE_STEPS = {29, 24, 20, 16, 11, 6, 0};
 
     private final IDrawable background;
@@ -84,11 +75,9 @@ public class TransmutationRecipeCategory implements IRecipeCategory<Transmutatio
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TransmutationRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, SOUL_SLOT_X, SOUL_SLOT_Y)
-                .addIngredients(recipe.getSoul());
+        builder.addSlot(RecipeIngredientRole.INPUT, SOUL_SLOT_X, SOUL_SLOT_Y).addIngredients(recipe.getSoul());
 
-        builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X, INPUT_SLOT_Y)
-                .addIngredients(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X, INPUT_SLOT_Y).addIngredients(recipe.getInput());
 
         addOutputSlot(builder, recipe.getJeiOutputs());
     }
@@ -118,16 +107,6 @@ public class TransmutationRecipeCategory implements IRecipeCategory<Transmutatio
             return;
         }
 
-        guiGraphics.blit(
-                BUBBLES_TEXTURE,
-                BUBBLES_X,
-                BUBBLES_Y + BUBBLES_HEIGHT - height,
-                0,
-                BUBBLES_HEIGHT - height,
-                BUBBLES_WIDTH,
-                height,
-                BUBBLES_WIDTH,
-                BUBBLES_HEIGHT
-        );
+        guiGraphics.blit(BUBBLES_TEXTURE, BUBBLES_X, BUBBLES_Y + BUBBLES_HEIGHT - height, 0, BUBBLES_HEIGHT - height, BUBBLES_WIDTH, height, BUBBLES_WIDTH, BUBBLES_HEIGHT);
     }
 }

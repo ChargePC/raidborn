@@ -9,13 +9,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public final class CompatibleIllagerTypes {
-
-    /** Persisted NBT in saved worlds: do not rename. */
+public class CompatibleIllagerTypes {
     private static final String SETTLEMENT_ILLAGER_TAG = "RaidbornSettlementIllager";
-
-    private static final Map<IllagerStrengthCategory, List<ResourceLocation>> ILLAGERS_BY_CATEGORY =
-            new EnumMap<>(IllagerStrengthCategory.class);
+    private static final Map<IllagerStrengthCategory, List<ResourceLocation>> ILLAGERS_BY_CATEGORY = new EnumMap<>(IllagerStrengthCategory.class);
 
     static {
         ILLAGERS_BY_CATEGORY.put(IllagerStrengthCategory.COMMON, List.of(
@@ -54,11 +50,7 @@ public final class CompatibleIllagerTypes {
         ));
     }
 
-    private static final CategorizedMobSpawnTable<IllagerStrengthCategory> SPAWN_TABLE =
-            new CategorizedMobSpawnTable<>(ILLAGERS_BY_CATEGORY, SETTLEMENT_ILLAGER_TAG, Raidborn.LOGGER);
-
-    private CompatibleIllagerTypes() {
-    }
+    private static final CategorizedMobSpawnTable<IllagerStrengthCategory> SPAWN_TABLE = new CategorizedMobSpawnTable<>(ILLAGERS_BY_CATEGORY, SETTLEMENT_ILLAGER_TAG, Raidborn.LOGGER);
 
     private static ResourceLocation id(String value) {
         ResourceLocation id = ResourceLocation.tryParse(value);

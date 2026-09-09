@@ -41,9 +41,7 @@ public class WarbellVillageDoorOpenGoal extends OpenDoorGoal {
     }
 
     private boolean canOpenDoorsNow() {
-        return WarbellVillageData.isVillageMode(this.mob)
-                && !this.mob.isSleeping()
-                && this.mob.getNavigation() instanceof GroundPathNavigation;
+        return WarbellVillageData.isVillageMode(this.mob) && !this.mob.isSleeping() && this.mob.getNavigation() instanceof GroundPathNavigation;
     }
 
     private void applyDoorPathing(boolean value) {

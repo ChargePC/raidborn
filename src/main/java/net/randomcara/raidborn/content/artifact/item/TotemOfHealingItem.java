@@ -38,13 +38,10 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
 public class TotemOfHealingItem extends Item implements ICurioItem, IActivatableCurioItem {
-
     private static final String TAG_ACTIVE_UNTIL = "raidborn_totem_healing_until";
     private static final String TAG_LAST_APPLY_TICK = "raidborn_totem_healing_last_apply";
-
     public static final int COOLDOWN_TICKS = 20 * 45;
     private static final int DURATION_TICKS = 20 * 15;
-
     private static final int APPLY_INTERVAL_TICKS = 10;
     private static final int REGEN_DURATION_TICKS = 30;
     private static final int REGEN_AMPLIFIER = 1;
@@ -70,23 +67,9 @@ public class TotemOfHealingItem extends Item implements ICurioItem, IActivatable
 
         Raidborn.showItemActivation(player, stack.copy());
 
-        player.level().playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.TOTEM_USE,
-                SoundSource.PLAYERS,
-                1.0F,
-                1.0F
-        );
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-        Raidborn.showTotemAreaVisual(
-                player,
-                AREA_COLOR,
-                (float) getRadius(),
-                DURATION_TICKS
-        );
+        Raidborn.showTotemAreaVisual(player, AREA_COLOR, (float) getRadius(), DURATION_TICKS);
 
         return true;
     }
@@ -112,7 +95,6 @@ public class TotemOfHealingItem extends Item implements ICurioItem, IActivatable
         CompoundTag data = player.getPersistentData();
         long now = player.level().getGameTime();
         long activeUntil = data.getLong(TAG_ACTIVE_UNTIL);
-
         if (activeUntil <= now) return;
 
         long lastApply = data.getLong(TAG_LAST_APPLY_TICK);
@@ -124,57 +106,28 @@ public class TotemOfHealingItem extends Item implements ICurioItem, IActivatable
 
     private static void healPlayersAndAllies(ServerPlayer player) {
         for (ServerPlayer nearbyPlayer : getPlayersInArea(player)) {
-            nearbyPlayer.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION,
-                    REGEN_DURATION_TICKS,
-                    REGEN_AMPLIFIER,
-                    false,
-                    true,
-                    true
-            ));
+            nearbyPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, REGEN_DURATION_TICKS, REGEN_AMPLIFIER, false, true, true));
         }
 
         UUID ownerId = player.getUUID();
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        List<Mob> allies = player.serverLevel().getEntitiesOfClass(
-                Mob.class,
-                box,
-                mob -> mob.isAlive()
-                        && isOwnedAlly(mob, ownerId)
-                        && isInsideSquareArea(player, mob)
-        );
-
+        List<Mob> allies = player.serverLevel().getEntitiesOfClass(Mob.class, box, mob -> mob.isAlive() && isOwnedAlly(mob, ownerId) && isInsideSquareArea(player, mob));
         for (Mob mob : allies) {
-            mob.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION,
-                    REGEN_DURATION_TICKS,
-                    REGEN_AMPLIFIER,
-                    false,
-                    true,
-                    true
-            ));
+            mob.addEffect(new MobEffectInstance(MobEffects.REGENERATION, REGEN_DURATION_TICKS, REGEN_AMPLIFIER, false, true, true));
         }
     }
 
     private static List<ServerPlayer> getPlayersInArea(ServerPlayer player) {
         AABB box = player.getBoundingBox().inflate(getRadius(), 3.0D, getRadius());
-
-        return player.serverLevel().getPlayers(
-                otherPlayer -> otherPlayer.isAlive()
-                        && box.intersects(otherPlayer.getBoundingBox())
-                        && isInsideSquareArea(player, otherPlayer)
-        );
+        return player.serverLevel().getPlayers(otherPlayer -> otherPlayer.isAlive() && box.intersects(otherPlayer.getBoundingBox()) && isInsideSquareArea(player, otherPlayer));
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Mob mob) {
-        return Math.abs(mob.getX() - player.getX()) <= getRadius()
-                && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(mob.getX() - player.getX()) <= getRadius() && Math.abs(mob.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isInsideSquareArea(ServerPlayer player, Player otherPlayer) {
-        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius()
-                && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
+        return Math.abs(otherPlayer.getX() - player.getX()) <= getRadius() && Math.abs(otherPlayer.getZ() - player.getZ()) <= getRadius();
     }
 
     private static boolean isOwnedAlly(Mob mob, UUID ownerId) {
@@ -201,12 +154,7 @@ public class TotemOfHealingItem extends Item implements ICurioItem, IActivatable
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(
-                tooltip,
-                TooltipHelper.line("Creates a healing area for players and allies", 0xFF5555),
-                TooltipHelper.line("Gives Regeneration II", 0xFF7777),
-                TooltipHelper.line("Cooldown: 45s", 0xFFAA00)
-        );
+        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Creates a healing area for players and allies", 0xFF5555), TooltipHelper.line("Gives Regeneration II", 0xFF7777), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

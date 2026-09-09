@@ -14,23 +14,16 @@ import net.randomcara.raidborn.gameplay.settlement.block.GrandWarbellBlock;
 import net.randomcara.raidborn.transmutation.block.TransmutationTableBlock;
 
 public class ModBlocks {
-    public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, Raidborn.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Raidborn.MOD_ID);
 
     public static final RegistryObject<Block> GRAND_WARBELL = BLOCKS.register("grand_warbell",
-            () -> new GrandWarbellBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5F)
-                    .sound(SoundType.ANVIL)
-                    .requiresCorrectToolForDrops()));
+            () -> new GrandWarbellBlock(BlockBehaviour.Properties.of().strength(3.5F).sound(SoundType.ANVIL).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> BEAST_HEART = BLOCKS.register("beast_heart",
             () -> new BeastHeartBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
 
     public static final RegistryObject<Block> TRANSMUTATION_TABLE = BLOCKS.register("transmutation_table",
-            () -> new TransmutationTableBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5F, 6.0F)
-                    .sound(SoundType.STONE)
-                    .requiresCorrectToolForDrops()));
+            () -> new TransmutationTableBlock(BlockBehaviour.Properties.of().strength(3.5F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

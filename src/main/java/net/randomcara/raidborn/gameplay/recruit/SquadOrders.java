@@ -12,7 +12,7 @@ import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import java.util.List;
 import java.util.UUID;
 
-public final class SquadOrders {
+public class SquadOrders {
     public static final String TAG_ORDER = "raidborn_order";
     public static final String TAG_HOLD_X = "raidborn_hold_x";
     public static final String TAG_HOLD_Y = "raidborn_hold_y";
@@ -20,9 +20,6 @@ public final class SquadOrders {
     public static final String TAG_ATTACK_TARGET = "raidborn_attack_target";
     public static final String TAG_ATTACK_EXPIRE = "raidborn_attack_expire";
     public static final String TAG_HOLD_WANDER_COOLDOWN = "raidborn_hold_wander_cooldown";
-
-    private SquadOrders() {
-    }
 
     public static double commandRadius() {
         return RaidbornServerConfig.getSquadCommandRadius();
@@ -78,19 +75,13 @@ public final class SquadOrders {
     }
 
     public static boolean hasHoldPos(Mob mob) {
-        return mob.getPersistentData().contains(TAG_HOLD_X)
-                && mob.getPersistentData().contains(TAG_HOLD_Y)
-                && mob.getPersistentData().contains(TAG_HOLD_Z);
+        return mob.getPersistentData().contains(TAG_HOLD_X) && mob.getPersistentData().contains(TAG_HOLD_Y) && mob.getPersistentData().contains(TAG_HOLD_Z);
     }
 
     public static BlockPos getHoldPos(Mob mob) {
         if (!hasHoldPos(mob)) return null;
 
-        return new BlockPos(
-                mob.getPersistentData().getInt(TAG_HOLD_X),
-                mob.getPersistentData().getInt(TAG_HOLD_Y),
-                mob.getPersistentData().getInt(TAG_HOLD_Z)
-        );
+        return new BlockPos(mob.getPersistentData().getInt(TAG_HOLD_X), mob.getPersistentData().getInt(TAG_HOLD_Y), mob.getPersistentData().getInt(TAG_HOLD_Z));
     }
 
     public static void clearHoldPos(Mob mob) {
@@ -108,9 +99,7 @@ public final class SquadOrders {
     }
 
     public static UUID getAttackTargetUUID(Mob mob) {
-        return mob.getPersistentData().hasUUID(TAG_ATTACK_TARGET)
-                ? mob.getPersistentData().getUUID(TAG_ATTACK_TARGET)
-                : null;
+        return mob.getPersistentData().hasUUID(TAG_ATTACK_TARGET) ? mob.getPersistentData().getUUID(TAG_ATTACK_TARGET) : null;
     }
 
     public static long getAttackExpire(Mob mob) {
@@ -144,11 +133,6 @@ public final class SquadOrders {
         clearCombatState(mob);
     }
 
-    /**
-     * Drops everything that would make the mob keep fighting: the active target, both revenge
-     * slots, and whatever path it was running. Only place this happens: capture, release, teleport
-     * and order changes all go through here so a recruit can't come back still swinging.
-     */
     public static void clearCombatState(Mob mob) {
         mob.setTarget(null);
         mob.setLastHurtByMob(null);
@@ -163,11 +147,7 @@ public final class SquadOrders {
     }
 
     public static List<Mob> getNearbySquad(ServerPlayer player) {
-        return player.level().getEntitiesOfClass(
-                Mob.class,
-                player.getBoundingBox().inflate(commandRadius()),
-                mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive()
-        );
+        return player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(commandRadius()), mob -> RecruitOwnership.isYours(player, mob) && mob.isAlive());
     }
 
     public static boolean isValidTarget(ServerPlayer owner, Mob recruit, LivingEntity target) {

@@ -9,18 +9,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-final class AttackCelebration {
-    private AttackCelebration() {
-    }
-
+class AttackCelebration {
     static void launchFirework(ServerLevel level, Entity source, DyeColor primary, DyeColor secondary, DyeColor fade) {
-        level.addFreshEntity(new FireworkRocketEntity(
-                level,
-                source.getX(),
-                source.getY() + source.getBbHeight() + 0.15D,
-                source.getZ(),
-                createFirework(primary, secondary, fade)
-        ));
+        level.addFreshEntity(new FireworkRocketEntity(level, source.getX(), source.getY() + source.getBbHeight() + 0.15D, source.getZ(), createFirework(primary, secondary, fade)));
     }
 
     private static ItemStack createFirework(DyeColor primary, DyeColor secondary, DyeColor fade) {

@@ -20,55 +20,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Hands each Attack defender someone to fight.
- *
- * <p>Vanilla target goals only look at what's in front of them, so a squad left alone dogpiles the
- * first raider it trips over and ignores the player entirely. This assigns targets for the group.
- *
- * <p>{@link AttackIllagerAIHandler} does the same thing for the player's side.
- */
-final class DefenderTargeting {
-
+class DefenderTargeting {
     private static final int RETARGET_MIN_TICKS = 34;
     private static final int RETARGET_JITTER_TICKS = 18;
 
-    private DefenderTargeting() {
-    }
-
-    /**
-     * Who a defender goes for, in order. The first rule that matches decides; ties inside a rule
-     * are broken in {@link Candidate#ORDER}.
-     */
     private enum Priority {
-        /** Whoever is hitting this defender right now. Being shot in the back overrides orders. */
         RETALIATION,
 
-        /** The event owner. The player is the objective, and the squad converges on them. */
         OWNER,
 
-        /** Anything with a villager or another defender in its sights. */
         ATTACKING_OUR_SIDE,
 
-        /** Everyone else the Attack considers hostile. */
         ANY
     }
 
-    /**
-     * A threat a given defender could take, ranked. Within the same priority the defender goes for
-     * whatever fewest of its squadmates are already on, and then for whatever is closest, which is
-     * what keeps a squad from dogpiling one raider.
-     */
     private record Candidate(LivingEntity threat, Priority priority, int defendersOnIt, double distanceSqr) {
-        private static final Comparator<Candidate> ORDER = Comparator
-                .comparing(Candidate::priority)
-                .thenComparingInt(Candidate::defendersOnIt)
-                .thenComparingDouble(Candidate::distanceSqr);
+        private static final Comparator<Candidate> ORDER = Comparator.comparing(Candidate::priority).thenComparingInt(Candidate::defendersOnIt).thenComparingDouble(Candidate::distanceSqr);
     }
 
     static void tick(AttackInstance attack, ServerLevel level, @Nullable LivingEntity owner) {
         UUID ownerUuid = attack.getOwnerPlayerUuid();
-
         ThreatScan scan = scanThreats(attack, level, owner, ownerUuid);
         enroll(attack, scan.newcomers(), ownerUuid);
 
@@ -77,13 +48,11 @@ final class DefenderTargeting {
 
         for (UUID defenderUuid : attack.getAllDefenderUuids()) {
             Entity entity = level.getEntity(defenderUuid);
-
             if (!(entity instanceof Mob defender) || !defender.isAlive()) {
                 continue;
             }
 
             LivingEntity currentTarget = defender.getTarget();
-
             if (currentTarget != null && !isStillListed(currentTarget, threats)) {
                 releaseTarget(defendersPerThreat, currentTarget.getUUID());
                 defender.setTarget(null);
@@ -91,7 +60,6 @@ final class DefenderTargeting {
             }
 
             LivingEntity chosen = chooseTarget(attack, defender, threats, ownerUuid, currentTarget, defendersPerThreat);
-
             if (chosen == null || chosen == currentTarget) {
                 continue;
             }
@@ -105,10 +73,6 @@ final class DefenderTargeting {
         }
     }
 
-    /**
-     * Everything the defenders are allowed to fight, plus the mobs the area scan turned up that the
-     * Attack was not tracking yet.
-     */
     private record ThreatScan(List<LivingEntity> threats, List<Mob> newcomers) {
     }
 
@@ -119,28 +83,20 @@ final class DefenderTargeting {
         Map<UUID, LivingEntity> threats = new LinkedHashMap<>();
         List<Mob> newcomers = new ArrayList<>();
 
-        if (owner instanceof Player player
-                && player.getUUID().equals(ownerUuid)
-                && AttackRaidbornHooks.isValidAttackOwnerTarget(player)) {
+        if (owner instanceof Player player && player.getUUID().equals(ownerUuid) && AttackRaidbornHooks.isValidAttackOwnerTarget(player)) {
             threats.put(player.getUUID(), player);
         }
 
         for (UUID allyUuid : attack.getParticipatingRecruitUuids()) {
-            if (level.getEntity(allyUuid) instanceof LivingEntity ally
-                    && AttackRaidbornHooks.isAttackThreat(ally, attack, ownerUuid)) {
+            if (level.getEntity(allyUuid) instanceof LivingEntity ally && AttackRaidbornHooks.isAttackThreat(ally, attack, ownerUuid)) {
                 threats.put(ally.getUUID(), ally);
             }
         }
 
         double scanRadius = Math.max(attack.getRadius(), RaidbornServerConfig.ATTACK_ABANDON_RADIUS.get());
         AABB scanBox = new AABB(attack.getCenter()).inflate(scanRadius);
-
         for (LivingEntity living : level.getEntitiesOfClass(LivingEntity.class, scanBox, LivingEntity::isAlive)) {
-            if (living instanceof Villager || AttackRaidbornHooks.isAttackDefender(living, attack.getAttackId())) {
-                continue;
-            }
-
-            if (!AttackRaidbornHooks.isAttackThreat(living, attack, ownerUuid)) {
+            if (living instanceof Villager || AttackRaidbornHooks.isAttackDefender(living, attack.getAttackId()) || !AttackRaidbornHooks.isAttackThreat(living, attack, ownerUuid)) {
                 continue;
             }
 
@@ -154,7 +110,6 @@ final class DefenderTargeting {
         return new ThreatScan(new ArrayList<>(threats.values()), newcomers);
     }
 
-    /** A mob that shows up fighting on the player's side counts as a participant from then on. */
     private static void enroll(AttackInstance attack, List<Mob> newcomers, UUID ownerUuid) {
         for (Mob mob : newcomers) {
             attack.addParticipatingRecruit(mob.getUUID());
@@ -169,13 +124,11 @@ final class DefenderTargeting {
 
         for (UUID defenderUuid : attack.getAllDefenderUuids()) {
             Entity entity = level.getEntity(defenderUuid);
-
             if (!(entity instanceof Mob defender) || !defender.isAlive()) {
                 continue;
             }
 
             LivingEntity target = defender.getTarget();
-
             if (target != null && isStillListed(target, threats)) {
                 counts.merge(target.getUUID(), 1, Integer::sum);
             }
@@ -189,11 +142,7 @@ final class DefenderTargeting {
     }
 
     private static boolean isStillListed(LivingEntity target, List<LivingEntity> threats) {
-        if (!target.isAlive()) {
-            return false;
-        }
-
-        if (target instanceof Player player && (player.isCreative() || player.isSpectator())) {
+        if (!target.isAlive() || (target instanceof Player player && (player.isCreative() || player.isSpectator()))) {
             return false;
         }
 
@@ -206,13 +155,6 @@ final class DefenderTargeting {
         return false;
     }
 
-    /**
-     * The target has to pass the defender's own rules.
-     *
-     * <p>Without it a Juggernaut got handed a target 90 blocks out, {@code aiStep} cleared it the
-     * next tick for being past the chase range, and the two of them fought over the field 20 times
-     * a second, killing the path every time.
-     */
     private static boolean canTarget(Mob defender, LivingEntity threat) {
         if (threat == defender || !threat.isAlive()) {
             return false;
@@ -248,13 +190,7 @@ final class DefenderTargeting {
                 continue;
             }
 
-            Candidate candidate = new Candidate(
-                    threat,
-                    priorityOf(attack, defender, threat, ownerUuid),
-                    defendersAlreadyOn(defendersPerThreat, threat, currentTarget),
-                    defender.distanceToSqr(threat)
-            );
-
+            Candidate candidate = new Candidate(threat, priorityOf(attack, defender, threat, ownerUuid), defendersAlreadyOn(defendersPerThreat, threat, currentTarget), defender.distanceToSqr(threat));
             if (best == null || Candidate.ORDER.compare(candidate, best) < 0) {
                 best = candidate;
             }
@@ -264,29 +200,18 @@ final class DefenderTargeting {
             return null;
         }
 
-        boolean keepsCurrent = currentTarget != null
-                && isStillListed(currentTarget, threats)
-                && canTarget(defender, currentTarget);
+        boolean keepsCurrent = currentTarget != null && isStillListed(currentTarget, threats) && canTarget(defender, currentTarget);
 
         if (!keepsCurrent) {
             return best.threat();
         }
 
-        /*
-         * Staying on the current target is the default, and the only thing that overrides it is a
-         * genuinely more urgent one. Everything else waits for the window: a defender that swaps
-         * because a raider drifted a block closer spends the fight walking instead of swinging.
-         */
         Priority current = priorityOf(attack, defender, currentTarget, ownerUuid);
-
-        return best.priority().compareTo(current) < 0 || RetargetWindow.isOpen(defender, RETARGET_MIN_TICKS, RETARGET_JITTER_TICKS)
-                ? best.threat()
-                : currentTarget;
+        return best.priority().compareTo(current) < 0 || RetargetWindow.isOpen(defender, RETARGET_MIN_TICKS, RETARGET_JITTER_TICKS) ? best.threat() : currentTarget;
     }
 
     private static Priority priorityOf(AttackInstance attack, Mob defender, LivingEntity threat, UUID ownerUuid) {
         LivingEntity lastDamager = defender.getLastHurtByMob();
-
         if (lastDamager != null && lastDamager.getUUID().equals(threat.getUUID())) {
             return Priority.RETALIATION;
         }
@@ -302,14 +227,11 @@ final class DefenderTargeting {
         return Priority.ANY;
     }
 
-    /** A defender is in the count for its own target, and must not read itself as a crowd. */
     private static int defendersAlreadyOn(Map<UUID, Integer> defendersPerThreat,
                                           LivingEntity threat,
                                           @Nullable LivingEntity currentTarget) {
         int count = defendersPerThreat.getOrDefault(threat.getUUID(), 0);
 
-        return currentTarget != null && currentTarget.getUUID().equals(threat.getUUID())
-                ? Math.max(0, count - 1)
-                : count;
+        return currentTarget != null && currentTarget.getUUID().equals(threat.getUUID()) ? Math.max(0, count - 1) : count;
     }
 }
