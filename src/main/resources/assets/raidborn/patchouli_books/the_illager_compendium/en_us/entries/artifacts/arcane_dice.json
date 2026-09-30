@@ -1,0 +1,14 @@
+{
+  "name": "Arcane Dice",
+  "icon": "raidborn:arcane_dice",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:arcane_dice",
+      "text": "Hands you and every nearby recruit a random beneficial effect. Each target rolls separately, so the patrol rarely comes out of it holding the same thing.$(br2)Cooldown is 90 seconds.",
+      "title": "Arcane Dice"
+    }
+  ]
+}

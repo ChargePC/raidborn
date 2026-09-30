@@ -1,0 +1,13 @@
+{
+  "name": "Poison Arrowhead",
+  "icon": "raidborn:poison_arrowhead",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:poison_arrowhead",
+      "text": "Weapons, tools and projectiles all carry Poison III for 5 seconds. Your recruits poison as well, and it skips the rest of your patrol, so a crowded fight does not turn against you.",
+      "title": "Poison Arrowhead"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Oath Ring",
+  "icon": "raidborn:oath_ring",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:oath_ring",
+      "text": "Whatever you drink, the patrol drinks. Any status effect you gain, or a stronger version of one you already hold, copies to your nearby recruits.",
+      "title": "Oath Ring"
+    }
+  ]
+}

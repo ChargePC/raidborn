@@ -1,0 +1,14 @@
+{
+  "name": "Soggy Ring",
+  "icon": "raidborn:soggy_ring",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:soggy_ring",
+      "text": "Fire stops mattering, and lava turns to cobblestone under your feet with a hiss. The stone reverts after 8 seconds unless you break it first, so a lava lake is a bridge you have to keep walking across.",
+      "title": "Soggy Ring"
+    }
+  ]
+}

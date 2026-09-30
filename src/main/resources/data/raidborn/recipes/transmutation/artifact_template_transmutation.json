@@ -1,0 +1,11 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:soul_of_many_villagers"
+  },
+  "input": {
+    "item": "raidborn:artifact_template"
+  },
+  "output_tag": "raidborn:random_artifacts",
+  "count": 1
+}

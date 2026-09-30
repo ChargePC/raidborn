@@ -1,0 +1,13 @@
+{
+  "name": "Totem of Healing",
+  "icon": "raidborn:totem_of_healing",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:totem_of_healing",
+      "text": "Drops a healing field for 15 seconds. You and any nearby recruit standing in it hold Regeneration II, so it is worth placing before the patrol scatters.$(br2)Cooldown is 45 seconds, and firing any Raidborn totem puts all three on it.",
+      "title": "Totem of Healing"
+    }
+  ]
+}

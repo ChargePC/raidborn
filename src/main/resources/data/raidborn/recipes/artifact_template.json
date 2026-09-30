@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FF",
+    "FF"
+  ],
+  "key": {
+    "F": {
+      "item": "raidborn:artifact_fragment"
+    }
+  },
+  "result": {
+    "item": "raidborn:artifact_template",
+    "count": 1
+  }
+}

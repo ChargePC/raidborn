@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:raiders",
+    "raidborn:grumblager",
+    "raidborn:beast",
+    { "id": "minecraft:witch", "required": false },
+    { "id": "born_in_chaos_v1:iceologer", "required": false },
+    { "id": "dungeons_mobs:iceologer", "required": false },
+    { "id": "dungeons_mobs:windcaller", "required": false },
+    { "id": "dungeons_mobs:geomancer", "required": false },
+    { "id": "dungeons_mobs:enchanter", "required": false },
+    { "id": "dungeons_mobs:royal_guard", "required": false },
+    { "id": "dungeons_mobs:illusioner", "required": false },
+    { "id": "minecraft:illusioner", "required": false }
+  ]
+}

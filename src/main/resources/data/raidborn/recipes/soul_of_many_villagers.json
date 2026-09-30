@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "raidborn:villager_soul"
+    },
+    {
+      "item": "raidborn:villager_soul"
+    },
+    {
+      "item": "raidborn:villager_soul"
+    },
+    {
+      "item": "raidborn:villager_soul"
+    }
+  ],
+  "result": {
+    "item": "raidborn:soul_of_many_villagers",
+    "count": 1
+  }
+}

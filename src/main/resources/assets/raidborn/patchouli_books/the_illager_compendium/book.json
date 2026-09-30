@@ -1,0 +1,14 @@
+{
+  "name": "Illager Compendium",
+  "landing_text": "Everything you need for the wrong side of a raid. Swearing an oath, taking recruits, running a settlement, and what the Transmutation Table will take off your hands.",
+  "version": "0",
+  "subtitle": "Raidborn guide",
+  "creative_tab": "raidborn:raidborn_tab",
+  "use_resource_pack": true,
+  "model": "raidborn:illager_compendium",
+  "header_color": "000000",
+  "book_texture": "raidborn:textures/gui/book/compendium.png",
+  "filler_texture": "raidborn:textures/gui/book/filler.png",
+  "show_toasts": false,
+  "show_progress": false
+}

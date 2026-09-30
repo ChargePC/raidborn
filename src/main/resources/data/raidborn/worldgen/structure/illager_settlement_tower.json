@@ -1,0 +1,23 @@
+{
+  "type": "raidborn:terrain_checked_jigsaw",
+  "biomes": "#raidborn:has_structure/illager_settlement_tower",
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
+  "spawn_overrides": {},
+  "start_pool": "raidborn:illager_settlement_tower/start_pool",
+  "size": 1,
+  "start_height": {
+    "absolute": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 80,
+  "use_expansion_hack": false,
+
+  "terrain_check_radius": 18,
+  "terrain_check_step": 4,
+  "max_terrain_height_difference": 18,
+
+  "water_check_radius": 22,
+  "max_water_depth": 0,
+  "reject_river_biomes": false
+}

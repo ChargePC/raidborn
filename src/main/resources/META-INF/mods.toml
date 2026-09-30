@@ -1,0 +1,56 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved (LICENSE.txt)"
+issueTrackerURL="https://github.com/ChargePC/raidborn/issues"
+
+[[mods]]
+modId="raidborn"
+version="0.1-1.20.1"
+displayName="Raidborn: Join the Illagers"
+displayURL="https://github.com/ChargePC/raidborn"
+logoFile="raidborn.png"
+authors="Randomcara7, I_DRAW_THINGS"
+credits="Randomcara7 (github.com/ChargePC): design, code and balancing. I_DRAW_THINGS: art, item and block textures, entity models and textures. All rights reserved, see LICENSE.txt in the jar for what you may and may not do with it."
+description='''Join the wrong side'''
+
+[[dependencies.raidborn]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.raidborn]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.raidborn]]
+modId="bentoslib"
+mandatory=true
+versionRange="[0.2,)"
+ordering="BEFORE"
+side="BOTH"
+
+[[dependencies.raidborn]]
+modId="curios"
+mandatory=true
+versionRange="[5.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.raidborn]]
+modId="patchouli"
+mandatory=false
+versionRange="[1.20.1-84,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.raidborn]]
+modId="jei"
+mandatory=false
+versionRange="[15.0.0,)"
+ordering="AFTER"
+side="BOTH"

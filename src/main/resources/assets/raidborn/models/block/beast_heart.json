@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "raidborn:block/core_front",
+    "down": "raidborn:block/core_down",
+    "up": "raidborn:block/core_top",
+    "north": "raidborn:block/core_front",
+    "south": "raidborn:block/core_back",
+    "west": "raidborn:block/core_right",
+    "east": "raidborn:block/core_left"
+  }
+}

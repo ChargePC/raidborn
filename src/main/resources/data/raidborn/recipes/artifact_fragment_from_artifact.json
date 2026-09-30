@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "raidborn:breakable_artifacts"
+    }
+  ],
+  "result": {
+    "item": "raidborn:artifact_fragment",
+    "count": 3
+  }
+}

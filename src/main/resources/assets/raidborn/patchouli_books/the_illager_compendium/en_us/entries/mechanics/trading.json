@@ -1,0 +1,28 @@
+{
+  "name": "Trading",
+  "icon": "minecraft:emerald",
+  "category": "raidborn:mechanics",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Trading",
+      "text": "Most recruitable Illagers must be assigned to $(l:raidborn:mechanics/settlement_mode)Settlement Mode$(/l) and linked to their correct workstation before they can trade. Right-click normally to open the trading screen; shift-right-click is used for recruitment."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Trade Conditions",
+      "text": "Illagers do not trade while sleeping or fighting. Some compatible trade-only Illagers can open trades without joining a settlement."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Levels",
+      "text": "Each Illager has its own offers, experience, and trade level. Levels run from 1 to 5. Gaining experience adds higher-level offers without removing earlier ones."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Restocking",
+      "text": "Used offers restock after the Illager completes another workday. Unique rewards may remain limited. Equipping a Giga Emerald reduces emerald prices during the trade."
+    }
+  ]
+}

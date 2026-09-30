@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "raidborn:block/transmutation_table_side",
+    "down": "raidborn:block/transmutation_table_down",
+    "up": "raidborn:block/transmutation_table_top",
+    "north": "raidborn:block/transmutation_table_face",
+    "south": "raidborn:block/transmutation_table_face",
+    "east": "raidborn:block/transmutation_table_side",
+    "west": "raidborn:block/transmutation_table_side"
+  }
+}

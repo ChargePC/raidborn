@@ -1,0 +1,22 @@
+{
+  "parent": "raidborn:they_had_families",
+  "display": {
+    "icon": { "item": "raidborn:raidborn_essence" },
+    "title": { "translate": "advancements.raidborn.unlikely_alliance.title" },
+    "description": { "translate": "advancements.raidborn.unlikely_alliance.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_illager_loyalty": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "raidborn:illager_loyalty": {}
+        }
+      }
+    }
+  }
+}

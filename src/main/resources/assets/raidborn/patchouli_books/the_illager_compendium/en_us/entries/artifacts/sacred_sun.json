@@ -1,0 +1,14 @@
+{
+  "name": "Sacred Sun",
+  "icon": "raidborn:sacred_sun",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:sacred_sun",
+      "text": "Lights the ground around you like a torch you never have to place. Undead within 8 blocks burn as though the sun were up, which makes walking at night cost them more than it costs you.",
+      "title": "Sacred Sun"
+    }
+  ]
+}

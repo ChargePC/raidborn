@@ -1,0 +1,14 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:villager_soul"
+  },
+  "input": {
+    "item": "minecraft:writable_book"
+  },
+  "output": {
+    "item": "patchouli:guide_book",
+    "count": 1,
+    "nbt": "{\"patchouli:book\":\"raidborn:the_illager_compendium\"}"
+  }
+}

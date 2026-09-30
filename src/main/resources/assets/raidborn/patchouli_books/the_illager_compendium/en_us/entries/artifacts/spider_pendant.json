@@ -1,0 +1,14 @@
+{
+  "name": "Spider Pendant",
+  "icon": "raidborn:spider_pendant",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:spider_pendant",
+      "text": "Hold Jump against a wall or ceiling to climb it, and Sneak to stay attached where you are. Fall damage is cut heavily too, which matters more than it sounds once you are up there.",
+      "title": "Spider Pendant"
+    }
+  ]
+}

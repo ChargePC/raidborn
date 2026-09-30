@@ -1,0 +1,13 @@
+{
+  "name": "Evoker Idol",
+  "icon": "raidborn:evoker_idol",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:evoker_idol",
+      "text": "Every hit you take carries a 15% chance of answering with 3 Vex, which go straight for whatever hit you. They last 15 seconds.",
+      "title": "Evoker Idol"
+    }
+  ]
+}

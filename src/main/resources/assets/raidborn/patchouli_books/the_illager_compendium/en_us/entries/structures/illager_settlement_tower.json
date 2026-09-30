@@ -1,0 +1,23 @@
+{
+  "name": "Illager Settlement Tower",
+  "icon": "minecraft:stone_bricks",
+  "category": "raidborn:structures",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Settlement Tower",
+      "text": "Settlement Towers generate in plains, savannas, snowy plains, and taigas. They are the rarest and most heavily defended Illager settlement."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Occupants",
+      "text": "Towers can contain common, strong, and very strong units. Evokers and Illusioners may occupy the strongest positions, along with compatible elite Illagers from installed mods."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Loot",
+      "text": "Tower chests draw from Illager, mining, library, and rare tower loot. Valuable finds can include diamonds, enchanted equipment, and golden apples."
+    }
+  ]
+}

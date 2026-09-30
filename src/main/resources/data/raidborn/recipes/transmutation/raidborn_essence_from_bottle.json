@@ -1,0 +1,13 @@
+{
+  "type": "raidborn:transmutation",
+  "soul": {
+    "item": "raidborn:villager_soul"
+  },
+  "input": {
+    "item": "minecraft:glass_bottle"
+  },
+  "output": {
+    "item": "raidborn:raidborn_essence",
+    "count": 1
+  }
+}

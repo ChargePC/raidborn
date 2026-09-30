@@ -1,0 +1,24 @@
+{
+  "name": "Hero of the Illage",
+  "icon": "raidborn:textures/mob_effect/hero_of_the_raid.png",
+  "category": "raidborn:effects",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Hero of the Illage",
+      "item": "raidborn:overlord_essence",
+      "text": "An $(l:raidborn:utility_and_items/essences)Overlord Essence$() grants Hero of the Illage, the last of the three alliance effects. Illagers stop treating you as prey, and it does not wear off on its own."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Alliance Rules",
+      "text": "It carries 15 recruitment slots by default and strips Bad Omen outright. Unlike the two below it, it survives you attacking or killing an Illager-side creature, so nothing you do in a fight can cost you the pact."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Village Relations",
+      "text": "Any Raidborn alliance effect costs you the village side of the game: Villagers will not deal with you, Iron Golems treat you as hostile, and Hero of the Village stays out of reach while it lasts."
+    }
+  ]
+}

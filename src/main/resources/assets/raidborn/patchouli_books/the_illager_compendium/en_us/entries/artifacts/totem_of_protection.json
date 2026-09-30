@@ -1,0 +1,13 @@
+{
+  "name": "Totem of Protection",
+  "icon": "raidborn:totem_of_protection",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:totem_of_protection",
+      "text": "Drops a protective field for 15 seconds. Everyone inside takes Resistance III, is put out if burning, and is cleared of harmful effects, which makes it the answer to a potion thrown into the patrol.$(br2)Cooldown is 45 seconds, and firing any Raidborn totem puts all three on it.",
+      "title": "Totem of Protection"
+    }
+  ]
+}

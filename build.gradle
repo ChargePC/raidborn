@@ -1,0 +1,131 @@
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '6.0.24'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+group = 'net.randomcara.raidborn'
+version = '0.1-1.20.1'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+minecraft {
+    mappings channel: 'parchment', version: '2023.06.26-1.20.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', tasks.named('createSrgToMcp').get().outputs.files.singleFile
+
+            mods {
+                raidborn {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', tasks.named('createSrgToMcp').get().outputs.files.singleFile
+
+            mods {
+                raidborn {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    // bentoslib comes from here, run publishToMavenLocal in that project first
+    mavenLocal()
+
+    // forge first, it serves net.minecraftforge and cpw.mods (eventbus asks for modlauncher 10.0.+)
+    maven { url = 'https://maven.minecraftforge.net' }
+
+    // content filters below. without them gradle asks every repo for every artifact, and one repo
+    // being down aborts resolution instead of falling through to the next. sponge threw 522s once
+    // and killed the build over an artifact that wasn't even hosted there.
+    maven {
+        name = 'SpongePowered'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+        content { includeGroupByRegex 'org\\.spongepowered.*' }
+    }
+
+    maven {
+        url = 'https://maven.parchmentmc.org'
+        content { includeGroupByRegex 'org\\.parchmentmc.*' }
+    }
+
+    maven {
+        url = 'https://maven.theillusivec4.top/'
+        content { includeGroupByRegex 'top\\.theillusivec4.*' }
+    }
+
+    maven {
+        url = 'https://maven.blamejared.com'
+        content {
+            includeGroupByRegex 'mezz\\.jei.*'
+            includeGroupByRegex 'vazkii.*'
+        }
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.9'
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    implementation fg.deobf('net.randomcara.bentoslib:bentoslib:0.2-1.20.1')
+
+    runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
+    compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1:api')
+
+    runtimeOnly fg.deobf('vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE')
+    compileOnly fg.deobf('vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api')
+
+    compileOnly fg.deobf('mezz.jei:jei-1.20.1-common-api:15.20.0.106')
+    compileOnly fg.deobf('mezz.jei:jei-1.20.1-forge-api:15.20.0.106')
+    runtimeOnly fg.deobf('mezz.jei:jei-1.20.1-forge:15.20.0.106')
+}
+
+mixin {
+    add sourceSets.main, 'raidborn.refmap.json'
+    config 'raidborn.mixins.json'
+}
+
+jar {
+    // mixin's AP writes raidborn.refmap.json into the classes dir and MixinGradle registers the
+    // same file through the sourceSet, so it shows up twice. identical copies, but gradle 7+
+    // treats that as an error instead of a warning.
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // license text goes in the jar, mods.toml only carries the name of it
+    from(rootProject.file('LICENSE.txt'))
+
+    manifest {
+        attributes([
+                'MixinConfigs'          : 'raidborn.mixins.json',
+                'Implementation-Title'  : 'Raidborn: Join the Illagers',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor' : 'Randomcara7'
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

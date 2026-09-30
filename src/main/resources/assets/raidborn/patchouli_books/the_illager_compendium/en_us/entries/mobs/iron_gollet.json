@@ -1,0 +1,31 @@
+{
+  "name": "Iron Gollet",
+  "category": "raidborn:mobs",
+  "icon": "raidborn:iron_gollet_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Overview",
+      "text": "The Iron Gollet is a small guardian with 25 health. It attacks hostile creatures except Creepers and deals between 7.5 and 21.5 damage.$(br2)Gollets prioritize injured Villagers, carry them away from nearby threats, and grant Regeneration II. They release a Villager when fully healed or after a short rescue period."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "raidborn:iron_gollet",
+      "name": "Iron Gollet",
+      "scale": 0.5,
+      "offset": 0.2,
+      "rotate": true,
+      "text": "They defend Villagers, Iron Golems, and other village-linked Gollets when those protectors are attacked."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Creation",
+      "text": "Place a Carved Pumpkin directly on top of one Iron Block, then right-click the Pumpkin with a Poppy. The two blocks and the Poppy are consumed, and the new Gollet belongs to the player who created it."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Carrying the Owner",
+      "text": "Only a player-created Gollet can carry its owner. Right-click your Gollet to mount it and receive Regeneration II while carried. Press Shift to dismount.$(br2)A village-linked Gollet cannot carry a player."
+    }
+  ]
+}

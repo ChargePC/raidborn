@@ -1,0 +1,24 @@
+{
+  "parent": "raidborn:root",
+  "display": {
+    "icon": { "item": "raidborn:villager_soul" },
+    "title": { "translate": "advancements.raidborn.they_had_families.title" },
+    "description": { "translate": "advancements.raidborn.they_had_families.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_villager_soul": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["raidborn:villager_soul"]
+          }
+        ]
+      }
+    }
+  }
+}

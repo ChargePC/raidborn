@@ -1,0 +1,29 @@
+{
+  "name": "Settlement Mode",
+  "icon": "raidborn:grand_warbell",
+  "category": "raidborn:mechanics",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Grand Warbell",
+      "item": "raidborn:grand_warbell",
+      "text": "Place a $(l:raidborn:utility_and_items/grand_warbell)Grand Warbell$(/l), then right-click it to assign nearby recruited Illagers to the settlement."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Settlement Members",
+      "text": "Assigned Illagers stop following you and no longer use active recruitment slots. They remain around the bell, wander, use beds, claim workstations, sleep, and follow a daily routine."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Trading and Recruiting",
+      "text": "Most settlement Illagers can trade after claiming the correct workstation. You can recruit them again later when you need them in your patrol.$(br2)Beasts cannot be assigned to Settlement Mode."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Breaking the Bell",
+      "text": "The Grand Warbell is the settlement center. Breaking it removes Settlement Mode from linked Illagers in the surrounding area."
+    }
+  ]
+}

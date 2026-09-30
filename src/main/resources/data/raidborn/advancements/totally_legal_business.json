@@ -1,0 +1,17 @@
+{
+  "parent": "raidborn:bound_to_the_bell",
+  "display": {
+    "icon": { "item": "minecraft:emerald" },
+    "title": { "translate": "advancements.raidborn.totally_legal_business.title" },
+    "description": { "translate": "advancements.raidborn.totally_legal_business.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "first_trade": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

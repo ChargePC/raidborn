@@ -1,0 +1,13 @@
+{
+  "name": "Giga Emerald",
+  "icon": "raidborn:giga_emerald",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:giga_emerald",
+      "text": "Emerald prices drop while it is equipped, with Villagers and Illagers alike. Settlement trades count too, so a Grand Warbell and this together undercut a village.",
+      "title": "Giga Emerald"
+    }
+  ]
+}

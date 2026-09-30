@@ -1,0 +1,13 @@
+{
+  "name": "Bloody Chalice",
+  "icon": "raidborn:bloody_chalice",
+  "category": "raidborn:artifacts",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:bloody_chalice",
+      "text": "Kills feed the patrol both ways. A nearby recruit finishing an enemy heals you 3 hearts, and a kill of your own heals every nearby recruit in the patrol by the same amount.",
+      "title": "Bloody Chalice"
+    }
+  ]
+}

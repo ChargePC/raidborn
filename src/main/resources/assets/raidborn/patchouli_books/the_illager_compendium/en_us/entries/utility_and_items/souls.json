@@ -1,0 +1,30 @@
+{
+  "name": "Souls",
+  "icon": "raidborn:villager_soul",
+  "category": "raidborn:utility_and_items",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Souls are used in the Transmutation Table and can be combined into stronger soul tiers.",
+      "title": "Souls"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:villager_soul",
+      "text": "$(thing)Villager Soul$() has a 10% chance to drop when a Villager dies. The Ominous Dagger doubles this chance.",
+      "title": "Villager Soul"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "raidborn:soul_of_many_villagers",
+      "title": "Soul of Many Villagers",
+      "text": "Combine 4 Villager Souls to make a Soul of Many Villagers."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "raidborn:village_soul",
+      "title": "Village Soul",
+      "text": "Combine 4 Souls of Many Villagers to make a Village Soul."
+    }
+  ]
+}

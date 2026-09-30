@@ -1,0 +1,40 @@
+{
+  "name": "Beast",
+  "category": "raidborn:mobs",
+  "icon": "raidborn:beast_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Overview",
+      "text": "The Beast is a heavy Illager unit with 80 health, strong melee attacks, and a cost of 5 recruitment slots. Its blows launch targets upward.$(br2)Right-click a Beast with a Villager Soul to restore 25 health."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "raidborn:beast",
+      "name": "Beast",
+      "scale": 1,
+      "offset": 0.0,
+      "rotate": true,
+      "text": "They do not attack Illagers, Raiders, their creator or players with a Raidborn alliance effect."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Summoning the Beast",
+      "images": [
+        "raidborn:textures/gui/book/beast_summon.png"
+      ],
+      "border": true,
+      "text": "Place a Beast Heart with a Carved Pumpkin directly above it. Place Mud directly below the Heart and on two opposite sides. Put a Chest directly against either remaining horizontal side; the two side Mud blocks must be perpendicular to the Chest.$(br2)The Beast faces away from the Chest."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Ownership",
+      "text": "A player-created Beast remembers its creator and never attacks them. The creator can right-click it to open a 15-slot inventory.$(br2)Beasts can be led with a Lead. Stored items drop when the Beast dies."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "During Raids",
+      "text": "Beasts appear in raids at the same frequency as Ravagers. A raid-spawned Beast arrives leashed to a Pillager or Vindicator and carries a modest shipment of vanilla weapons, ammunition, food, and camp supplies.$(br2)The automatic raid leash releases during combat and can reconnect after combat. Its cargo remains available if the Beast is recruited."
+    }
+  ]
+}

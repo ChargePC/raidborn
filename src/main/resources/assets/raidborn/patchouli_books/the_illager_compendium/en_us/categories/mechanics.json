@@ -1,0 +1,6 @@
+{
+  "name": "Mechanics",
+  "description": "How any of this actually works. Taking recruits, giving them orders, settling them somewhere, and pointing them at a village.",
+  "icon": "minecraft:comparator",
+  "sortnum": 2
+}

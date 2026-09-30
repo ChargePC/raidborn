@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raidborn:block/beast_heart"
+    },
+    "facing=east": {
+      "model": "raidborn:block/beast_heart",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raidborn:block/beast_heart",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raidborn:block/beast_heart",
+      "y": 270
+    }
+  }
+}

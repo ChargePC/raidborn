@@ -1,0 +1,24 @@
+{
+  "name": "Illager Loyalty",
+  "icon": "raidborn:textures/mob_effect/illager_loyalty.png",
+  "category": "raidborn:effects",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "title": "Illager Loyalty",
+      "item": "raidborn:raidborn_essence",
+      "text": "A $(l:raidborn:utility_and_items/essences)Raidborn Essence$() grants Illager Loyalty, the first of the three alliance effects. Illagers stop treating you as prey, and it does not wear off on its own."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Alliance Rules",
+      "text": "It carries 5 recruitment slots by default and it is the least forgiving of the three: directly hurting an Illager-side creature is enough to end it, no kill required.$(br2)Bad Omen suppresses it while it lasts, and Illager Loyalty comes back when Bad Omen goes."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Village Relations",
+      "text": "Any Raidborn alliance effect costs you the village side of the game: Villagers will not deal with you, Iron Golems treat you as hostile, and Hero of the Village stays out of reach while it lasts."
+    }
+  ]
+}

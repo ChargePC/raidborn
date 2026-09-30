@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RR",
+    "GG",
+    "CC"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:red_carpet"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:tuff"
+    }
+  },
+  "result": {
+    "item": "raidborn:transmutation_table",
+    "count": 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Anywhere Pillow",
+  "icon": "raidborn:anywhere_pillow",
+  "category": "raidborn:artifacts",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "raidborn:anywhere_pillow",
+      "text": "Sleeps you where you stand, at night or during a thunderstorm, with no bed involved. It needs solid ground under you, room to lie down, and no monsters nearby.$(br2)Outside the Overworld it explodes instead. Cooldown is 20 seconds.",
+      "title": "Anywhere Pillow"
+    }
+  ]
+}
