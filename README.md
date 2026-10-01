@@ -1,12 +1,9 @@
 # Raidborn: Join the Illagers
 
-Join the wrong side.
+Forge mod for Minecraft 1.20.1. You get to play on the illager side: recruit them
+into a squad, settle them around a warbell, raid villages, and turn junk into artifacts at the transmutation table.
 
-Forge mod for Minecraft 1.20.1. You get to play on the illager side for once: recruit them
-into a squad, settle them around a warbell, raid villages, and turn junk into artifacts at the
-transmutation table.
-
-Still 0.1, so expect rough edges. Bugs and ideas go in the
+Still 0.1, so expect Bugs and ideas go in the
 [issues](https://github.com/ChargePC/raidborn/issues).
 
 ## What you need
@@ -53,7 +50,7 @@ and the jar lands in `build/libs/`.
 
 ## Code layout
 
-Everything sits under `net/randomcara/raidborn`:
+`net/randomcara/raidborn`:
 
 - `core` - registries, config, compat checks, misc helpers
 - `content` - items, entities, effects, artifacts
