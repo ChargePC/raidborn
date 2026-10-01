@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SettlementSpawnMarkerEvents {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final boolean REQUIRE_MARKER_TAG = false;
+    private static final boolean REQUIRE_MARKER_TAG = true;
     private static final String SPAWN_MARKER_TAG = "raidborn_spawn_marker";
     private static final int SPAWN_DELAY_TICKS = 2;
     private static final int MAX_ATTEMPTS = 5;

@@ -21,6 +21,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
@@ -95,26 +96,23 @@ public class IllagerAllianceEvents {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getEffectInstance() == null) return;
 
-        MobEffect added = event.getEffectInstance().getEffect();
-        IllagerAlliance gained = IllagerAlliance.forEffect(added);
-        if (gained != null) {
-            for (IllagerAlliance other : IllagerAlliance.all()) {
-                if (other != gained) other.revoke(player);
-            }
+        IllagerAlliance gained = IllagerAlliance.forEffect(event.getEffectInstance().getEffect());
+        if (gained == null) return;
 
-            player.removeEffect(MobEffects.HERO_OF_THE_VILLAGE);
-            return;
+        for (IllagerAlliance other : IllagerAlliance.all()) {
+            if (other != gained) other.revoke(player);
         }
 
-        if (added == MobEffects.BAD_OMEN && blocksBadOmen(player)) {
-            event.setCanceled(true);
-            player.removeEffect(MobEffects.BAD_OMEN);
-            return;
-        }
+        player.removeEffect(MobEffects.HERO_OF_THE_VILLAGE);
+    }
 
-        if (added == MobEffects.HERO_OF_THE_VILLAGE && ModEffects.hasAllianceEffect(player)) {
-            event.setCanceled(true);
-            player.removeEffect(MobEffects.HERO_OF_THE_VILLAGE);
+    @SubscribeEvent
+    public static void onEffectApplicable(MobEffectEvent.Applicable event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        MobEffect effect = event.getEffectInstance().getEffect();
+        if (effect == MobEffects.BAD_OMEN && blocksBadOmen(player) || effect == MobEffects.HERO_OF_THE_VILLAGE && ModEffects.hasAllianceEffect(player)) {
+            event.setResult(Event.Result.DENY);
         }
     }
 

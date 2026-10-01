@@ -16,7 +16,7 @@ description='''Join the wrong side'''
 [[dependencies.raidborn]]
 modId="forge"
 mandatory=true
-versionRange="[47,)"
+versionRange="[47.4,)"
 ordering="NONE"
 side="BOTH"
 
@@ -31,13 +31,13 @@ side="BOTH"
 modId="bentoslib"
 mandatory=true
 versionRange="[0.2,)"
-ordering="BEFORE"
+ordering="AFTER"
 side="BOTH"
 
 [[dependencies.raidborn]]
 modId="curios"
 mandatory=true
-versionRange="[5.0,)"
+versionRange="[5.14.1,)"
 ordering="AFTER"
 side="BOTH"
 

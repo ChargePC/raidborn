@@ -41,25 +41,25 @@ public class OminousDaggerItem extends SwordItem {
     private static final int MAX_BONUS_KILLS = 40;
     private static final UUID OMINOUS_DAGGER_REACH_UUID = UUID.fromString("7b1b8c5d-59c3-4f5f-b4c4-3de7dc0f4c11");
 
-    private final Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public OminousDaggerItem(Tier tier, Properties properties) {
         super(tier, 2, -1.8F, properties);
-
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 4.0D, AttributeModifier.Operation.ADDITION));
-
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1.8D, AttributeModifier.Operation.ADDITION));
-
-        builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(OMINOUS_DAGGER_REACH_UUID, "Ominous Dagger reach modifier", -0.75D, AttributeModifier.Operation.ADDITION));
-
-        this.defaultModifiers = builder.build();
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
+        if (slot != EquipmentSlot.MAINHAND) return super.getDefaultAttributeModifiers(slot);
+
+        if (this.defaultModifiers == null) {
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+            builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 4.0D, AttributeModifier.Operation.ADDITION));
+            builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1.8D, AttributeModifier.Operation.ADDITION));
+            builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(OMINOUS_DAGGER_REACH_UUID, "Ominous Dagger reach modifier", -0.75D, AttributeModifier.Operation.ADDITION));
+            this.defaultModifiers = builder.build();
+        }
+
+        return this.defaultModifiers;
     }
 
     public static int getVillagerKills(ItemStack stack) {

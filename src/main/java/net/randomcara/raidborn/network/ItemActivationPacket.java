@@ -1,11 +1,11 @@
 package net.randomcara.raidborn.network;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import net.randomcara.bentoslib.client.render.area.AreaVisualClient;
-import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.client.ClientPacketHandler;
 
 import java.util.function.Supplier;
 
@@ -26,13 +26,7 @@ public class ItemActivationPacket {
 
     public static void handle(ItemActivationPacket msg, Supplier<NetworkEvent.Context> ctxSupplier) {
         NetworkEvent.Context ctx = ctxSupplier.get();
-        ctx.enqueueWork(() -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.player != null && !msg.stack.is(ModItems.ANYWHERE_PILLOW.get())) {
-                minecraft.gameRenderer.displayItemActivation(msg.stack);
-                AreaVisualClient.startFromActivatedStack(minecraft.player, msg.stack);
-            }
-        });
+        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleItemActivation(msg.stack)));
         ctx.setPacketHandled(true);
     }
 }
