@@ -32,6 +32,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -173,7 +174,7 @@ public class TotemOfProtectionItem extends Item implements ICurioItem, IActivata
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Gives Resistance III to players and allies", 0x9FE6FF), TooltipHelper.line("Removes fire and harmful effects", 0xCFEFFF), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("totem_of_protection.resistance", 0x9FE6FF), RaidbornTooltips.line("totem_of_protection.cleanse", 0xCFEFFF), RaidbornTooltips.line("cooldown", 0xFFAA00, "45s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

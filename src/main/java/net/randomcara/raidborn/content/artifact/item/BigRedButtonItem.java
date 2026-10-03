@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -39,7 +40,7 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
 
         List<Mob> recruits = getPlayerRecruits(player, SEARCH_RADIUS);
         if (recruits.isEmpty()) {
-            player.displayClientMessage(Component.literal("You have no recruited Illagers nearby.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.no_recruits_nearby") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return false;
         }
 
@@ -67,7 +68,7 @@ public class BigRedButtonItem extends Item implements ICurioItem, IActivatableCu
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Press it. Something will happen.", 0xFFFF7777), TooltipHelper.line("Cooldown: 1m 40s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("big_red_button.press", 0xFFFF7777), RaidbornTooltips.line("cooldown", 0xFFAA00, "1m 40s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

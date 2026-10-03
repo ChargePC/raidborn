@@ -27,6 +27,7 @@ import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -54,7 +55,7 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("15% chance to summon 3 Vex when hit", 0xDDDDDD), TooltipHelper.line("The Vex go after whoever hit you", 0xBBBBFF));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("evoker_idol.chance", 0xDDDDDD), RaidbornTooltips.line("evoker_idol.target", 0xBBBBFF));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

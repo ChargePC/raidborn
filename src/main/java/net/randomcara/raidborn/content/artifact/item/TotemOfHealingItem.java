@@ -29,6 +29,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -154,7 +155,7 @@ public class TotemOfHealingItem extends Item implements ICurioItem, IActivatable
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Creates a healing area for players and allies", 0xFF5555), TooltipHelper.line("Gives Regeneration II", 0xFF7777), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("totem_of_healing.area", 0xFF5555), RaidbornTooltips.line("totem_of_healing.regeneration", 0xFF7777), RaidbornTooltips.line("cooldown", 0xFFAA00, "45s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

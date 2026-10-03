@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -84,7 +85,7 @@ public class ArcaneDiceItem extends Item implements ICurioItem, IActivatableCuri
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, Component.literal("Rolls a random buff for you and your recruits") .withStyle(ChatFormatting.LIGHT_PURPLE), Component.literal("Every target gets its own effect") .withStyle(ChatFormatting.DARK_PURPLE), TooltipHelper.line("Cooldown: 90s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, Component.translatable("tooltip.raidborn.arcane_dice.roll") .withStyle(ChatFormatting.LIGHT_PURPLE), Component.translatable("tooltip.raidborn.arcane_dice.each_target") .withStyle(ChatFormatting.DARK_PURPLE), RaidbornTooltips.line("cooldown", 0xFFAA00, "90s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

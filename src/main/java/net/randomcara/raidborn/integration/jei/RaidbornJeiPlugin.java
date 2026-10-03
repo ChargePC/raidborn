@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.registry.ModBlocks;
+import net.randomcara.raidborn.core.registry.ModRecipeTypes;
 import net.randomcara.raidborn.transmutation.recipe.TransmutationRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -35,7 +36,7 @@ public class RaidbornJeiPlugin implements IModPlugin {
             return;
         }
 
-        List<TransmutationRecipe> recipes = minecraft.level.getRecipeManager().getAllRecipesFor(TransmutationRecipe.Type.INSTANCE);
+        List<TransmutationRecipe> recipes = minecraft.level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.TRANSMUTATION.get());
         registration.addRecipes(TransmutationRecipeCategory.TRANSMUTATION_TYPE, recipes);
     }
 

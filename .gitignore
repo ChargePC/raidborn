@@ -9,3 +9,18 @@ hs_err_pid*
 
 .idea/workspace.xml
 .idea/shelf/
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+.settings/
+.classpath
+.project
+bin/
+.vscode/
+
+logs/
+.DS_Store
+Thumbs.db

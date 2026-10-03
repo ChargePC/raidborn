@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.content.artifact.item.RaidbornNecklaceEffectEvents;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
@@ -88,7 +89,7 @@ public class RaidbornNecklaceItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("+" + BONUS_RECRUIT_SLOTS + " Recruitment Slots", 0x55FF55), TooltipHelper.line("Preserves your alliance effect after death", 0xAAAAAA));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("raidborn_necklace.slots", 0x55FF55, BONUS_RECRUIT_SLOTS), RaidbornTooltips.line("raidborn_necklace.death", 0xAAAAAA));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

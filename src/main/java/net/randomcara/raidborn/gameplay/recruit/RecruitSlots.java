@@ -92,7 +92,7 @@ public class RecruitSlots {
 
         if (releasedCount > 0) {
             int finalUsed = countRecruitSlots(player);
-            player.displayClientMessage(Component.literal("Recruit limit exceeded. " + releasedCount + " Illager" + (releasedCount == 1 ? "" : "s") + " dismissed. (" + finalUsed + "/" + maxSlots + " slots)") .withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.translatable(releasedCount == 1 ? "message.raidborn.recruit.limit_exceeded_one" : "message.raidborn.recruit.limit_exceeded", releasedCount, finalUsed, maxSlots) .withStyle(ChatFormatting.RED), true);
         }
     }
 }

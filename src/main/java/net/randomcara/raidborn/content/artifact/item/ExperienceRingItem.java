@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
@@ -69,10 +70,10 @@ public class ExperienceRingItem extends Item implements SlotBoundCurioItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         int storedXp = getStoredExperience(stack);
         if (storedXp > 0) {
-            tooltip.add(TooltipHelper.line("Stored Experience: " + storedXp + " XP", 0xFFA1FF99));
+            tooltip.add(RaidbornTooltips.line("experience_ring.stored", 0xFFA1FF99, storedXp));
         }
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Doubles experience gained while equipped", 0xFFA1FF99), TooltipHelper.line("Stores up to 30 levels when you die", 0xFFB7E45A), TooltipHelper.line("Pick up the ring after death to recover the stored XP", 0xFFB7E45A));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("experience_ring.doubles", 0xFFA1FF99), RaidbornTooltips.line("experience_ring.stores", 0xFFB7E45A), RaidbornTooltips.line("experience_ring.recover", 0xFFB7E45A));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

@@ -3,6 +3,7 @@ package net.randomcara.raidborn.content.item.utility;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -51,13 +52,13 @@ public class IllagerWarhornItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         SquadOrder mode = getSelectedMode(stack);
-        tooltip.add(Component.literal("Current Mode: ").withStyle(ChatFormatting.GRAY).append(Component.literal(formatMode(mode)).withStyle(getModeColor(mode))));
+        tooltip.add(Component.translatable("tooltip.raidborn.illager_warhorn.mode", formatMode(mode).withStyle(getModeColor(mode))).withStyle(ChatFormatting.GRAY));
 
         TooltipHelper.addShiftDescription(
                 tooltip,
-                Component.literal("Shift + Right Click: Change mode").withStyle(ChatFormatting.DARK_GRAY),
-                Component.literal("Right Click: Give order").withStyle(ChatFormatting.DARK_GRAY),
-                Component.literal("Hold: squad stays and defends the commanded position").withStyle(ChatFormatting.DARK_GRAY)
+                Component.translatable("tooltip.raidborn.illager_warhorn.change_mode").withStyle(ChatFormatting.DARK_GRAY),
+                Component.translatable("tooltip.raidborn.illager_warhorn.give_order").withStyle(ChatFormatting.DARK_GRAY),
+                Component.translatable("tooltip.raidborn.illager_warhorn.hold").withStyle(ChatFormatting.DARK_GRAY)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);
@@ -76,7 +77,7 @@ public class IllagerWarhornItem extends Item {
         }
 
         if (!RecruitmentEvents.canCommandRecruits(serverPlayer)) {
-            serverPlayer.displayClientMessage(Component.literal("You cannot command your squad right now.").withStyle(ChatFormatting.RED), true);
+            serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.cannot_command").withStyle(ChatFormatting.RED), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -87,13 +88,13 @@ public class IllagerWarhornItem extends Item {
             setSelectedMode(stack, next);
 
             player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-            serverPlayer.displayClientMessage(Component.literal("Warhorn mode: ").withStyle(ChatFormatting.YELLOW).append(Component.literal(formatMode(next)).withStyle(ChatFormatting.WHITE)), true);
+            serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.mode_changed", formatMode(next).withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.YELLOW), true);
             return InteractionResultHolder.success(stack);
         }
 
         List<Mob> squad = SquadOrders.getNearbySquad(serverPlayer);
         if (squad.isEmpty()) {
-            serverPlayer.displayClientMessage(Component.literal("You have no recruited Illagers nearby.").withStyle(ChatFormatting.GRAY), true);
+            serverPlayer.displayClientMessage(Component.translatable("message.raidborn.no_recruits_nearby").withStyle(ChatFormatting.GRAY), true);
             return InteractionResultHolder.success(stack);
         }
 
@@ -109,12 +110,12 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.FOLLOW);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("Squad order: Follow").withStyle(ChatFormatting.GREEN), true);
+                serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.order.follow").withStyle(ChatFormatting.GREEN), true);
             }
             case ATTACK -> {
                 LivingEntity lookedTarget = getLookTarget(serverPlayer);
                 if (lookedTarget == null) {
-                    serverPlayer.displayClientMessage(Component.literal("No valid target in sight.").withStyle(ChatFormatting.GRAY), true);
+                    serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.no_target").withStyle(ChatFormatting.GRAY), true);
                     return InteractionResultHolder.success(stack);
                 }
 
@@ -132,11 +133,11 @@ public class IllagerWarhornItem extends Item {
                 }
 
                 if (affected <= 0) {
-                    serverPlayer.displayClientMessage(Component.literal("That target is not valid for your squad.").withStyle(ChatFormatting.GRAY), true);
+                    serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.invalid_target").withStyle(ChatFormatting.GRAY), true);
                 } else {
                     playOrderSound(level, serverPlayer, SquadOrder.ATTACK);
                     player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                    serverPlayer.displayClientMessage(Component.literal("Squad order: Attack target").withStyle(ChatFormatting.DARK_RED), true);
+                    serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.order.attack").withStyle(ChatFormatting.DARK_RED), true);
                 }
             }
             case HOLD -> {
@@ -148,7 +149,7 @@ public class IllagerWarhornItem extends Item {
 
                 playOrderSound(level, serverPlayer, SquadOrder.HOLD);
                 player.getCooldowns().addCooldown(this, COMMAND_COOLDOWN_TICKS);
-                serverPlayer.displayClientMessage(Component.literal("Squad order: Hold position").withStyle(ChatFormatting.GOLD), true);
+                serverPlayer.displayClientMessage(Component.translatable("message.raidborn.illager_warhorn.order.hold").withStyle(ChatFormatting.GOLD), true);
             }
         }
 
@@ -199,12 +200,8 @@ public class IllagerWarhornItem extends Item {
         return true;
     }
 
-    private String formatMode(SquadOrder mode) {
-        return switch (mode) {
-            case FOLLOW -> "Follow";
-            case ATTACK -> "Attack";
-            case HOLD -> "Hold";
-        };
+    private MutableComponent formatMode(SquadOrder mode) {
+        return Component.translatable("squad_order.raidborn." + mode.getId());
     }
 
     private ChatFormatting getModeColor(SquadOrder mode) {

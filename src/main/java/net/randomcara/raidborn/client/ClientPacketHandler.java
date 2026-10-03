@@ -2,7 +2,6 @@ package net.randomcara.raidborn.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
-import net.randomcara.bentoslib.client.render.area.AreaVisualClient;
 import net.randomcara.raidborn.core.registry.ModItems;
 
 public class ClientPacketHandler {
@@ -10,7 +9,6 @@ public class ClientPacketHandler {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && !stack.is(ModItems.ANYWHERE_PILLOW.get())) {
             minecraft.gameRenderer.displayItemActivation(stack);
-            AreaVisualClient.startFromActivatedStack(minecraft.player, stack);
         }
     }
 }

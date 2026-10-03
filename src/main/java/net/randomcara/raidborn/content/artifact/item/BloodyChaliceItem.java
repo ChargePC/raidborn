@@ -18,6 +18,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +41,7 @@ public class BloodyChaliceItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("When your patrol gets a kill, you heal 3 hearts", 0xAA0000), TooltipHelper.line("When you get a kill, your patrol heals 3 hearts", 0xFF5555));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("bloody_chalice.patrol_kill", 0xAA0000), RaidbornTooltips.line("bloody_chalice.your_kill", 0xFF5555));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

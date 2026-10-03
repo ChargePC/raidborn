@@ -13,6 +13,7 @@ import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -33,7 +34,7 @@ public class TemporalRelicItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Cooldowns recover 30% faster", 0xFFBBA6FF));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("temporal_relic.cooldowns", 0xFFBBA6FF));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

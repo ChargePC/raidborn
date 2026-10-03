@@ -94,7 +94,7 @@ public class SettlementBridge {
         if (player == null || player.level().isClientSide) return;
 
         if (!RecruitmentEvents.canCommandRecruits(player)) {
-            player.displayClientMessage(Component.literal("You cannot command recruits right now.").withStyle(ChatFormatting.GRAY), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.settlement.cannot_command").withStyle(ChatFormatting.GRAY), true);
             return;
         }
 
@@ -122,9 +122,9 @@ public class SettlementBridge {
 
         if (affected > 0) {
             RaidbornAdvancements.award(player, ADV_BOUND_TO_THE_BELL, CRIT_BOUND_TO_THE_BELL);
-            player.displayClientMessage(Component.literal("Settlement mode enabled for " + affected + " Illager" + (affected == 1 ? "." : "s.")).withStyle(ChatFormatting.GREEN), true);
+            player.displayClientMessage(Component.translatable(affected == 1 ? "message.raidborn.settlement.enabled_one" : "message.raidborn.settlement.enabled", affected).withStyle(ChatFormatting.GREEN), true);
         } else {
-            player.displayClientMessage(Component.literal("No valid recruited Illagers found.").withStyle(ChatFormatting.GRAY), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.settlement.no_recruits").withStyle(ChatFormatting.GRAY), true);
         }
     }
 

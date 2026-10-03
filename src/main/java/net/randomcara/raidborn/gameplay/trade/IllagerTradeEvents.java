@@ -109,7 +109,7 @@ public class IllagerTradeEvents {
     private static final ResourceLocation WB_PILLAGER_BAG = id(WANDERING_BAGS_MODID, "pillager_bag");
     private static final ResourceLocation WB_WITCH_BAG = id(WANDERING_BAGS_MODID, "witch_bag");
 
-    private record TradeProfile(String type, String title) {
+    private record TradeProfile(String type, String titleKey) {
     }
 
     private static ResourceLocation id(String namespace, String path) {
@@ -213,33 +213,33 @@ public class IllagerTradeEvents {
         ResourceLocation id = getEntityId(entity);
         if (id == null) return null;
 
-        if (id.equals(MC_ILLUSIONER)) return new TradeProfile("illusioner", "Illusioner Illusions");
-        if (id.equals(MC_PILLAGER)) return new TradeProfile("pillager", "Pillager Armory");
-        if (id.equals(MC_VINDICATOR)) return new TradeProfile("vindicator", "Vindicator Arsenal");
-        if (id.equals(MC_EVOKER)) return new TradeProfile("evoker", "Evoker Relics");
-        if (id.equals(MC_WITCH)) return new TradeProfile("witch", "Witch Brews");
-        if (id.equals(SANDR_EXECUTIONER)) return new TradeProfile("sandr_executioner", "Executioner Wares");
-        if (id.equals(SANDR_GRIEFER)) return new TradeProfile("sandr_griefer", "Griefer Contraband");
-        if (id.equals(SANDR_ICEOLOGER)) return new TradeProfile("sandr_iceologer", "Iceologer Relics");
-        if (id.equals(SANDR_TRICKSTER)) return new TradeProfile("sandr_trickster", "Trickster Curios");
-        if (id.equals(IINV_PROVOKER)) return new TradeProfile("iinv_provoker", "Provoker Draughts");
-        if (id.equals(IINV_BASHER)) return new TradeProfile("iinv_basher", "Basher Armory");
-        if (id.equals(IINV_SORCERER)) return new TradeProfile("iinv_sorcerer", "Sorcerer Relics");
-        if (id.equals(IINV_ARCHIVIST)) return new TradeProfile("iinv_archivist", "Archivist Catalog");
-        if (id.equals(IINV_INQUISITOR)) return new TradeProfile("iinv_inquisitor", "Inquisitor Arsenal");
-        if (id.equals(IINV_MARAUDER)) return new TradeProfile("iinv_marauder", "Marauder Spoils");
-        if (id.equals(IINV_INVOKER)) return new TradeProfile("iinv_invoker", "Invoker Arcana");
-        if (id.equals(IINV_ALCHEMIST)) return new TradeProfile("iinv_alchemist", "Alchemist Brews");
-        if (id.equals(IINV_FIRECALLER)) return new TradeProfile("iinv_firecaller", "Firecaller Flames");
-        if (id.equals(IINV_NECROMANCER)) return new TradeProfile("iinv_necromancer", "Necromancer Rites");
-        if (id.equals(TAP_ARCHER)) return new TradeProfile("tap_archer", "Archer Gear");
-        if (id.equals(TAP_LEGIONER)) return new TradeProfile("tap_legioner", "Legioner Armory");
-        if (id.equals(TAP_SKIRMISHER)) return new TradeProfile("tap_skirmisher", "Skirmisher Wares");
-        if (id.equals(GI_GUARD)) return new TradeProfile("gi_guard", "Guard Supplies");
-        if (id.equals(HR_HUNTER)) return new TradeProfile("hr_hunter", "Hunter Stock");
-        if (id.equals(CONJ_CONJURER)) return new TradeProfile("conj_conjurer", "Conjurer Curios");
-        if (id.equals(RNC_CABBAGER)) return new TradeProfile("rnc_cabbager", "Cabbager Produce");
-        if (id.equals(EWM_ENCHANTER)) return new TradeProfile("ewm_enchanter_v2", "Enchanter Arcana");
+        if (id.equals(MC_ILLUSIONER)) return new TradeProfile("illusioner", "merchant.raidborn.illusioner");
+        if (id.equals(MC_PILLAGER)) return new TradeProfile("pillager", "merchant.raidborn.pillager");
+        if (id.equals(MC_VINDICATOR)) return new TradeProfile("vindicator", "merchant.raidborn.vindicator");
+        if (id.equals(MC_EVOKER)) return new TradeProfile("evoker", "merchant.raidborn.evoker");
+        if (id.equals(MC_WITCH)) return new TradeProfile("witch", "merchant.raidborn.witch");
+        if (id.equals(SANDR_EXECUTIONER)) return new TradeProfile("sandr_executioner", "merchant.raidborn.sandr_executioner");
+        if (id.equals(SANDR_GRIEFER)) return new TradeProfile("sandr_griefer", "merchant.raidborn.sandr_griefer");
+        if (id.equals(SANDR_ICEOLOGER)) return new TradeProfile("sandr_iceologer", "merchant.raidborn.sandr_iceologer");
+        if (id.equals(SANDR_TRICKSTER)) return new TradeProfile("sandr_trickster", "merchant.raidborn.sandr_trickster");
+        if (id.equals(IINV_PROVOKER)) return new TradeProfile("iinv_provoker", "merchant.raidborn.iinv_provoker");
+        if (id.equals(IINV_BASHER)) return new TradeProfile("iinv_basher", "merchant.raidborn.iinv_basher");
+        if (id.equals(IINV_SORCERER)) return new TradeProfile("iinv_sorcerer", "merchant.raidborn.iinv_sorcerer");
+        if (id.equals(IINV_ARCHIVIST)) return new TradeProfile("iinv_archivist", "merchant.raidborn.iinv_archivist");
+        if (id.equals(IINV_INQUISITOR)) return new TradeProfile("iinv_inquisitor", "merchant.raidborn.iinv_inquisitor");
+        if (id.equals(IINV_MARAUDER)) return new TradeProfile("iinv_marauder", "merchant.raidborn.iinv_marauder");
+        if (id.equals(IINV_INVOKER)) return new TradeProfile("iinv_invoker", "merchant.raidborn.iinv_invoker");
+        if (id.equals(IINV_ALCHEMIST)) return new TradeProfile("iinv_alchemist", "merchant.raidborn.iinv_alchemist");
+        if (id.equals(IINV_FIRECALLER)) return new TradeProfile("iinv_firecaller", "merchant.raidborn.iinv_firecaller");
+        if (id.equals(IINV_NECROMANCER)) return new TradeProfile("iinv_necromancer", "merchant.raidborn.iinv_necromancer");
+        if (id.equals(TAP_ARCHER)) return new TradeProfile("tap_archer", "merchant.raidborn.tap_archer");
+        if (id.equals(TAP_LEGIONER)) return new TradeProfile("tap_legioner", "merchant.raidborn.tap_legioner");
+        if (id.equals(TAP_SKIRMISHER)) return new TradeProfile("tap_skirmisher", "merchant.raidborn.tap_skirmisher");
+        if (id.equals(GI_GUARD)) return new TradeProfile("gi_guard", "merchant.raidborn.gi_guard");
+        if (id.equals(HR_HUNTER)) return new TradeProfile("hr_hunter", "merchant.raidborn.hr_hunter");
+        if (id.equals(CONJ_CONJURER)) return new TradeProfile("conj_conjurer", "merchant.raidborn.conj_conjurer");
+        if (id.equals(RNC_CABBAGER)) return new TradeProfile("rnc_cabbager", "merchant.raidborn.rnc_cabbager");
+        if (id.equals(EWM_ENCHANTER)) return new TradeProfile("ewm_enchanter_v2", "merchant.raidborn.ewm_enchanter");
         return null;
     }
 
@@ -289,7 +289,7 @@ public class IllagerTradeEvents {
 
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
-        openIllager(player, mob, profile.type(), profile.title());
+        openIllager(player, mob, profile.type(), profile.titleKey());
     }
 
     @SubscribeEvent
@@ -355,7 +355,7 @@ public class IllagerTradeEvents {
         }
     }
 
-    private static void openIllager(ServerPlayer player, Mob mob, String type, String titleBase) {
+    private static void openIllager(ServerPlayer player, Mob mob, String type, String titleKey) {
         ensureTradeData(mob);
 
         int level = getLevel(mob);
@@ -366,7 +366,7 @@ public class IllagerTradeEvents {
             applyGigaEmeraldReputationDiscounts(sessionOffers);
         }
 
-        openMerchant(player, Component.literal(titleBase), sessionOffers, mob, type);
+        openMerchant(player, Component.translatable(titleKey), sessionOffers, mob, type);
     }
 
     private static long getCurrentDay(Mob mob) {

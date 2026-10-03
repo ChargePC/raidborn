@@ -24,6 +24,7 @@ import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -47,7 +48,7 @@ public class PoisonArrowheadItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Your weapon hits and projectiles poison enemies", 0xFF76DB4C), TooltipHelper.line("Your recruited Illagers can poison too", 0xFF4F8C29));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("poison_arrowhead.poison", 0xFF76DB4C), RaidbornTooltips.line("poison_arrowhead.recruits", 0xFF4F8C29));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

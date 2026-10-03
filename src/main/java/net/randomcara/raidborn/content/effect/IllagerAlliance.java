@@ -24,7 +24,6 @@ public enum IllagerAlliance {
         ON_KILL
     }
 
-    public static final int PERMANENT = Integer.MAX_VALUE;
     private static final IllagerAlliance[] ALL = values();
 
     static IllagerAlliance[] all() {
@@ -71,7 +70,7 @@ public enum IllagerAlliance {
     }
 
     public void grant(Player player) {
-        player.addEffect(new MobEffectInstance(effect(), PERMANENT, 0, false, true, true));
+        player.addEffect(new MobEffectInstance(effect(), MobEffectInstance.INFINITE_DURATION, 0, false, true, true));
     }
 
     public void revoke(Player player) {

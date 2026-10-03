@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -185,7 +186,7 @@ public class SpiderPendantItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Hold Jump to climb walls and ceilings", 0xFFC8C2A7), TooltipHelper.line("Hold Sneak while climbing to stick to walls", 0xFFC8C2A7), TooltipHelper.line("Greatly reduces fall damage", 0xFFC8C2A7));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("spider_pendant.climb", 0xFFC8C2A7), RaidbornTooltips.line("spider_pendant.stick", 0xFFC8C2A7), RaidbornTooltips.line("spider_pendant.fall", 0xFFC8C2A7));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

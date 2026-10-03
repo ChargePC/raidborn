@@ -26,6 +26,7 @@ import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -65,44 +66,44 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
         }
 
         if (player.isSleeping()) {
-            player.displayClientMessage(Component.literal("You are already sleeping."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.already_sleeping"), true);
             return false;
         }
 
         if (player.isPassenger()) {
-            player.displayClientMessage(Component.literal("You can't sleep while riding."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.riding"), true);
             return false;
         }
 
         if (!level.isNight() && !level.isThundering()) {
-            player.displayClientMessage(Component.literal("You can only use this at night or during a storm."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.not_night"), true);
             return false;
         }
 
         if (!player.onGround()) {
-            player.displayClientMessage(Component.literal("You need solid ground under you."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.not_on_ground"), true);
             return false;
         }
 
         if (player.isInWater() || player.isInLava()) {
-            player.displayClientMessage(Component.literal("You can't sleep here."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.cannot_sleep_here"), true);
             return false;
         }
 
         BlockPos feetPos = player.blockPosition();
         BlockPos groundPos = feetPos.below();
         if (!hasValidGround(level, groundPos)) {
-            player.displayClientMessage(Component.literal("The pillow needs solid ground."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.needs_ground"), true);
             return false;
         }
 
         if (!hasEnoughRoom(level, feetPos)) {
-            player.displayClientMessage(Component.literal("There isn't enough room here."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.no_room"), true);
             return false;
         }
 
         if (!player.isCreative() && hasNearbyMonster(level, player)) {
-            player.displayClientMessage(Component.literal("You may not rest now; monsters are nearby."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.anywhere_pillow.monsters_nearby"), true);
             return false;
         }
 
@@ -169,7 +170,7 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, Component.literal("Sleep almost anywhere"), TooltipHelper.line("Cooldown: 20s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, Component.translatable("tooltip.raidborn.anywhere_pillow.sleep"), RaidbornTooltips.line("cooldown", 0xFFAA00, "20s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

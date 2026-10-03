@@ -27,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -106,11 +107,11 @@ public class OminousDaggerItem extends SwordItem {
 
         TooltipHelper.addShiftDescription(
                 tooltip,
-                TooltipHelper.line("Fast dagger, but with shorter reach", 0xAAAAAA),
-                TooltipHelper.line(String.format("+%.2f%% damage for each Villager slain", DAMAGE_BONUS_PER_KILL * 100.0F), 0xAA3333),
-                TooltipHelper.line(String.format("Damage bonus: +%.1f%% / %.0f%%", bonusPercent, MAX_DAMAGE_BONUS * 100.0F), 0xFF5555),
-                TooltipHelper.line("Progress: " + progressKills + " / " + MAX_BONUS_KILLS, 0x8B0000),
-                TooltipHelper.line("Cannot get Unbreaking or Mending", 0x777777)
+                RaidbornTooltips.line("ominous_dagger.reach", 0xAAAAAA),
+                RaidbornTooltips.line("ominous_dagger.per_kill", 0xAA3333, String.format("%.2f", DAMAGE_BONUS_PER_KILL * 100.0F)),
+                RaidbornTooltips.line("ominous_dagger.bonus", 0xFF5555, String.format("%.1f", bonusPercent), String.format("%.0f", MAX_DAMAGE_BONUS * 100.0F)),
+                RaidbornTooltips.line("ominous_dagger.progress", 0x8B0000, progressKills, MAX_BONUS_KILLS),
+                RaidbornTooltips.line("ominous_dagger.no_mending", 0x777777)
         );
 
         super.appendHoverText(stack, level, tooltip, flag);

@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
@@ -66,7 +67,7 @@ public class SoggyRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Lets you walk over lava", 0x66CCFF), TooltipHelper.line("Lava beneath you becomes temporary cobblestone", 0xAAAAAA), TooltipHelper.line("Grants immunity to fire damage", 0xFF8844));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("soggy_ring.lava_walk", 0x66CCFF), RaidbornTooltips.line("soggy_ring.cobblestone", 0xAAAAAA), RaidbornTooltips.line("soggy_ring.fire", 0xFF8844));
     }
 
     private static void transformLavaUnderPlayer(ServerLevel level, Player player) {

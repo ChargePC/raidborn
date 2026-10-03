@@ -29,6 +29,7 @@ import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.core.registry.ModLootModifiers;
 import net.randomcara.raidborn.core.registry.ModMenuTypes;
 import net.randomcara.raidborn.core.registry.ModRecipeSerializers;
+import net.randomcara.raidborn.core.registry.ModRecipeTypes;
 import net.randomcara.raidborn.core.registry.ModSounds;
 import net.randomcara.raidborn.core.registry.RaidbornCreativeTab;
 import net.randomcara.raidborn.core.registry.RaidbornStructureTypes;
@@ -56,6 +57,7 @@ public class Raidborn {
         ModItems.ITEMS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModMenuTypes.MENUS.register(modBus);
+        ModRecipeTypes.RECIPE_TYPES.register(modBus);
         ModRecipeSerializers.SERIALIZERS.register(modBus);
         ModEntities.register(modBus);
         RaidbornCreativeTab.CREATIVE_TABS.register(modBus);

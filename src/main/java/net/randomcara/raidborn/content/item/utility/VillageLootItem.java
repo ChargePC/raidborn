@@ -180,9 +180,9 @@ public class VillageLootItem extends Item {
     public Component getName(ItemStack stack) {
         AttackRaidbornHooks.AttackTier tier = getTier(stack);
         return switch (tier) {
-            case HERO -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Hero"));
-            case HONOR -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Honor"));
-            case LOYALTY -> Component.translatable("item.raidborn.village_loot").append(Component.literal(" - Loyalty"));
+            case HERO -> Component.translatable("item.raidborn.village_loot.hero");
+            case HONOR -> Component.translatable("item.raidborn.village_loot.honor");
+            case LOYALTY -> Component.translatable("item.raidborn.village_loot.loyalty");
         };
     }
 

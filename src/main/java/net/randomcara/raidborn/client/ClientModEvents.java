@@ -1,15 +1,16 @@
 package net.randomcara.raidborn.client;
 
+import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.randomcara.bentoslib.client.render.area.AreaVisualClient;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.client.model.BeastModel;
 import net.randomcara.raidborn.client.model.GrumblagerModel;
@@ -22,23 +23,19 @@ import net.randomcara.raidborn.client.renderer.JuggernautRenderer;
 import net.randomcara.raidborn.client.renderer.curio.BannerCurioRenderer;
 import net.randomcara.raidborn.content.entity.beast.client.BeastInventoryScreen;
 import net.randomcara.raidborn.core.registry.ModEntities;
-import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.core.registry.ModMenuTypes;
+import net.randomcara.raidborn.core.registry.ModRecipeTypes;
 import net.randomcara.raidborn.transmutation.client.TransmutationTableScreen;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
-    private static final float TOTEM_AREA_HALF_SIZE = 8.0F;
-    private static final int TOTEM_AREA_DURATION_TICKS = 20 * 15;
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(ModMenuTypes.TRANSMUTATION_TABLE_MENU.get(), TransmutationTableScreen::new);
             MenuScreens.register(ModMenuTypes.BEAST_INVENTORY_MENU.get(), BeastInventoryScreen::new);
 
-            registerTotemAreaVisuals();
             registerBannerCurioRenderer();
         });
     }
@@ -51,10 +48,9 @@ public class ClientModEvents {
         }
     }
 
-    private static void registerTotemAreaVisuals() {
-        AreaVisualClient.register(ModItems.TOTEM_OF_HEALING.get(), 0xFFE31700, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
-        AreaVisualClient.register(ModItems.TOTEM_OF_PROTECTION.get(), 0xFF66CEE6, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
-        AreaVisualClient.register(ModItems.TOTEM_OF_RESISTANCE.get(), 0xFFF47800, TOTEM_AREA_HALF_SIZE, TOTEM_AREA_DURATION_TICKS);
+    @SubscribeEvent
+    public static void registerRecipeBookCategories(RegisterRecipeBookCategoriesEvent event) {
+        event.registerRecipeCategoryFinder(ModRecipeTypes.TRANSMUTATION.get(), recipe -> RecipeBookCategories.UNKNOWN);
     }
 
     @SubscribeEvent

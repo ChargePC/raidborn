@@ -26,6 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModBlockEntities;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.registry.ModRecipeTypes;
 import net.randomcara.raidborn.transmutation.menu.TransmutationTableMenu;
 import net.randomcara.raidborn.transmutation.recipe.TransmutationRecipe;
 import org.jetbrains.annotations.NotNull;
@@ -220,7 +221,7 @@ public class TransmutationTableBlockEntity extends BlockEntity implements MenuPr
             return Optional.empty();
         }
 
-        return this.level.getRecipeManager().getRecipeFor(TransmutationRecipe.Type.INSTANCE, createRecipeContainer(), this.level);
+        return this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TRANSMUTATION.get(), createRecipeContainer(), this.level);
     }
 
     private SimpleContainer createRecipeContainer() {

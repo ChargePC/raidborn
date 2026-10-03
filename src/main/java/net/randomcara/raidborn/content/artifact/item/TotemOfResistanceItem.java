@@ -35,6 +35,7 @@ import net.randomcara.bentoslib.curio.CurioActivationHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import net.randomcara.raidborn.mixin.ThrownTridentAccessor;
 import org.jetbrains.annotations.Nullable;
@@ -187,7 +188,7 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Creates a field that blocks projectiles", 0xFFE39A), TooltipHelper.line("Gives Absorption IV to players and allies", 0xFFE39A), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("totem_of_resistance.field", 0xFFE39A), RaidbornTooltips.line("totem_of_resistance.absorption", 0xFFE39A), RaidbornTooltips.line("cooldown", 0xFFAA00, "45s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

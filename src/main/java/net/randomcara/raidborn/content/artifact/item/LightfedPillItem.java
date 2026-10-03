@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -40,7 +41,7 @@ public class LightfedPillItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Feeds from light while you remain still", 0xFF7A9A22), TooltipHelper.line("Restores 1 hunger every 2 seconds after charging", 0xFFE5AD25));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("lightfed_pill.feeds", 0xFF7A9A22), RaidbornTooltips.line("lightfed_pill.restores", 0xFFE5AD25));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }

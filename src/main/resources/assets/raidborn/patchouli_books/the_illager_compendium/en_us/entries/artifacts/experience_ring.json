@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "raidborn:experience_ring",
-      "text": "Doubles the experience you pick up. It also catches up to 30 levels when you die and holds them in the dropped ring, so getting the ring back matters more than getting back in time.",
+      "text": "Doubles all experience you gain while it is worn, not just the orbs you pick up. It also catches up to 30 levels when you die and holds them in the dropped ring, so getting the ring back matters more than getting back in time.",
       "title": "Experience Ring"
     }
   ]

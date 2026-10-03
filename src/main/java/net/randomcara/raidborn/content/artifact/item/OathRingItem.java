@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -77,7 +78,7 @@ public class OathRingItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("When you gain an effect, your recruited Illagers gain it too", 0xC8A2FF), TooltipHelper.line("Only works while equipped", 0xAAAAAA));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("oath_ring.shares", 0xC8A2FF), RaidbornTooltips.line("oath_ring.equipped", 0xAAAAAA));
     }
 
     private static void tickOathRing(ServerLevel level, ServerPlayer player) {

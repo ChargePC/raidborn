@@ -151,7 +151,12 @@ public class AttackDefenderSpawner {
         }
 
         ResourceLocation location = ResourceLocation.tryParse(id.trim());
-        return location == null ? Optional.empty() : Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getValue(location));
+        if (location == null || !ForgeRegistries.ENTITY_TYPES.containsKey(location)) {
+            Raidborn.LOGGER.warn("Unknown entity id in the attack defender config: {}", id);
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getValue(location));
     }
 
     private static Map<EntityType<?>, Integer> enrollDefendersAlreadyInVillage(AttackInstance attack,

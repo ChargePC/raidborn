@@ -481,11 +481,11 @@ public class RaidbornServerConfig {
         RECRUIT_DISABLED_CACHE.clear();
 
         for (String id : VALUES.tradesDisabledFor.get()) {
-            TRADES_DISABLED_CACHE.add(id);
+            TRADES_DISABLED_CACHE.add(ResourceLocation.parse(id).toString());
         }
 
         for (String id : VALUES.recruitmentDisabledFor.get()) {
-            RECRUIT_DISABLED_CACHE.add(id);
+            RECRUIT_DISABLED_CACHE.add(ResourceLocation.parse(id).toString());
         }
     }
 

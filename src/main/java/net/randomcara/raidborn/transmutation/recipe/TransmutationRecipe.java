@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.registry.ModRecipeSerializers;
+import net.randomcara.raidborn.core.registry.ModRecipeTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -203,12 +204,7 @@ public class TransmutationRecipe implements Recipe<Container> {
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
-    }
-
-    public static class Type implements RecipeType<TransmutationRecipe> {
-        public static final Type INSTANCE = new Type();
-        public static final String ID = "transmutation";
+        return ModRecipeTypes.TRANSMUTATION.get();
     }
 
     public static class Serializer implements RecipeSerializer<TransmutationRecipe> {

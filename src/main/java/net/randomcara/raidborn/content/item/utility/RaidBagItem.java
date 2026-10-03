@@ -24,6 +24,7 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.item.RaidbornNecklaceItem;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import net.randomcara.raidborn.gameplay.recruit.RecruitRoster;
@@ -72,13 +73,13 @@ public class RaidBagItem extends Item {
     private static InteractionResultHolder<ItemStack> capturePatrol(ServerPlayer player, ItemStack stack) {
         String currentEffect = getCurrentAllianceEffect(player);
         if (currentEffect == null) {
-            player.displayClientMessage(Component.literal("You need Illager Loyalty, Illager Honor, or Hero of the Illage.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.need_alliance") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
         List<Mob> recruits = getOwnedRecruits(player, SEARCH_RADIUS);
         if (recruits.isEmpty()) {
-            player.displayClientMessage(Component.literal("You have no recruited Illagers nearby.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.no_recruits_nearby") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -87,7 +88,7 @@ public class RaidBagItem extends Item {
 
         for (Mob mob : recruits) {
             if (!mob.isAlive() || mob.isRemoved()) {
-                player.displayClientMessage(Component.literal("A recruit was invalid and could not be stored.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+                player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.invalid_recruit") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
                 return InteractionResultHolder.fail(stack);
             }
 
@@ -96,7 +97,7 @@ public class RaidBagItem extends Item {
                 entityTag = mob.serializeNBT();
             } catch (RuntimeException e) {
                 Raidborn.LOGGER.warn("Could not serialise {} for the raid bag", mob.getType(), e);
-                player.displayClientMessage(Component.literal("Failed to store a recruit safely.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+                player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.store_failed") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
                 return InteractionResultHolder.fail(stack);
             }
 
@@ -108,7 +109,7 @@ public class RaidBagItem extends Item {
         }
 
         if (storedList.isEmpty()) {
-            player.displayClientMessage(Component.literal("No valid recruits were found to store.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.nothing_to_store") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -128,7 +129,7 @@ public class RaidBagItem extends Item {
             mob.remove(Entity.RemovalReason.DISCARDED);
         }
 
-        player.displayClientMessage(Component.literal("Stored " + recruits.size() + " recruited Illager" + (recruits.size() == 1 ? "" : "s") + " (" + totalStoredSlots + " slots).") .withStyle(Style.EMPTY.withColor(0x76DB4C)), true);
+        player.displayClientMessage(Component.translatable(recruits.size() == 1 ? "message.raidborn.raid_bag.stored_one" : "message.raidborn.raid_bag.stored", recruits.size(), totalStoredSlots) .withStyle(Style.EMPTY.withColor(0x76DB4C)), true);
 
         return InteractionResultHolder.success(stack);
     }
@@ -145,7 +146,7 @@ public class RaidBagItem extends Item {
         if (now < unlockTime) {
             long remainingTicks = unlockTime - now;
             double seconds = remainingTicks / 20.0D;
-            player.displayClientMessage(Component.literal(String.format("The bag is still sealed for %.1f seconds.", seconds)) .withStyle(Style.EMPTY.withColor(0xD9A441)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.sealed", String.format("%.1f", seconds)) .withStyle(Style.EMPTY.withColor(0xD9A441)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -153,12 +154,12 @@ public class RaidBagItem extends Item {
         String currentEffect = getCurrentAllianceEffect(player);
 
         if (requiredEffect.isEmpty()) {
-            player.displayClientMessage(Component.literal("This bag is missing capture effect data.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.missing_effect") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
         if (currentEffect == null || getEffectTier(currentEffect) < getEffectTier(requiredEffect)) {
-            player.displayClientMessage(Component.literal("You need " + getPrettyEffectName(requiredEffect) + (EFFECT_HERO.equals(requiredEffect) ? "" : " or a stronger alliance") + " to release this patrol.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable(EFFECT_HERO.equals(requiredEffect) ? "message.raidborn.raid_bag.needs_effect" : "message.raidborn.raid_bag.needs_effect_or_stronger", getPrettyEffectName(requiredEffect)) .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -167,14 +168,14 @@ public class RaidBagItem extends Item {
         }
 
         if (!tag.contains(TAG_STORED_MOBS, 9)) {
-            player.displayClientMessage(Component.literal("This bag contains no valid stored patrol.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.no_patrol") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
         ListTag storedList = tag.getList(TAG_STORED_MOBS, 10);
         if (storedList.isEmpty()) {
             clearStoredPatrolData(tag);
-            player.displayClientMessage(Component.literal("The bag was empty.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.empty") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -184,12 +185,12 @@ public class RaidBagItem extends Item {
         int finalSlots = activeSlots + storedSlots;
 
         if (maxSlots <= 0) {
-            player.displayClientMessage(Component.literal("You do not have a valid recruit limit.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.no_limit") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
         if (finalSlots > maxSlots) {
-            player.displayClientMessage(Component.literal("Cannot release this patrol. Recruit limit would be exceeded: " + activeSlots + "/" + maxSlots + " active slots, bag requires " + storedSlots + " slots.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.limit_exceeded", activeSlots, maxSlots, storedSlots) .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -203,12 +204,12 @@ public class RaidBagItem extends Item {
                 loaded = EntityTypeLoader.load(serverLevel, entityTag);
             } catch (RuntimeException e) {
                 Raidborn.LOGGER.warn("Could not rebuild a stored recruit from the raid bag", e);
-                player.displayClientMessage(Component.literal("Failed to rebuild stored patrol safely.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+                player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.rebuild_failed") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
                 return InteractionResultHolder.fail(stack);
             }
 
             if (!(loaded instanceof Mob mob)) {
-                player.displayClientMessage(Component.literal("A stored recruit was invalid.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+                player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.invalid_stored") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
                 return InteractionResultHolder.fail(stack);
             }
 
@@ -224,7 +225,7 @@ public class RaidBagItem extends Item {
                     added.remove(Entity.RemovalReason.DISCARDED);
                 }
 
-                player.displayClientMessage(Component.literal("Not enough room to release the patrol safely.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+                player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.no_room") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
                 return InteractionResultHolder.fail(stack);
             }
 
@@ -233,7 +234,7 @@ public class RaidBagItem extends Item {
 
         clearStoredPatrolData(tag);
 
-        player.displayClientMessage(Component.literal("Released " + addedMobs.size() + " recruited Illager" + (addedMobs.size() == 1 ? "." : "s.")) .withStyle(Style.EMPTY.withColor(0x76DB4C)), true);
+        player.displayClientMessage(Component.translatable(addedMobs.size() == 1 ? "message.raidborn.raid_bag.released_one" : "message.raidborn.raid_bag.released", addedMobs.size()) .withStyle(Style.EMPTY.withColor(0x76DB4C)), true);
 
         return InteractionResultHolder.success(stack);
     }
@@ -308,11 +309,9 @@ public class RaidBagItem extends Item {
         }
 
         String ownerName = tag.getString(TAG_OWNER_NAME);
-        if (ownerName == null || ownerName.isEmpty()) {
-            ownerName = "another player";
-        }
+        Component ownerText = ownerName.isEmpty() ? Component.translatable("message.raidborn.raid_bag.another_player") : Component.literal(ownerName);
 
-        player.displayClientMessage(Component.literal("This Raid Bag belongs to " + ownerName + ".") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+        player.displayClientMessage(Component.translatable("message.raidborn.raid_bag.belongs_to", ownerText) .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
         return false;
     }
 
@@ -373,12 +372,12 @@ public class RaidBagItem extends Item {
         };
     }
 
-    private static String getPrettyEffectName(String effect) {
+    private static Component getPrettyEffectName(String effect) {
         return switch (effect) {
-            case EFFECT_LOYALTY -> "Illager Loyalty";
-            case EFFECT_HONOR -> "Illager Honor";
-            case EFFECT_HERO -> "Hero of the Illage";
-            default -> "Unknown";
+            case EFFECT_LOYALTY -> ModEffects.ILLAGER_LOYALTY.get().getDisplayName();
+            case EFFECT_HONOR -> ModEffects.ILLAGER_HONOR.get().getDisplayName();
+            case EFFECT_HERO -> ModEffects.HERO_OF_THE_RAID.get().getDisplayName();
+            default -> Component.translatable("message.raidborn.raid_bag.unknown_effect");
         };
     }
 
@@ -448,30 +447,30 @@ public class RaidBagItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = stack.getTag();
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Right click to store or release your recruited Illagers", 0xDDDDDD), TooltipHelper.line("Release is locked for 20s after storing", 0xD9A441), TooltipHelper.line("Only the owner can use this bag", 0xC77DFF));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("raid_bag.usage", 0xDDDDDD), RaidbornTooltips.line("raid_bag.sealed", 0xD9A441), RaidbornTooltips.line("raid_bag.owner_only", 0xC77DFF));
 
         if (tag != null) {
             if (tag.hasUUID(TAG_OWNER_UUID)) {
                 String ownerName = tag.getString(TAG_OWNER_NAME);
                 if (!ownerName.isEmpty()) {
-                    tooltip.add(Component.literal("Owner: " + ownerName).withStyle(Style.EMPTY.withColor(0x76DB4C)));
+                    tooltip.add(RaidbornTooltips.line("raid_bag.owner", 0x76DB4C, ownerName));
                 }
             }
 
             if (tag.contains(TAG_STORED_MOBS, 9)) {
                 int count = tag.getList(TAG_STORED_MOBS, 10).size();
                 if (count > 0) {
-                    tooltip.add(Component.literal("Stored recruits: " + count).withStyle(Style.EMPTY.withColor(0xFF5555)));
+                    tooltip.add(RaidbornTooltips.line("raid_bag.stored_recruits", 0xFF5555, count));
 
                     int slots = getStoredSlotCostFromList(tag.getList(TAG_STORED_MOBS, 10));
-                    tooltip.add(Component.literal("Stored slots: " + slots).withStyle(Style.EMPTY.withColor(0xFFAA55)));
+                    tooltip.add(RaidbornTooltips.line("raid_bag.stored_slots", 0xFFAA55, slots));
                 }
             }
 
             if (tag.contains(TAG_CAPTURED_EFFECT)) {
                 String effect = tag.getString(TAG_CAPTURED_EFFECT);
                 if (!effect.isEmpty()) {
-                    tooltip.add(Component.literal("Required effect: " + getPrettyEffectName(effect) + (EFFECT_HERO.equals(effect) ? "" : " or stronger")).withStyle(Style.EMPTY.withColor(0x55C1FF)));
+                    tooltip.add(RaidbornTooltips.line(EFFECT_HERO.equals(effect) ? "raid_bag.required_effect" : "raid_bag.required_effect_or_stronger", 0x55C1FF, getPrettyEffectName(effect)));
                 }
             }
         }

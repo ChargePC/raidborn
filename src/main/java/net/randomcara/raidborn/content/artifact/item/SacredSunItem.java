@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
 import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.content.artifact.api.SlotBoundCurioItem;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -87,7 +88,7 @@ public class SacredSunItem extends Item implements SlotBoundCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Emits sacred sunlight while equipped", 0xFFE27A), TooltipHelper.line("Nearby undead burn under its holy sun", 0xFFB347));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("sacred_sun.sunlight", 0xFFE27A), RaidbornTooltips.line("sacred_sun.undead", 0xFFB347));
     }
 
     private static void tickSacredSun(ServerLevel level, ServerPlayer player) {

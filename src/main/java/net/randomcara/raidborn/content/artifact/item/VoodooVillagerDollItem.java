@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.randomcara.bentoslib.api.curio.IActivatableCurioItem;
 import net.randomcara.bentoslib.client.tooltip.ActivatableArtifactTooltipHelper;
 import net.randomcara.bentoslib.client.tooltip.TooltipHelper;
+import net.randomcara.raidborn.core.util.RaidbornTooltips;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -43,7 +44,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
         UUID ownerId = player.getUUID();
         List<Mob> targets = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RADIUS), mob -> isValidTarget(mob, ownerId));
         if (targets.isEmpty()) {
-            player.displayClientMessage(Component.literal("No recruited Illagers nearby."), true);
+            player.displayClientMessage(Component.translatable("message.raidborn.no_recruits_nearby"), true);
             return false;
         }
 
@@ -59,7 +60,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
 
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
 
-        player.displayClientMessage(Component.literal("Voodoo empowered " + targets.size() + " recruited Illager" + (targets.size() == 1 ? "!" : "s!")), true);
+        player.displayClientMessage(Component.translatable(targets.size() == 1 ? "message.raidborn.voodoo_villager_doll.empowered_one" : "message.raidborn.voodoo_villager_doll.empowered", targets.size()), true);
 
         return true;
     }
@@ -89,7 +90,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         ActivatableArtifactTooltipHelper.addActivationLine(tooltip);
 
-        TooltipHelper.addShiftDescription(tooltip, TooltipHelper.line("Buffs your recruited Illagers", 0xAAAAAA), TooltipHelper.line("Works on most melee Illagers", 0xAAAAAA), TooltipHelper.line("15s of Speed and Strength", 0x55FF55), TooltipHelper.line("Cooldown: 45s", 0xFFAA00));
+        TooltipHelper.addShiftDescription(tooltip, RaidbornTooltips.line("voodoo_villager_doll.buffs", 0xAAAAAA), RaidbornTooltips.line("voodoo_villager_doll.melee", 0xAAAAAA), RaidbornTooltips.line("voodoo_villager_doll.duration", 0x55FF55), RaidbornTooltips.line("cooldown", 0xFFAA00, "45s"));
 
         super.appendHoverText(stack, level, tooltip, flag);
     }
