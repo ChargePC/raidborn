@@ -32,7 +32,7 @@
     {
       "type": "patchouli:text",
       "title": "Losing the Alliance",
-      "text": "If your alliance effect is removed, your active patrol is disbanded. Recruits stored inside a Raid Bag still use recruitment slots and can only be released while you have the same alliance effect used to store them."
+      "text": "If your alliance effect is removed, your active patrol is disbanded. Recruits stored inside a Raid Bag still use recruitment slots and can only be released while you have the alliance effect used to store them, or a stronger one."
     },
     {
       "type": "patchouli:spotlight",

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "entries": [
-    "raidborn:villager_soul"
+    "raidborn:villager_soul",
+    "raidborn:artifact_chest_loot"
   ]
 }

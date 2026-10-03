@@ -39,16 +39,8 @@ public class RecruitSlots {
         return 1;
     }
 
-    static int countRecruitSlots(ServerPlayer player, double radius) {
-        List<Mob> mobs = player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius), mob -> RecruitOwnership.isYours(player, mob));
-
-        int slots = 0;
-        for (Mob mob : mobs) {
-            slots += getRecruitCost(mob);
-        }
-
-        slots += RaidBagItem.getStoredRecruitSlots(player);
-        return slots;
+    static int countRecruitSlots(ServerPlayer player) {
+        return RecruitRoster.get(player.server).countSlots(player) + RaidBagItem.getStoredRecruitSlots(player);
     }
 
     static int getMaxRecruitSlots(ServerPlayer player) {
@@ -73,7 +65,7 @@ public class RecruitSlots {
         }
 
         int maxSlots = getMaxRecruitSlots(player);
-        int usedSlots = countRecruitSlots(player, slotScanRadius());
+        int usedSlots = countRecruitSlots(player);
         if (usedSlots <= maxSlots) {
             return;
         }
@@ -99,7 +91,7 @@ public class RecruitSlots {
         }
 
         if (releasedCount > 0) {
-            int finalUsed = countRecruitSlots(player, slotScanRadius());
+            int finalUsed = countRecruitSlots(player);
             player.displayClientMessage(Component.literal("Recruit limit exceeded. " + releasedCount + " Illager" + (releasedCount == 1 ? "" : "s") + " dismissed. (" + finalUsed + "/" + maxSlots + " slots)") .withStyle(ChatFormatting.RED), true);
         }
     }

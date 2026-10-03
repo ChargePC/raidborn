@@ -4,11 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.entity.VillageSide;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 
 import java.util.List;
@@ -150,7 +152,7 @@ public class RecruitTickEvents {
     }
 
     static LivingEntity findBestHoldTarget(ServerPlayer player, Mob mob, BlockPos holdPos) {
-        List<LivingEntity> nearbyTargets = mob.level().getEntitiesOfClass(LivingEntity.class, new AABB(holdPos).inflate(SquadOrders.holdScanRadius()), entity -> entity != player && entity != mob && SquadOrders.isValidTarget(player, mob, entity));
+        List<LivingEntity> nearbyTargets = mob.level().getEntitiesOfClass(LivingEntity.class, new AABB(holdPos).inflate(SquadOrders.holdScanRadius()), entity -> entity != player && entity != mob && SquadOrders.isValidTarget(player, mob, entity) && isHoldThreat(player, mob, entity));
 
         LivingEntity bestTarget = null;
         double bestDist = Double.MAX_VALUE;
@@ -164,6 +166,13 @@ public class RecruitTickEvents {
         }
 
         return bestTarget;
+    }
+
+    static boolean isHoldThreat(ServerPlayer player, Mob mob, LivingEntity entity) {
+        if (entity instanceof Enemy && !VillageSide.isIllagerSide(entity)) return true;
+
+        LivingEntity target = entity instanceof Mob attacker ? attacker.getTarget() : null;
+        return target == player || target == mob || target instanceof Mob targetMob && RecruitOwnership.isYours(player, targetMob);
     }
 
     static void moveToHoldPos(Mob mob, BlockPos holdPos) {

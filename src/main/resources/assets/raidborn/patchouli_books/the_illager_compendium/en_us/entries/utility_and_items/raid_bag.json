@@ -12,7 +12,7 @@
     {
       "type": "patchouli:text",
       "title": "Releasing the Patrol",
-      "text": "Right-click again to release the stored recruits. You must have the same alliance effect used during capture and enough free recruitment slots.$(br2)Stored recruits still count toward your recruitment limit."
+      "text": "Right-click again to release the stored recruits. You must have the alliance effect used during capture, or a stronger one, and enough free recruitment slots.$(br2)Stored recruits still count toward your recruitment limit."
     },
     {
       "type": "patchouli:text",

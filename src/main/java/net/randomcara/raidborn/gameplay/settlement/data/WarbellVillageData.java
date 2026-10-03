@@ -1,13 +1,27 @@
 package net.randomcara.raidborn.gameplay.settlement.data;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModBlocks;
 import net.randomcara.raidborn.core.util.MobSleep;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class WarbellVillageData {
     public static final String TAG_VILLAGE_MEMBER = "raidborn_village_member";
@@ -122,6 +136,24 @@ public class WarbellVillageData {
 
     public static boolean isInsideVillageRadius(BlockPos center, BlockPos testPos, int radius) {
         return center != null && testPos != null && center.distSqr(testPos) <= (double) radius * radius;
+    }
+
+    public static List<BlockPos> findLoadedBlocks(Level level, BlockPos min, BlockPos max, Predicate<BlockState> matches) {
+        if (!(level instanceof ServerLevel serverLevel)) return List.of();
+
+        BoundingBox box = BoundingBox.fromCorners(min, max);
+        Set<BlockPos> found = new HashSet<>();
+        for (int chunkX = SectionPos.blockToSectionCoord(box.minX()); chunkX <= SectionPos.blockToSectionCoord(box.maxX()); chunkX++) {
+            for (int chunkZ = SectionPos.blockToSectionCoord(box.minZ()); chunkZ <= SectionPos.blockToSectionCoord(box.maxZ()); chunkZ++) {
+                LevelChunk chunk = serverLevel.getChunkSource().getChunkNow(chunkX, chunkZ);
+                if (chunk == null) continue;
+
+                Stream<BlockPos> candidates = Stream.concat(serverLevel.getPoiManager().getInChunk(type -> true, chunk.getPos(), PoiManager.Occupancy.ANY).map(PoiRecord::getPos), chunk.getBlockEntities().keySet().stream());
+                candidates.filter(box::isInside).filter(pos -> matches.test(chunk.getBlockState(pos))).forEach(found::add);
+            }
+        }
+
+        return new ArrayList<>(found);
     }
 
     public static boolean isMobOutsideVillage(Mob mob, double extraBuffer) {

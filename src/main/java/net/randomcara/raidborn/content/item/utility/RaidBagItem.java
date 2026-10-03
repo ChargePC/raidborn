@@ -26,6 +26,7 @@ import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModEffects;
 import net.randomcara.raidborn.gameplay.recruit.FollowOwnerGoal;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
+import net.randomcara.raidborn.gameplay.recruit.RecruitRoster;
 import net.randomcara.raidborn.gameplay.recruit.RecruitSlots;
 import net.randomcara.raidborn.gameplay.recruit.SquadOrders;
 import net.randomcara.raidborn.world.settlement.SettlementSpawnMarkerEvents;
@@ -156,8 +157,8 @@ public class RaidBagItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        if (!requiredEffect.equals(currentEffect)) {
-            player.displayClientMessage(Component.literal("You need the same alliance effect used when the patrol was captured: " + getPrettyEffectName(requiredEffect)) .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
+        if (currentEffect == null || getEffectTier(currentEffect) < getEffectTier(requiredEffect)) {
+            player.displayClientMessage(Component.literal("You need " + getPrettyEffectName(requiredEffect) + (EFFECT_HERO.equals(requiredEffect) ? "" : " or a stronger alliance") + " to release this patrol.") .withStyle(Style.EMPTY.withColor(0xD9534F)), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -178,7 +179,7 @@ public class RaidBagItem extends Item {
         }
 
         int maxSlots = getMaxRecruitSlotsForEffect(player, currentEffect);
-        int activeSlots = getActiveRecruitSlots(player);
+        int activeSlots = RecruitRoster.get(player.server).countSlots(player);
         int storedSlots = getStoredSlotCostFromList(storedList);
         int finalSlots = activeSlots + storedSlots;
 
@@ -346,22 +347,6 @@ public class RaidBagItem extends Item {
         return baseSlots + RaidbornNecklaceItem.getEquippedBonusRecruitSlots(player);
     }
 
-    private static int getActiveRecruitSlots(ServerPlayer player) {
-        int total = 0;
-
-        for (ServerLevel level : player.server.getAllLevels()) {
-            for (Entity entity : level.getAllEntities()) {
-                if (!(entity instanceof Mob mob) || !isOwnedRecruit(player, mob)) {
-                    continue;
-                }
-
-                total += Math.max(1, RecruitSlots.getRecruitCost(mob));
-            }
-        }
-
-        return total;
-    }
-
     private static int getStoredSlotCostFromList(ListTag list) {
         int total = 0;
 
@@ -377,6 +362,15 @@ public class RaidBagItem extends Item {
         }
 
         return total;
+    }
+
+    private static int getEffectTier(String effect) {
+        return switch (effect) {
+            case EFFECT_LOYALTY -> 1;
+            case EFFECT_HONOR -> 2;
+            case EFFECT_HERO -> 3;
+            default -> 0;
+        };
     }
 
     private static String getPrettyEffectName(String effect) {
@@ -477,7 +471,7 @@ public class RaidBagItem extends Item {
             if (tag.contains(TAG_CAPTURED_EFFECT)) {
                 String effect = tag.getString(TAG_CAPTURED_EFFECT);
                 if (!effect.isEmpty()) {
-                    tooltip.add(Component.literal("Required effect: " + getPrettyEffectName(effect)).withStyle(Style.EMPTY.withColor(0x55C1FF)));
+                    tooltip.add(Component.literal("Required effect: " + getPrettyEffectName(effect) + (EFFECT_HERO.equals(effect) ? "" : " or stronger")).withStyle(Style.EMPTY.withColor(0x55C1FF)));
                 }
             }
         }

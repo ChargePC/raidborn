@@ -232,8 +232,5 @@ public class IllagerMerchant implements Merchant {
 
     @Override
     public void overrideXp(int xp) {
-        if (this.boundMob != null) {
-            this.boundMob.getPersistentData().putInt(IllagerTradeEvents.TAG_XP, xp);
-        }
     }
 }

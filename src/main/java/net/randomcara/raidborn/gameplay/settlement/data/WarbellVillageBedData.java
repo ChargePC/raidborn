@@ -490,10 +490,7 @@ public class WarbellVillageBedData {
         BlockPos bestBed = null;
         double bestScore = Double.MAX_VALUE;
 
-        for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
-            BlockState state = mob.level().getBlockState(pos);
-            if (!(state.getBlock() instanceof BedBlock)) continue;
-            if (state.hasProperty(BedBlock.PART) && state.getValue(BedBlock.PART) != BedPart.FOOT) continue;
+        for (BlockPos pos : WarbellVillageData.findLoadedBlocks(mob.level(), min, max, state -> state.getBlock() instanceof BedBlock && (!state.hasProperty(BedBlock.PART) || state.getValue(BedBlock.PART) == BedPart.FOOT))) {
             if (!WarbellVillageData.isInsideVillageRadius(bellPos, pos, radius)) continue;
 
             BlockPos normalized = normalizeBedPos(mob, pos);

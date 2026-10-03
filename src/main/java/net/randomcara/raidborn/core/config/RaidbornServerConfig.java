@@ -233,7 +233,7 @@ public class RaidbornServerConfig {
 
             artifactLootChance = b.comment("Chance for the injected artifact loot pool to roll. 0.33 is roughly one in three chests.").defineInRange("artifactLootChance", 0.33D, 0.0D, 1.0D);
 
-            villagerSoulDropChance = b.comment("Chance for Villagers to drop a Villager Soul when the Raidborn soul drop event is used.").defineInRange("villagerSoulDropChance", 0.10D, 0.0D, 1.0D);
+            villagerSoulDropChance = b.comment("Chance for a Villager to drop a Villager Soul when it dies. Doubled when the killing blow comes from the Ominous Dagger.").defineInRange("villagerSoulDropChance", 0.10D, 0.0D, 1.0D);
 
             b.pop();
 
@@ -441,7 +441,7 @@ public class RaidbornServerConfig {
 
             squadFollowTeleportDistance = b.comment("Distance at which a following recruit teleports to its owner instead of walking.", "Lower values make the squad stick closer but teleport more visibly.").defineInRange("followTeleportDistance", 40.0D, 8.0D, 128.0D);
 
-            squadSlotScanRadius = b.comment("Radius around the owner searched when counting recruits against the slot limit.", "Recruits farther away than this stop consuming slots.").defineInRange("slotScanRadius", 160.0D, 16.0D, 512.0D);
+            squadSlotScanRadius = b.comment("Radius around the owner searched for recruits to dismiss when the slot limit is exceeded.", "Every recruit counts against the limit, no matter how far away it is.").defineInRange("slotScanRadius", 160.0D, 16.0D, 512.0D);
 
             squadSupportHealRadius = b.comment("Range within which recruited healers throw healing potions at allies.").defineInRange("supportHealRadius", 10.0D, 2.0D, 64.0D);
 

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -38,6 +39,7 @@ import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.gameplay.settlement.ai.WarbellVillageRoutine;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageData;
 import net.randomcara.raidborn.gameplay.settlement.data.WarbellVillageWorkstationData;
+import net.randomcara.raidborn.mixin.MerchantMenuAccessor;
 import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = Raidborn.MOD_ID)
@@ -301,7 +303,12 @@ public class IllagerTradeEvents {
         MerchantOffers offers = menu.getOffers();
         if (offers == null || offers.isEmpty()) return;
 
-        storeSpecialPriceSnapshot(player, container.containerId, offers);
+        if (((MerchantMenuAccessor) menu).raidborn$getTrader() instanceof Villager) {
+            player.getPersistentData().remove(TAG_GIGA_SNAPSHOT);
+        } else {
+            storeSpecialPriceSnapshot(player, container.containerId, offers);
+        }
+
         applyGigaEmeraldReputationDiscounts(offers);
     }
 

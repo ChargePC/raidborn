@@ -125,7 +125,7 @@ public class AnywherePillowItem extends Item implements ICurioItem, IActivatable
     private static void explodeWrongDimension(ServerPlayer player, ServerLevel level) {
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 0.8F);
 
-        level.explode(player, player.getX(), player.getY(), player.getZ(), 4.0F, true, Level.ExplosionInteraction.TNT);
+        level.explode(null, level.damageSources().badRespawnPointExplosion(player.position()), null, player.getX(), player.getY(), player.getZ(), 4.0F, true, Level.ExplosionInteraction.TNT);
     }
 
     @Override

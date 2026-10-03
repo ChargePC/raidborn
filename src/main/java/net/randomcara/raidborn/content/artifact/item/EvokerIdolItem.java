@@ -98,8 +98,10 @@ public class EvokerIdolItem extends Item implements SlotBoundCurioItem {
 
         UUID targetUuid = data.getUUID(TAG_TARGET_UUID);
         Entity entity = serverLevel.getEntity(targetUuid);
-        if (!(entity instanceof LivingEntity target)) return;
-        if (!target.isAlive()) return;
+        if (!(entity instanceof LivingEntity target) || !target.isAlive()) {
+            vex.kill();
+            return;
+        }
 
         if (vex.getTarget() != target) {
             vex.setTarget(target);

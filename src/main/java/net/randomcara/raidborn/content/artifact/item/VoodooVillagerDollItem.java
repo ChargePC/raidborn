@@ -32,7 +32,7 @@ public class VoodooVillagerDollItem extends Item implements ICurioItem, IActivat
     public static final int BUFF_TICKS = 15 * 20;
     public static final double RADIUS = 48.0D;
 
-    private static final Set<String> VALID_ILLAGER_IDS = Set.of("minecraft:vindicator", "takeapillager:skirmisher", "illagerinvasion:marauder", "illagerinvasion:basher", "illagerinvasion:inquisitor", "savage_and_ravage:executioner", "guardillagers:guard_illager", "hunters_return:hunter");
+    private static final Set<String> VALID_ILLAGER_IDS = Set.of("minecraft:vindicator", "takesapillage:skirmisher", "illagerinvasion:marauder", "illagerinvasion:basher", "illagerinvasion:inquisitor", "savage_and_ravage:executioner", "guardillagers:guard_illager", "hunters_return:hunter");
 
     public VoodooVillagerDollItem(Properties props) {
         super(props.stacksTo(1));

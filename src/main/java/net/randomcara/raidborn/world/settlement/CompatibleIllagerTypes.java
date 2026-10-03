@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.randomcara.bentoslib.world.spawn.CategorizedMobSpawnTable;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.core.compat.RaidbornCompat;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -50,8 +51,6 @@ public class CompatibleIllagerTypes {
         ));
     }
 
-    private static final CategorizedMobSpawnTable<IllagerStrengthCategory> SPAWN_TABLE = new CategorizedMobSpawnTable<>(ILLAGERS_BY_CATEGORY, SETTLEMENT_ILLAGER_TAG, Raidborn.LOGGER);
-
     private static ResourceLocation id(String value) {
         ResourceLocation id = ResourceLocation.tryParse(value);
         if (id == null) {
@@ -62,6 +61,7 @@ public class CompatibleIllagerTypes {
 
     public static boolean spawnRandomIllager(ServerLevel level, IllagerStrengthCategory category, double x, double y,
                                              double z, float yRot, float xRot, float yHeadRot) {
-        return SPAWN_TABLE.spawnRandom(level, category, x, y, z, yRot, xRot, yHeadRot);
+        List<ResourceLocation> enabled = ILLAGERS_BY_CATEGORY.getOrDefault(category, List.of()).stream().filter(id -> RaidbornCompat.isEnabled(id.getNamespace())).toList();
+        return new CategorizedMobSpawnTable<>(Map.of(category, enabled), SETTLEMENT_ILLAGER_TAG, Raidborn.LOGGER).spawnRandom(level, category, x, y, z, yRot, xRot, yHeadRot);
     }
 }

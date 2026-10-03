@@ -148,21 +148,21 @@ public class RecruitInteractionEvents {
         if (recruited && hasOwner && playerId.equals(mob.getPersistentData().getUUID(FollowOwnerGoal.TAG_OWNER))) {
             RecruitmentEvents.releaseRecruit(mob);
 
-            int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
+            int used = RecruitSlots.countRecruitSlots(player);
             player.displayClientMessage(Component.literal("Illager dismissed. (" + used + "/" + maxSlots + " slots)").withStyle(ChatFormatting.RED), true);
         } else if (recruited && hasOwner) {
             player.displayClientMessage(Component.literal("This mob already serves another leader.").withStyle(ChatFormatting.GRAY), true);
         } else {
             if (RaidBagItem.playerHasStoredSquad(player)) {
                 int storedCount = RaidBagItem.getStoredRecruitCount(player);
-                int used = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
+                int used = RecruitSlots.countRecruitSlots(player);
                 player.displayClientMessage(Component.literal("Your squad is stored in a Raid Bag (" + storedCount + " recruits, " + used + "/" + maxSlots + " slots used).") .withStyle(ChatFormatting.GRAY), true);
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 return;
             }
 
-            int currentSlots = RecruitSlots.countRecruitSlots(player, RecruitSlots.slotScanRadius());
+            int currentSlots = RecruitSlots.countRecruitSlots(player);
             int cost = RecruitSlots.getRecruitCost(mob);
             if (currentSlots + cost > maxSlots) {
                 player.displayClientMessage(Component.literal("Recruit limit reached (" + currentSlots + "/" + maxSlots + " slots used).").withStyle(ChatFormatting.RED), true);
@@ -173,6 +173,7 @@ public class RecruitInteractionEvents {
 
                 mob.getPersistentData().putBoolean(FollowOwnerGoal.TAG_RECRUITED, true);
                 mob.getPersistentData().putUUID(FollowOwnerGoal.TAG_OWNER, playerId);
+                RecruitRoster.get(player.server).track(mob);
 
                 if (mob instanceof Beast beast) {
                     beast.setCreatorUUID(playerId);

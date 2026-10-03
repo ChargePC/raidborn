@@ -166,11 +166,9 @@ public class WarbellVillageWorkstationData {
         BlockPos bestPos = null;
         double bestScore = Double.MAX_VALUE;
 
-        for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
-            BlockState state = mob.level().getBlockState(pos);
-
+        for (BlockPos pos : WarbellVillageData.findLoadedBlocks(mob.level(), min, max, state -> isValidWorkstationFor(mob, state))) {
             if (!WarbellVillageData.isInsideVillageRadius(bellPos, pos, radius)) continue;
-            if (!isValidWorkstationFor(mob, state) || isWorkstationClaimedByOther(mob, pos)) continue;
+            if (isWorkstationClaimedByOther(mob, pos)) continue;
 
             BlockPos interactionPos = findWorkstationStandPos(mob, pos);
             if (interactionPos == null) continue;

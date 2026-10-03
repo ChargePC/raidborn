@@ -59,6 +59,16 @@ public class RaidbornNecklaceEffectEvents {
         }
     }
 
+    public static void forgetAllianceEffect(ServerPlayer player) {
+        UUID playerId = player.getUUID();
+        LAST_EFFECT_BY_PLAYER.remove(playerId);
+        PENDING_RESTORE_BY_PLAYER.remove(playerId);
+
+        CompoundTag persistedRoot = getExistingPersistedRoot(player);
+        persistedRoot.remove(TAG_LAST_ALLIANCE_EFFECT);
+        persistedRoot.remove(TAG_PENDING_ALLIANCE_EFFECT);
+    }
+
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {

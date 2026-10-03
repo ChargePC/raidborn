@@ -15,7 +15,11 @@ import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,6 +36,7 @@ import net.randomcara.raidborn.Raidborn;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
 import net.randomcara.raidborn.gameplay.recruit.RecruitOwnership;
+import net.randomcara.raidborn.mixin.ThrownTridentAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -132,7 +137,15 @@ public class TotemOfResistanceItem extends Item implements ICurioItem, IActivata
                 continue;
             }
 
+            if (projectile instanceof ThrownEnderpearl || projectile instanceof FireworkRocketEntity firework && !firework.isShotAtAngle()) {
+                continue;
+            }
+
             level.sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.48F, 0.0F), 0.55F), projectile.getX(), projectile.getY(), projectile.getZ(), 8, 0.04D, 0.04D, 0.04D, 0.01D);
+
+            if (projectile instanceof ThrownTrident trident && trident.pickup == AbstractArrow.Pickup.ALLOWED) {
+                trident.spawnAtLocation(((ThrownTridentAccessor) trident).raidborn$getPickupItem(), 0.1F);
+            }
 
             projectile.discard();
         }

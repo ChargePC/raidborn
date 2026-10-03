@@ -25,6 +25,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.randomcara.raidborn.Raidborn;
+import net.randomcara.raidborn.content.artifact.item.RaidbornNecklaceEffectEvents;
 import net.randomcara.raidborn.content.effect.IllagerAlliance.Betrayal;
 import net.randomcara.raidborn.content.entity.VillageSide;
 import net.randomcara.raidborn.core.compat.RaidbornCompatEntities;
@@ -137,6 +138,7 @@ public class IllagerAllianceEvents {
         alliance.revoke(player);
 
         if (player instanceof ServerPlayer serverPlayer) {
+            RaidbornNecklaceEffectEvents.forgetAllianceEffect(serverPlayer);
             RaidbornAdvancements.award(serverPlayer, ADV_FRIENDLY_FIRE, CRIT_FRIENDLY_FIRE);
         }
     }

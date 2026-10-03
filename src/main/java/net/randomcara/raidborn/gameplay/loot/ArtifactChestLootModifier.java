@@ -1,23 +1,27 @@
 package net.randomcara.raidborn.gameplay.loot;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.randomcara.bentoslib.gameplay.loot.ChestLootInjector;
-import net.randomcara.raidborn.Raidborn;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.minecraftforge.common.loot.LootModifier;
 import net.randomcara.raidborn.core.config.RaidbornServerConfig;
 import net.randomcara.raidborn.core.registry.ModItems;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = Raidborn.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ChestLootInjectorEvents {
+public class ArtifactChestLootModifier extends LootModifier {
+    public static final Codec<ArtifactChestLootModifier> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance).apply(instance, ArtifactChestLootModifier::new));
+
     private static final Set<ResourceLocation> TARGET_TABLES = Set.of(
             BuiltInLootTables.PILLAGER_OUTPOST,
             BuiltInLootTables.JUNGLE_TEMPLE,
@@ -54,10 +58,25 @@ public class ChestLootInjectorEvents {
             ModItems.SACRED_SUN
     );
 
-    private static final ChestLootInjector INJECTOR = ChestLootInjector.Builder.create(TARGET_TABLES, ARTIFACTS, "raidborn_artifact_injection").enabledWhen(RaidbornServerConfig::isArtifactChestLootEnabled, true).chance(RaidbornServerConfig::getArtifactLootChance, 0.33D).build();
+    public ArtifactChestLootModifier(LootItemCondition[] conditions) {
+        super(conditions);
+    }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onLootTableLoad(LootTableLoadEvent event) {
-        INJECTOR.onLootTableLoad(event);
+    @Override
+    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        if (!TARGET_TABLES.contains(context.getQueriedLootTableId()) || !RaidbornServerConfig.isArtifactChestLootEnabled()) {
+            return generatedLoot;
+        }
+
+        if (context.getRandom().nextFloat() < RaidbornServerConfig.getArtifactLootChance()) {
+            generatedLoot.add(new ItemStack(ARTIFACTS.get(context.getRandom().nextInt(ARTIFACTS.size())).get()));
+        }
+
+        return generatedLoot;
+    }
+
+    @Override
+    public Codec<? extends IGlobalLootModifier> codec() {
+        return CODEC;
     }
 }

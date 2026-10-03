@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
@@ -380,7 +381,7 @@ public class Beast extends AbstractIllager {
         startAttackAnimation();
 
         float attackDamage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float damage = attackDamage > 0.0F ? attackDamage / 2.0F + this.random.nextInt(Mth.floor(attackDamage)) : attackDamage;
+        float damage = Mth.floor(attackDamage) > 0 ? attackDamage / 2.0F + this.random.nextInt(Mth.floor(attackDamage)) : attackDamage;
         boolean hurt = target.hurt(this.damageSources().mobAttack(this), damage);
         if (hurt) {
             double resistance = target instanceof LivingEntity hitTarget ? hitTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0D;
@@ -411,8 +412,12 @@ public class Beast extends AbstractIllager {
     }
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
-        super.dropCustomDeathLoot(source, looting, recentlyHit);
+    protected void dropEquipment() {
+        super.dropEquipment();
+
+        if (!this.isPlayerControlled() && !this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            return;
+        }
 
         for (int slot = 0; slot < this.beastInventory.getSlots(); slot++) {
             ItemStack stack = this.beastInventory.extractItem(slot, Integer.MAX_VALUE, false);
